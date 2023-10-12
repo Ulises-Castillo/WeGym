@@ -11,6 +11,7 @@
 		1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2852AD6621900F1A2D6 /* ContentView.swift */; };
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
 		1CDEE28B2AD6621A00F1A2D6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE28A2AD6621A00F1A2D6 /* Preview Assets.xcassets */; };
+		1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE29F2AD8ADC400F1A2D6 /* MainTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		1CDEE2852AD6621900F1A2D6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1CDEE28A2AD6621A00F1A2D6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1CDEE29F2AD8ADC400F1A2D6 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,11 @@
 		1CDEE2822AD6621900F1A2D6 /* WeGym */ = {
 			isa = PBXGroup;
 			children = (
+				1CDEE2912AD8ABF100F1A2D6 /* App */,
+				1CDEE2922AD8ABF200F1A2D6 /* Core */,
+				1CDEE2932AD8ABF300F1A2D6 /* Extensions */,
+				1CDEE2942AD8ABF600F1A2D6 /* Models */,
+				1CDEE2952AD8ABF800F1A2D6 /* Services */,
 				1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */,
 				1CDEE2852AD6621900F1A2D6 /* ContentView.swift */,
 				1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */,
@@ -65,6 +72,98 @@
 				1CDEE28A2AD6621A00F1A2D6 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1CDEE2912AD8ABF100F1A2D6 /* App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		1CDEE2922AD8ABF200F1A2D6 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE2962AD8AC7F00F1A2D6 /* Authentication */,
+				1CDEE2972AD8ACA300F1A2D6 /* Feed */,
+				1CDEE2982AD8ACB500F1A2D6 /* Profile */,
+				1CDEE2992AD8ACC000F1A2D6 /* Root */,
+				1CDEE29A2AD8ACCA00F1A2D6 /* Search */,
+				1CDEE29B2AD8ACD900F1A2D6 /* TabBar */,
+				1CDEE29C2AD8ACE200F1A2D6 /* Upload Posts */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		1CDEE2932AD8ABF300F1A2D6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1CDEE2942AD8ABF600F1A2D6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1CDEE2952AD8ABF800F1A2D6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1CDEE2962AD8AC7F00F1A2D6 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		1CDEE2972AD8ACA300F1A2D6 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		1CDEE2982AD8ACB500F1A2D6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		1CDEE2992AD8ACC000F1A2D6 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		1CDEE29A2AD8ACCA00F1A2D6 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		1CDEE29B2AD8ACD900F1A2D6 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE29F2AD8ADC400F1A2D6 /* MainTabView.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		1CDEE29C2AD8ACE200F1A2D6 /* Upload Posts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Upload Posts";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,6 +238,7 @@
 			files = (
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
+				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
