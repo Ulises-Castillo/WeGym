@@ -10,8 +10,8 @@ import SwiftUI
 //TODO: refactor – duplicate of "Add Email View"
 struct CreateUsernameView: View {
   
-  @State private var username = ""
   @Environment(\.dismiss) var dismiss
+  @EnvironmentObject var viewModel: RegistrationViewModel
   
   var body: some View {
     VStack(spacing: 12) {
@@ -27,7 +27,7 @@ struct CreateUsernameView: View {
         .padding(.horizontal, 24)
         .padding(.top, 1)
       
-      TextField("Username", text: $username)
+      TextField("Username", text: $viewModel.username)
         .autocapitalization(.none)
         .modifier(WGTextFieldModifier())
         .padding(.top)
