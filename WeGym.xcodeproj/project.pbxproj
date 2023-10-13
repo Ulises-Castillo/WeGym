@@ -12,6 +12,8 @@
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
 		1CDEE28B2AD6621A00F1A2D6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE28A2AD6621A00F1A2D6 /* Preview Assets.xcassets */; };
 		1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE29F2AD8ADC400F1A2D6 /* MainTabView.swift */; };
+		1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A12AD8B15300F1A2D6 /* ProfileView.swift */; };
+		1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1CDEE28A2AD6621A00F1A2D6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1CDEE29F2AD8ADC400F1A2D6 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		1CDEE2A12AD8B15300F1A2D6 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2962AD8AC7F00F1A2D6 /* Authentication */,
+				1CDEE2A32AD8B96700F1A2D6 /* Components */,
 				1CDEE2972AD8ACA300F1A2D6 /* Feed */,
 				1CDEE2982AD8ACB500F1A2D6 /* Profile */,
 				1CDEE2992AD8ACC000F1A2D6 /* Root */,
@@ -133,6 +138,7 @@
 		1CDEE2982AD8ACB500F1A2D6 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				1CDEE2A12AD8B15300F1A2D6 /* ProfileView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -164,6 +170,14 @@
 			children = (
 			);
 			path = "Upload Posts";
+			sourceTree = "<group>";
+		};
+		1CDEE2A32AD8B96700F1A2D6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,8 +250,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
+				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
