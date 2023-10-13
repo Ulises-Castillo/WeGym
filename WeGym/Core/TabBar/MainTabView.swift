@@ -8,32 +8,32 @@
 import SwiftUI
 
 struct MainTabView: View {
-    var body: some View {
-      TabView {
-        Text("Home")
-          .tabItem {
-            Image(systemName: "house")
-          }
-        
-        Text("Search")
-          .tabItem {
-            Image(systemName: "magnifyingglass")
-          }
-        
-        Text("Notifications")
-          .tabItem {
-            Image(systemName: "person.bubble")
-          }
-        
-        ProfileView()
-          .tabItem {
-            Image(systemName: "person")
-          }
-      }
-      .accentColor(.black)
+  var body: some View {
+    TabView {
+      Text("Home")
+        .tabItem {
+          Image(systemName: "house")
+        }
+      
+      SearchView()
+        .tabItem {
+          Image(systemName: "magnifyingglass")
+        }
+      
+      Text("Notifications")
+        .tabItem {
+          Image(systemName: "person.bubble")
+        }
+      
+      ProfileView()
+        .tabItem {
+          Image(systemName: "person")
+        }
     }
+    .accentColor(.black)
+  }
 }
 
 #Preview {
-    MainTabView()
+  MainTabView()
 }

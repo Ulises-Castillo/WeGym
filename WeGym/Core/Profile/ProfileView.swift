@@ -79,7 +79,7 @@ struct ProfileView: View {
           }
         }
       }
-      .navigationTitle("Profile")
+      .navigationTitle("master_ulysses") // yes, I like this better
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
