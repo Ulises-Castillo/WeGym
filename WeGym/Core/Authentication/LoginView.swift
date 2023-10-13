@@ -25,18 +25,10 @@ struct LoginView: View {
         VStack {
           TextField("Enter your email", text: $email)
             .autocapitalization(.none)
-            .font(.subheadline)
-            .padding(12)
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-            .padding(.horizontal, 24)
+            .modifier(WGTextFieldModifier())
           
           SecureField("Enter your password", text: $password)
-            .font(.subheadline)
-            .padding(12)
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-            .padding(.horizontal, 24)
+            .modifier(WGTextFieldModifier())
         }
         
         Button {
@@ -69,7 +61,8 @@ struct LoginView: View {
         Divider()
         
         NavigationLink {
-          Text("Sign up")
+          AddEmailView()
+            .navigationBarBackButtonHidden()
         } label: {
           HStack(spacing: 3) {
             Text("New around here?")

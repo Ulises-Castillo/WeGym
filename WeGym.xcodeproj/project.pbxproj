@@ -16,6 +16,11 @@
 		1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */; };
 		1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A62AD8C37100F1A2D6 /* SearchView.swift */; };
 		1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */; };
+		1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */; };
+		1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */; };
+		1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */; };
+		1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */; };
+		1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +34,11 @@
 		1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStatView.swift; sourceTree = "<group>"; };
 		1CDEE2A62AD8C37100F1A2D6 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailView.swift; sourceTree = "<group>"; };
+		1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGTextFieldModifier.swift; sourceTree = "<group>"; };
+		1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameView.swift; sourceTree = "<group>"; };
+		1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
+		1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteSignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +139,10 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */,
+				1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */,
+				1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */,
+				1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */,
+				1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -182,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2A42AD8B99D00F1A2D6 /* UserStatView.swift */,
+				1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -257,9 +272,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
+				1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */,
+				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
+				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
+				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
+				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
