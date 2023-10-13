@@ -22,6 +22,7 @@
 		1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */; };
 		1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */; };
 		1CDEE2B72AD9C1AD00F1A2D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B62AD9C1AD00F1A2D6 /* User.swift */; };
+		1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B82AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
 		1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteSignUpView.swift; sourceTree = "<group>"; };
 		1CDEE2B62AD9C1AD00F1A2D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		1CDEE2B82AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2A12AD8B15300F1A2D6 /* ProfileView.swift */,
+				1CDEE2B82AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				1CDEE2B72AD9C1AD00F1A2D6 /* User.swift in Sources */,
 				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
 				1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */,
+				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,

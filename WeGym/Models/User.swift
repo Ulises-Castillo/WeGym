@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable, Codable {
+struct User: Identifiable, Hashable, Codable {
   let id: String
   let email: String
   var username: String // might make sense to be constant // q: does IG allow users to change username ?
