@@ -54,6 +54,7 @@
 		1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2F52AD9D97A00F1A2D6 /* AuthService.swift */; };
 		1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2F92AD9DAD200F1A2D6 /* ContentViewModel.swift */; };
 		1CDEE2FD2AD9DD3500F1A2D6 /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2FC2AD9DD3500F1A2D6 /* RegistrationViewModel.swift */; };
+		1CDEE2FF2AD9F8B000F1A2D6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2FE2AD9F8B000F1A2D6 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		1CDEE2F52AD9D97A00F1A2D6 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		1CDEE2F92AD9DAD200F1A2D6 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		1CDEE2FC2AD9DD3500F1A2D6 /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
+		1CDEE2FE2AD9F8B000F1A2D6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2FC2AD9DD3500F1A2D6 /* RegistrationViewModel.swift */,
+				1CDEE2FE2AD9F8B000F1A2D6 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
+				1CDEE2FF2AD9F8B000F1A2D6 /* LoginViewModel.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,

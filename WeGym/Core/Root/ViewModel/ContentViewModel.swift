@@ -11,7 +11,6 @@ import Combine
 
 class ContentViewModel: ObservableObject {
   
-  
   private let service = AuthService.shared
   private var cancellables = Set<AnyCancellable>()
   

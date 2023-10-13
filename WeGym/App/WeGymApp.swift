@@ -7,14 +7,16 @@
 
 import SwiftUI
 import FirebaseCore
+
+#if DEBUG
 import FirebaseAppCheck
+#endif
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     
-    // only for debug
 #if DEBUG
     let providerFactory = AppCheckDebugProviderFactory()
     AppCheck.setAppCheckProviderFactory(providerFactory)

@@ -15,22 +15,24 @@ class AuthService {
   static let shared = AuthService()
   
   init() {
-    self.userSession = Auth.auth().currentUser
+    userSession = Auth.auth().currentUser
   }
   
+  @MainActor
   func login(withEmail email: String, password: String) async throws {
-    
+    do {
+      let result = try await Auth.auth().signIn(withEmail: email, password: password)
+      userSession = result.user
+    } catch {
+      print("DEBUG: Failed to log in user with error: \(error.localizedDescription)")
+    }
   }
   
+  @MainActor
   func createUser(email: String, password: String, username: String) async throws {
-    print("Email is \(email)")
-    print("Password is \(password)")
-    print("Username is \(username)")
-    
     do {
       let result = try await Auth.auth().createUser(withEmail: email, password: password)
-      self.userSession = result.user
-      print("userSession: \(String(describing: self.userSession))")
+      userSession = result.user
     } catch {
       print("DEBUG: Failed to register user with error: \(error.localizedDescription)")
     }
@@ -41,6 +43,7 @@ class AuthService {
   }
   
   func signOut() {
-    
+    try? Auth.auth().signOut() //TODO: handle failure/optional
+    userSession = nil
   }
 }
