@@ -56,7 +56,11 @@ struct CurrentUserProfileView: View {
           
           // action button
           Button {
-            
+            if user.isCurrentUser {
+              
+            } else {
+              
+            }
           } label: {
             Text("Edit Profile")
               .font(.subheadline)
