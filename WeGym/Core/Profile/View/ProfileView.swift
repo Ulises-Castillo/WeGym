@@ -27,11 +27,7 @@ struct ProfileView: View {
         // pic and stats
         HStack {
           Spacer()
-          Image(user.profileImageUrl ?? "")
-            .resizable()
-            .scaledToFill()
-            .frame(width: 80, height: 80)
-            .clipShape(Circle())
+          CircularProfileImageView(user: user, size: .large)
           
           Spacer()
           
@@ -81,7 +77,7 @@ struct ProfileView: View {
       LazyVGrid(columns: gridItems, spacing: 1) {
         
         ForEach(0 ... 33, id: \.self) { _ in
-          Image(user.profileImageUrl ?? "smoke")
+          Image("smoke")
             .resizable()
             .scaledToFill()
         }
