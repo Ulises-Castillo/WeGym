@@ -13,7 +13,7 @@ struct MainTabView: View {
   
   var body: some View {
     TabView {
-      Text("Home")
+      FeedView()
         .onAppear {
           selectedIndex = 0
         }
