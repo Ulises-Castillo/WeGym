@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CurrentUserProfileView: View {
-  
   let user: User
+  @State private var showEditProfile = false
   
   private let gridItems: [GridItem] = [
     .init(.flexible(), spacing: 1),
@@ -56,11 +56,7 @@ struct CurrentUserProfileView: View {
           
           // action button
           Button {
-            if user.isCurrentUser {
-              
-            } else {
-              
-            }
+            showEditProfile.toggle()
           } label: {
             Text("Edit Profile")
               .font(.subheadline)
@@ -71,6 +67,9 @@ struct CurrentUserProfileView: View {
           }
           
           Divider()
+        }
+        .fullScreenCover(isPresented: $showEditProfile) {
+          EditProfileView()
         }
         
         // post grid view
