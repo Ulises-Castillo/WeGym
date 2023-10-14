@@ -12,76 +12,15 @@ struct ProfileView: View {
   let user: User
   @Environment(\.dismiss) var dismiss
   
-  private let gridItems: [GridItem] = [
-    .init(.flexible(), spacing: 1),
-    .init(.flexible(), spacing: 1),
-    .init(.flexible(), spacing: 1),
-  ]
-  
-  private let length = (UIScreen().bounds.width / 3) - 1 //FIXME: ?
+  var posts: [Post] {
+    return Post.MOCK_POSTS.filter({ $0.user?.username == user.username })
+  }
   
   var body: some View {
     ScrollView {
-      // header
-      VStack(spacing: 10) {
-        // pic and stats
-        HStack {
-          Spacer()
-          CircularProfileImageView(user: user, size: .large)
-          
-          Spacer()
-          
-          HStack(spacing: 8) {
-            UserStatView(value: 315, title: "Squat")
-            UserStatView(value: 245, title: "Bench")
-            UserStatView(value: 365, title: "Deadlift")
-          }
-          
-        }
-        .padding(.horizontal)
-        .padding(.bottom, 4)
-        
-        // name and bio
-        VStack(alignment: .leading, spacing: 4) {
-          if let fullName = user.fullName {
-            Text(fullName)
-              .font(.footnote)
-              .fontWeight(.semibold)
-          }
-          if let bio = user.bio {
-            Text(bio)
-              .font(.footnote)
-          }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
-        
-        // action button //FIXME: should be follow button
-        Button {
-          
-        } label: {
-          Text(user.isCurrentUser ? "Edit Profile" : "Follow")
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .frame(width: 360, height: 32)
-            .background(user.isCurrentUser ? .white : Color(.systemBlue))
-            .foregroundColor(user.isCurrentUser ? .black : .white)
-            .cornerRadius(6)
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(user.isCurrentUser ? .gray : .clear, lineWidth: 1))
-        }
-        
-        Divider()
-      }
+      ProfileHeaderView(user: user)
       
-      // post grid view
-      LazyVGrid(columns: gridItems, spacing: 1) {
-        
-        ForEach(0 ... 33, id: \.self) { _ in
-          Image("smoke")
-            .resizable()
-            .scaledToFill()
-        }
-      }
+      PostGridView(posts: posts)
     }
     .navigationTitle(user.username) // yes, I like this better
     .navigationBarTitleDisplayMode(.inline)
@@ -99,5 +38,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-  ProfileView(user: User.MOCK_USERS[0])
+  ProfileView(user: User.MOCK_USERS_2[0])
 }

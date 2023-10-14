@@ -24,7 +24,7 @@ struct User: Identifiable, Hashable, Codable {
 
 
 extension User {
-  static var MOCK_USERS: [User] = [
+  static var MOCK_USERS_2: [User] = [
     .init(id: NSUUID().uuidString, email: "uacastillo@ucdavis.edu", username: "master_ulysses", fullName: "Ulysses A. Castillo", profileImageUrl: nil, bio: "Amat Victoria Curam 💪"),
     .init(id: NSUUID().uuidString, email: "andrew@tate.com", username: "cobra_tate", fullName: "Andrew Emory Tate", profileImageUrl: nil, bio: "Escape the matrix"),
     .init(id: NSUUID().uuidString, email: "tristan@tate.com", username: "talisman_tate", fullName: "Tristan Tate", profileImageUrl: nil, bio: "International Playboy"),
@@ -35,7 +35,7 @@ extension User {
     .init(id: NSUUID().uuidString, email: "manny@boxing.com", username: "pacman", fullName: "Manny Pacquiao", profileImageUrl: nil, bio: "Boxing is my life"),
   ]
   
-  static var MOCK_USERS_2: [User] = [
+  static var MOCK_USERS: [User] = [
     .init(id: NSUUID().uuidString, email: "uacastillo@ucdavis.edu", username: "master_ulysses", fullName: "Ulysses A. Castillo", profileImageUrl: "uly", bio: "Amat Victoria Curam 💪"),
     .init(id: NSUUID().uuidString, email: "andrew@tate.com", username: "cobra_tate", fullName: "Andrew Emory Tate", profileImageUrl: "andrew", bio: "Escape the matrix"),
     .init(id: NSUUID().uuidString, email: "tristan@tate.com", username: "talisman_tate", fullName: "Tristan Tate", profileImageUrl: "tristan", bio: "International Playboy"),
