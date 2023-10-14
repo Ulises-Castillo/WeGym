@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CurrentUserProfileView: View {
   
+  let user: User
+  
   private let gridItems: [GridItem] = [
     .init(.flexible(), spacing: 1),
     .init(.flexible(), spacing: 1),
@@ -77,7 +79,7 @@ struct CurrentUserProfileView: View {
           }
         }
       }
-      .navigationTitle("master_ulysses") // yes, I like this better
+      .navigationTitle(user.username) // yes, I like this better
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -95,5 +97,5 @@ struct CurrentUserProfileView: View {
 }
 
 #Preview {
-  CurrentUserProfileView()
+  CurrentUserProfileView(user: User.MOCK_USERS[0])
 }
