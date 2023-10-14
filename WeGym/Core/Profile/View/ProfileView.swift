@@ -12,15 +12,12 @@ struct ProfileView: View {
   let user: User
   @Environment(\.dismiss) var dismiss
   
-  var posts: [Post] {
-    return Post.MOCK_POSTS.filter({ $0.user?.username == user.username })
-  }
   
   var body: some View {
     ScrollView {
       ProfileHeaderView(user: user)
       
-      PostGridView(posts: posts)
+      PostGridView(user: user)
     }
     .navigationTitle(user.username) // yes, I like this better
     .navigationBarTitleDisplayMode(.inline)
