@@ -69,6 +69,7 @@
 		1CDEE31E2ADA816200F1A2D6 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */; };
 		1CDEE3202ADA848700F1A2D6 /* UploadPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE31F2ADA848700F1A2D6 /* UploadPostView.swift */; };
 		1CDEE3222ADA87DC00F1A2D6 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3212ADA87DC00F1A2D6 /* UploadPostViewModel.swift */; };
+		1CDEE3282ADB101700F1A2D6 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,6 +108,7 @@
 		1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		1CDEE31F2ADA848700F1A2D6 /* UploadPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostView.swift; sourceTree = "<group>"; };
 		1CDEE3212ADA87DC00F1A2D6 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
+		1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,8 +250,8 @@
 		1CDEE2972AD8ACA300F1A2D6 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
-				1CDEE3192ADA745600F1A2D6 /* FeedCell.swift */,
-				1CDEE3172ADA744800F1A2D6 /* FeedView.swift */,
+				1CDEE3262ADB0FBA00F1A2D6 /* View */,
+				1CDEE3252ADB0FB100F1A2D6 /* ViewModel */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -405,6 +407,23 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		1CDEE3252ADB0FB100F1A2D6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1CDEE3262ADB0FBA00F1A2D6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE3192ADA745600F1A2D6 /* FeedCell.swift */,
+				1CDEE3172ADA744800F1A2D6 /* FeedView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -524,6 +543,7 @@
 				1CDEE3052ADA1C2900F1A2D6 /* SearchViewModel.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
+				1CDEE3282ADB101700F1A2D6 /* FeedViewModel.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE31E2ADA816200F1A2D6 /* ProfileHeaderView.swift in Sources */,
