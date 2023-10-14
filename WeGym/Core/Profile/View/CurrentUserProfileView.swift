@@ -45,11 +45,15 @@ struct CurrentUserProfileView: View {
           
           // name and bio
           VStack(alignment: .leading, spacing: 4) {
-            Text("Ulysses A. Castillo")
-              .font(.footnote)
-              .fontWeight(.semibold)
-            Text("Natty 💯\nAmat Victoria Curam 💪")
-              .font(.footnote)
+            if let fullName = user.fullName {
+              Text(fullName)
+                .font(.footnote)
+                .fontWeight(.semibold)
+            }
+            if let bio = user.bio {
+              Text(bio)
+                .font(.footnote)
+            }
           }
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.horizontal)
@@ -69,7 +73,7 @@ struct CurrentUserProfileView: View {
           Divider()
         }
         .fullScreenCover(isPresented: $showEditProfile) {
-          EditProfileView()
+          EditProfileView(user: user)
         }
         
         // post grid view
