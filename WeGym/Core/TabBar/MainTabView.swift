@@ -12,7 +12,7 @@ struct MainTabView: View {
   @State private var selectedIndex = 0
   
   var body: some View {
-    TabView {
+    TabView(selection: $selectedIndex) {
       FeedView()
         .onAppear {
           selectedIndex = 0
@@ -28,22 +28,30 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(1)
-      
-      Text("Notifications")
+   
+      UploadPostView(tabIndex: $selectedIndex)
         .onAppear {
           selectedIndex = 2
         }
         .tabItem {
-          Image(systemName: "person.bubble")
+          Image(systemName: "plus.square")
         }.tag(2)
       
-      CurrentUserProfileView(user: user)
+      Text("Notifications")
         .onAppear {
           selectedIndex = 3
         }
         .tabItem {
-          Image(systemName: "person")
+          Image(systemName: "person.bubble")
         }.tag(3)
+      
+      CurrentUserProfileView(user: user)
+        .onAppear {
+          selectedIndex = 4
+        }
+        .tabItem {
+          Image(systemName: "person")
+        }.tag(4)
     }
     .accentColor(.black)
   }
