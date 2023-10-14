@@ -59,6 +59,7 @@
 		1CDEE3052ADA1C2900F1A2D6 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3042ADA1C2900F1A2D6 /* SearchViewModel.swift */; };
 		1CDEE3092ADA3EE800F1A2D6 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3082ADA3EE800F1A2D6 /* EditProfileView.swift */; };
 		1CDEE30D2ADA443600F1A2D6 /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE30C2ADA443600F1A2D6 /* EditProfileViewModel.swift */; };
+		1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE30E2ADA4C5100F1A2D6 /* ImageUploader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		1CDEE3042ADA1C2900F1A2D6 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		1CDEE3082ADA3EE800F1A2D6 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		1CDEE30C2ADA443600F1A2D6 /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		1CDEE30E2ADA4C5100F1A2D6 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE3002ADA1B6100F1A2D6 /* UserService.swift */,
+				1CDEE30E2ADA4C5100F1A2D6 /* ImageUploader.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE2FF2AD9F8B000F1A2D6 /* LoginViewModel.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
+				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
 				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
