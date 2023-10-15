@@ -85,19 +85,21 @@ struct TrainingSessionSchedulerView: View {
         Button {
           showingSearchSheet.toggle()
         } label: {
-          Text("Invite Gym Bros")
-          Image(systemName: "plus")
+          HStack {
+            Text("Invite Gym Bros")
+            Image(systemName: "plus")
+          }
+          .font(.headline)
+          .fontWeight(.semibold)
+          .frame(width: 360, height: 50)
+          .background(Color(.systemBlue))
+          .foregroundColor(.white)
+          .cornerRadius(6)
+          .overlay(RoundedRectangle(cornerRadius: 6).stroke(.clear, lineWidth: 1))
         }
         .sheet(isPresented: $showingSearchSheet) {
           SearchView()
         }
-        .font(.headline)
-        .fontWeight(.semibold)
-        .frame(width: 360, height: 50)
-        .background(Color(.systemBlue))
-        .foregroundColor(.white)
-        .cornerRadius(6)
-        .overlay(RoundedRectangle(cornerRadius: 6).stroke(.clear, lineWidth: 1))
       }
       
       .navigationTitle("Edit Today")
