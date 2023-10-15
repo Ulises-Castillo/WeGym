@@ -11,6 +11,7 @@ struct TrainingSessionView: View {
   
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
+  @State private var showingEditSheet = false
   
   var body: some View {
     
@@ -18,10 +19,18 @@ struct TrainingSessionView: View {
       Divider()
       ScrollView {
         ForEach(0...15, id: \.self) { _ in
-          TrainingSessionCell()
-            .padding(.vertical, 12)
+          Button {
+            showingEditSheet.toggle()
+          } label: {
+            TrainingSessionCell()
+              .padding(.vertical, 12)
+          }
+          .sheet(isPresented: $showingEditSheet) {
+            TrainingSessionSchedulerView()
+          }
         }
       }
+      .foregroundColor(.black)
       .navigationTitle("Today")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
@@ -57,3 +66,4 @@ struct TrainingSessionView: View {
 #Preview {
   TrainingSessionView()
 }
+

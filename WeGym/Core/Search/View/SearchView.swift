@@ -47,7 +47,11 @@ struct SearchView: View {
       .navigationTitle("Add Gym Bros")
       .navigationBarTitleDisplayMode(.inline)
     }
+    .onAppear {
+      print("# of users: \(viewModel.users.count)") //FIXME: why are users disappearing when SearchView() called from the scheduler?
+    }
   }
+    
 }
 
 #Preview {
