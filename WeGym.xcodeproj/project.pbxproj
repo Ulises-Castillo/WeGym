@@ -72,6 +72,8 @@
 		1CDEE3282ADB101700F1A2D6 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */; };
 		1CDEE32A2ADB18D900F1A2D6 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3292ADB18D900F1A2D6 /* PostService.swift */; };
 		1CDEE32E2ADB1BEA00F1A2D6 /* PostGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE32D2ADB1BEA00F1A2D6 /* PostGridViewModel.swift */; };
+		1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */; };
+		1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,6 +115,8 @@
 		1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		1CDEE3292ADB18D900F1A2D6 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		1CDEE32D2ADB1BEA00F1A2D6 /* PostGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostGridViewModel.swift; sourceTree = "<group>"; };
+		1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionCell.swift; sourceTree = "<group>"; };
+		1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +215,7 @@
 				1CDEE2992AD8ACC000F1A2D6 /* Root */,
 				1CDEE29A2AD8ACCA00F1A2D6 /* Search */,
 				1CDEE29B2AD8ACD900F1A2D6 /* TabBar */,
+				1CDEE32F2ADB99AF00F1A2D6 /* TrainingSession */,
 				1CDEE29C2AD8ACE200F1A2D6 /* Upload Posts */,
 			);
 			path = Core;
@@ -284,7 +289,6 @@
 			children = (
 				1CDEE3022ADA1C0D00F1A2D6 /* View */,
 				1CDEE3032ADA1C1200F1A2D6 /* ViewModel */,
-				1CDEE2A62AD8C37100F1A2D6 /* SearchView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -363,6 +367,7 @@
 		1CDEE3022ADA1C0D00F1A2D6 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1CDEE2A62AD8C37100F1A2D6 /* SearchView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -442,6 +447,31 @@
 				1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */,
 				1CDEE3132ADA681000F1A2D6 /* CircularProfileImageView.swift */,
 				1CDEE31B2ADA7FBE00F1A2D6 /* PostGridView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1CDEE32F2ADB99AF00F1A2D6 /* TrainingSession */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE3312ADB99D300F1A2D6 /* View */,
+				1CDEE3302ADB99CD00F1A2D6 /* ViewModel */,
+			);
+			path = TrainingSession;
+			sourceTree = "<group>";
+		};
+		1CDEE3302ADB99CD00F1A2D6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1CDEE3312ADB99D300F1A2D6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */,
+				1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -562,6 +592,7 @@
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1CDEE31A2ADA745600F1A2D6 /* FeedCell.swift in Sources */,
+				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */,
 				1CDEE3052ADA1C2900F1A2D6 /* SearchViewModel.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
@@ -581,6 +612,7 @@
 				1CDEE3012ADA1B6100F1A2D6 /* UserService.swift in Sources */,
 				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
+				1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */,
 				1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
