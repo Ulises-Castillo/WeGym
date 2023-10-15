@@ -9,6 +9,9 @@ import SwiftUI
 
 struct TrainingSessionView: View {
   
+  @State private var selectedDate: Date = .now
+  @State private var showingDateSheet = false
+  
   var body: some View {
     
     NavigationStack {
@@ -33,10 +36,17 @@ struct TrainingSessionView: View {
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
-            print("open data picker")
+            showingDateSheet.toggle()
           } label: {
             Image(systemName: "calendar")
               .foregroundColor(.black)
+          }
+          .sheet(isPresented: $showingDateSheet) {
+            DatePicker("", selection: $selectedDate, displayedComponents: .date)
+              .onChange(of: selectedDate) { _ in showingDateSheet.toggle() }
+              .datePickerStyle(.graphical)
+              .presentationDetents([.medium])
+              .presentationDragIndicator(.hidden)
           }
         }
       }
