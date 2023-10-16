@@ -109,15 +109,15 @@ struct TrainingSessionSchedulerView: View {
           Button {
             dismiss()
           } label: {
-            Text("Done")
+            Image(systemName: "checkmark")
           }
-          .foregroundColor(.blue)
+          .foregroundColor(.green)
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
             dismiss()
           } label: {
-            Text("Cancel")
+            Image(systemName: "xmark")
           }
           .foregroundColor(.red)
         }
