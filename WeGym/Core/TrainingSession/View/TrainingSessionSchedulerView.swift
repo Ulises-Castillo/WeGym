@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import TagField //TODO: modify to have support multiline
 
 struct TrainingSessionSchedulerView: View {
   @State var workoutTime = Date()
@@ -26,10 +25,9 @@ struct TrainingSessionSchedulerView: View {
       Divider()
       ScrollView {
         // select workout / body parts
-        TagField(tags: $workoutTypes, placeholder: "Other", prefix: "")
+        TagField(tags: $workoutTypes, placeholder: "Other", prefix: "", multiSelect: true)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
-          .lowercase(true)
           .padding()
         
         // set workout time
@@ -40,11 +38,9 @@ struct TrainingSessionSchedulerView: View {
           .fontWeight(.medium)
         
         // set gym / workout location
-        // select workout / body parts
-        TagField(tags: $gyms, placeholder: "Other", prefix: "")
+        TagField(tags: $gyms, placeholder: "Other", prefix: "", multiSelect: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
-          .lowercase(true)
           .padding()
         
         // set workout comment / theme (perhaps image in the future)
