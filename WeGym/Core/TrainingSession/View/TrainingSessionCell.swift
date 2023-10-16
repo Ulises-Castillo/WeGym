@@ -9,50 +9,56 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   var body: some View {
-    HStack() {
+    VStack(alignment: .leading, spacing: 9) {
       
-      VStack {
+      HStack {
         // user profile image
         Image("uly")
           .resizable()
           .scaledToFill()
-          .frame(width: 50, height: 50)
+          .frame(width: 33, height: 33)
           .clipShape(Circle())
         // username
-        Text("master_ulysses")
-          .font(.footnote)
+        Text("Ulysses ")
+          .font(.subheadline)
           .fontWeight(.semibold)
+        
+        + Text("Going for a bench PR today ! 💪")
+          .fontWeight(.regular)
+          .font(.subheadline)
+        
+        Spacer()
       }
       
-      Spacer()
-      VStack(alignment: .leading) {
+
+      HStack {
         // body parts / workout type
-        Text("  Chest ")
+        Text(" Chest    ")
           .background(.green)
-        Text("  Back   ")
+          .cornerRadius(6)
+        Text("   Back     ")
           .background(.red)
-        Text("  Abs     ")
+          .cornerRadius(6)
+        Text("    Abs      ")
           .background(.blue)
+          .cornerRadius(6)
           
       }
       .foregroundColor(.white)
       .fontWeight(.bold)
-      .cornerRadius(3)
+      .font(.title)
       
-      Spacer()
-      
-      VStack {
+      HStack {
         // TrainingSession time
         Text("3pm")
-          .font(.footnote)
           .fontWeight(.semibold)
         // TrainingSession location / gym
         Text("Redwood City 24")
-          .font(.footnote)
           .fontWeight(.thin)
       }
+      .font(.subheadline)
     }
-    .padding(.horizontal, 21)
+    .padding(.leading, 21)
   }
 }
 

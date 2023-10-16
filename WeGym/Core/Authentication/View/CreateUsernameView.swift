@@ -20,7 +20,7 @@ struct CreateUsernameView: View {
         .fontWeight(.bold)
         .padding(.top)
       
-      Text("You'll use this email to sign to your account")
+      Text("Username must be at least 4 characters.")
         .font(.footnote)
         .foregroundColor(.gray)
         .multilineTextAlignment(.center)
