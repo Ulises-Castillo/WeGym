@@ -86,7 +86,7 @@ struct TrainingSessionSchedulerView: View {
           showingSearchSheet.toggle()
         } label: {
           HStack {
-            Text("Invite Gym Bros")
+            Text("Invite Gym Rats")
             Image(systemName: "plus")
           }
           .font(.headline)
@@ -102,7 +102,7 @@ struct TrainingSessionSchedulerView: View {
         }
       }
       
-      .navigationTitle("Edit Today")
+      .navigationTitle("Edit Workout")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
