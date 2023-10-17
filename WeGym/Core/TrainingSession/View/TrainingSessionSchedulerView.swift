@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import TagField //TODO: modify to have support multiline
+import Firebase
 
 struct TrainingSessionSchedulerView: View {
   @State var workoutTime = Date()
@@ -16,6 +16,9 @@ struct TrainingSessionSchedulerView: View {
   @State var workoutBroLimit = ""
   @State var gyms: [String] = ["Redwood City 24", "San Carlos 24", "Mountain View 24", "Vallejo In-Shape"]
   @State var workoutTypes: [String] = ["Chest", "Back", "Arms", "Legs", "Shoulders", "Abs", "Biceps", "Triceps", "Calves", "Upper Body", "Lower Body", "Full Body"]
+  
+  @State var focus = Set<String>()
+  @State var gym = Set<String>()
   
   @State private var showingSearchSheet = false
   
@@ -26,10 +29,9 @@ struct TrainingSessionSchedulerView: View {
       Divider()
       ScrollView {
         // select workout / body parts
-        TagField(tags: $workoutTypes, placeholder: "Other", prefix: "")
+        TagField(tags: $workoutTypes, set: $focus, placeholder: "Other", prefix: "", multiSelect: true)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
-          .lowercase(true)
           .padding()
         
         // set workout time
@@ -40,11 +42,9 @@ struct TrainingSessionSchedulerView: View {
           .fontWeight(.medium)
         
         // set gym / workout location
-        // select workout / body parts
-        TagField(tags: $gyms, placeholder: "Other", prefix: "")
+        TagField(tags: $gyms, set: $gym, placeholder: "Other", prefix: "", multiSelect: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
-          .lowercase(true)
           .padding()
         
         // set workout comment / theme (perhaps image in the future)
@@ -107,6 +107,17 @@ struct TrainingSessionSchedulerView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
+            Task {
+              // update existing training session
+              
+              
+              // new training session
+              try await TrainingSessionService
+                .uploadTrainingSession(date: Timestamp(date: workoutTime),
+                                       focus: [String](focus),
+                                       location: gym.first,
+                                       caption: workoutCaption)
+            }
             dismiss()
           } label: {
             Image(systemName: "checkmark")
