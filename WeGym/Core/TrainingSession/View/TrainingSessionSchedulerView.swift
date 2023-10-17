@@ -108,7 +108,7 @@ struct TrainingSessionSchedulerView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             Task {
-              // update existing training session
+              //TODO: update existing training session w/ ID
               
               
               // new training session

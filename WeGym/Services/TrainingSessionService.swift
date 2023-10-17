@@ -17,7 +17,20 @@ struct TrainingSessionService {
     
     let snapshot = try await Firestore.firestore().collection("training_sessions").whereField("date", isGreaterThan: start).whereField("date", isLessThan: end).getDocuments()
     
-    return snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) })
+    var trainingSessions = snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) })
+    
+    for i in 0..<trainingSessions.count {
+      let session = trainingSessions[i]
+      let ownerUid = session.ownerUid
+      let sessionUser = try await UserService.fetchUser(withUid: ownerUid)
+      // Single Source of Truth on the backend
+      // setting the user on the post such that the user info will be up to date
+      // yes, we could store username etc. w/ Post, however consider what would
+      // happen if the user had changed thier info (name, etc.) since making the
+      // Post. The user info stored with the Post would be outdated
+      trainingSessions[i].user = sessionUser
+    }
+    return trainingSessions
   }
   
   static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?) async throws {

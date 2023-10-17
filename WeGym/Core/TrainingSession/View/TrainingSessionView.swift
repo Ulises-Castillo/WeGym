@@ -12,15 +12,33 @@ struct TrainingSessionView: View {
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
+  @State private var showingAddSheet = false
   
   @StateObject var viewModel = TrainingSessionViewModel()
+  
+  let user: User
   
   var body: some View {
     
     NavigationStack {
       Divider()
       ScrollView {
-        ForEach(TrainingSession.MOCK_TRAINING_SESSIONS) { session in
+        if let currentUserTrainingSesssion = viewModel.currentUserTrainingSesssion {
+          Button {
+            showingAddSheet.toggle()
+          } label: {
+            TrainingSessionCell(trainingSession: currentUserTrainingSesssion)
+              .padding(.vertical, 12)
+          }
+          .sheet(isPresented: $showingAddSheet) {
+            TrainingSessionSchedulerView()
+          }
+        } else {
+          // Rest Day / No workout today cell // Add a workout
+          RestDayCell(user: user)
+        }
+        
+        ForEach(viewModel.trainingSessions) { session in
           Button {
             if let user = session.user, user.isCurrentUser {
               showingEditSheet.toggle()
@@ -68,6 +86,6 @@ struct TrainingSessionView: View {
 }
 
 #Preview {
-  TrainingSessionView()
+  TrainingSessionView(user: User.MOCK_USERS[0])
 }
 

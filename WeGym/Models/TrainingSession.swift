@@ -29,7 +29,7 @@ extension TrainingSession {
           focus: ["Chest", "Back", "Abs"],
           location: "Redwood City 24",
           caption: "Going for a bench PR today! 💪",
-          user: User.MOCK_USERS[0]),
+          user: User.MOCK_USERS_2[0]),
     
       .init(id: NSUUID().uuidString,
             ownerUid: NSUUID().uuidString,
