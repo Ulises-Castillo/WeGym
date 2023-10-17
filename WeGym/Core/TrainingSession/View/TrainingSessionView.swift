@@ -13,6 +13,8 @@ struct TrainingSessionView: View {
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
   
+  @StateObject var viewModel = TrainingSessionViewModel()
+  
   var body: some View {
     
     NavigationStack {

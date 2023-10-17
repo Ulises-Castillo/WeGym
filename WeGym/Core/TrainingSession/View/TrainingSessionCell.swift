@@ -63,7 +63,7 @@ struct TrainingSessionCell: View {
       HStack {
         // TrainingSession time
 //        Text(trainingSession.date.formatted(.time(pattern: .hourMinute)))
-        Text(trainingSession.date, format: .dateTime.hour().minute())
+        Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
           .fontWeight(.semibold)
         // TrainingSession location / gym
         if let location = trainingSession.location {

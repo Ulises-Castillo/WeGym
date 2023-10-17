@@ -20,7 +20,7 @@ public struct TagField: View {
   private var lowercase: Bool = false
   private var multiSelect: Bool
   
-  @State var isSelected = Set<String>()
+  @Binding var isSelected: Set<String>
   
   public var body: some View {
     VStack(spacing: 0){
@@ -138,21 +138,24 @@ public struct TagField: View {
       return false
     }
   }
-  public init(tags: Binding<[String]>, placeholder: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, multiSelect: Bool) {
     self._tags = tags
+    self._isSelected = set
     self.placeholder = placeholder
     self.multiSelect = multiSelect
   }
   
-  public init(tags: Binding<[String]>, placeholder: String, prefix: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, multiSelect: Bool) {
     self._tags = tags
+    self._isSelected = set
     self.placeholder = placeholder
     self.prefix = prefix
     self.multiSelect = multiSelect
   }
   
-  public init(tags: Binding<[String]>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool) {
     self._tags = tags
+    self._isSelected = set
     self.prefix = prefix
     self.placeholder = placeholder
     self._color = .init(initialValue: color)
@@ -165,6 +168,7 @@ public struct TagField: View {
 extension TagField {
   public func accentColor(_ color: Color) -> TagField {
     TagField(tags: self.$tags,
+             set: self.$isSelected,
              placeholder: self.placeholder, prefix: self.prefix,
              color: color,
              style: self.style,
@@ -173,6 +177,7 @@ extension TagField {
   }
   public func styled(_ style: TagFieldStyle) -> TagField {
     TagField(tags: self.$tags,
+             set: self.$isSelected,
              placeholder: self.placeholder, prefix: self.prefix,
              color: self.color,
              style: style,
@@ -181,6 +186,7 @@ extension TagField {
   }
   public func lowercase(_ bool: Bool) -> TagField {
     TagField(tags: self.$tags,
+             set: self.$isSelected,
              placeholder: self.placeholder,
              prefix: self.prefix,
              color: self.color,
