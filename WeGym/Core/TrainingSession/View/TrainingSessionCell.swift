@@ -8,41 +8,53 @@
 import SwiftUI
 
 struct TrainingSessionCell: View {
+  let trainingSession: TrainingSession
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       
       HStack {
         // user profile image
-        Image("uly")
+        Image(trainingSession.user!.profileImageUrl!) //FIXME: unwrap
           .resizable()
           .scaledToFill()
           .frame(width: 33, height: 33)
           .clipShape(Circle())
         // username
-        Text("Ulysses ")
+        Text(trainingSession.user!.fullName!) //FIXME: unwrap
           .font(.subheadline)
           .fontWeight(.semibold)
         
-        + Text("Going for a bench PR today ! 💪")
+         + Text(" ") + Text(trainingSession.caption ?? "")
           .fontWeight(.regular)
           .font(.subheadline)
+          
         
         Spacer()
       }
+      .frame(maxWidth: .infinity, alignment: .leading) // may not need this
+      .multilineTextAlignment(.leading)
+
       
 
       HStack {
         // body parts / workout type
-        Text(" Chest    ")
-          .background(.green)
-          .cornerRadius(6)
-        Text("   Back     ")
-          .background(.red)
-          .cornerRadius(6)
-        Text("    Abs      ")
-          .background(.blue)
-          .cornerRadius(6)
-          
+        ForEach(trainingSession.focus, id: \.self) { focus in
+          Text("  \(focus)  ")
+            .background(Color(.systemBlue))
+            .cornerRadius(6)
+        }
+        
+//        Text(" Chest    ")
+//          .background(.green)
+//          .cornerRadius(6)
+//        Text("   Back     ")
+//          .background(.red)
+//          .cornerRadius(6)
+//        Text("    Abs      ")
+//          .background(.blue)
+//          .cornerRadius(6)
+//          
       }
       .foregroundColor(.white)
       .fontWeight(.bold)
@@ -50,11 +62,14 @@ struct TrainingSessionCell: View {
       
       HStack {
         // TrainingSession time
-        Text("3pm")
+//        Text(trainingSession.date.formatted(.time(pattern: .hourMinute)))
+        Text(trainingSession.date, format: .dateTime.hour().minute())
           .fontWeight(.semibold)
         // TrainingSession location / gym
-        Text("Redwood City 24")
-          .fontWeight(.thin)
+        if let location = trainingSession.location {
+          Text(location)
+            .fontWeight(.thin)
+        }
       }
       .font(.subheadline)
     }
@@ -63,5 +78,5 @@ struct TrainingSessionCell: View {
 }
 
 #Preview {
-  TrainingSessionCell()
+  TrainingSessionCell(trainingSession: TrainingSession.MOCK_TRAINING_SESSIONS[0])
 }

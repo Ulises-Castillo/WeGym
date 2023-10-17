@@ -18,11 +18,13 @@ struct TrainingSessionView: View {
     NavigationStack {
       Divider()
       ScrollView {
-        ForEach(0...15, id: \.self) { _ in
+        ForEach(TrainingSession.MOCK_TRAINING_SESSIONS) { session in
           Button {
-            showingEditSheet.toggle()
+            if let user = session.user, user.isCurrentUser {
+              showingEditSheet.toggle()
+            }
           } label: {
-            TrainingSessionCell()
+            TrainingSessionCell(trainingSession: session)
               .padding(.vertical, 12)
           }
           .sheet(isPresented: $showingEditSheet) {
