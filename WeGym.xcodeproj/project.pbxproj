@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
+		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
 		1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */; };
 		1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2852AD6621900F1A2D6 /* ContentView.swift */; };
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
@@ -82,6 +83,7 @@
 /* Begin PBXFileReference section */
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
+		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
 		1CDEE2802AD6621900F1A2D6 /* WeGym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeGym.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeGymApp.swift; sourceTree = "<group>"; };
 		1CDEE2852AD6621900F1A2D6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2B62AD9C1AD00F1A2D6 /* User.swift */,
+				1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */,
 				1CDEE3152ADA703A00F1A2D6 /* Post.swift */,
 			);
 			path = Models;
@@ -598,6 +601,7 @@
 				1CDEE31C2ADA7FBE00F1A2D6 /* PostGridView.swift in Sources */,
 				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
 				1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */,
+				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */,
