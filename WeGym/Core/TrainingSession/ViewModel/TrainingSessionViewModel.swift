@@ -22,6 +22,19 @@ class TrainingSessionViewModel: ObservableObject {
     Task { try await fetchTrainingSessions() }
   }
   
+  func relaiveDay() -> String {
+    let relativeDateFormatter = DateFormatter()
+    relativeDateFormatter.timeStyle = .none
+    relativeDateFormatter.dateStyle = .medium
+    relativeDateFormatter.locale = Locale(identifier: "en_GB")
+    relativeDateFormatter.doesRelativeDateFormatting = true
+    
+    let inputFormatter = DateFormatter()
+    inputFormatter.dateFormat = "yyyy-MM-dd"
+
+    return relativeDateFormatter.string(from: day)
+  }
+  
   @MainActor
   func fetchTrainingSessions() async throws {
     guard !isFetching else { return }
@@ -29,14 +42,21 @@ class TrainingSessionViewModel: ObservableObject {
     
     trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: day)
     
+    var isFound = false
+    
     for i in 0..<trainingSessions.count {
       let session = trainingSessions[i]
       if let user = session.user, user.isCurrentUser {
         currentUserTrainingSesssion = session
         trainingSessions.remove(at: i)
+        isFound = true
         break
       }
     }
+    if !isFound {
+      currentUserTrainingSesssion = nil
+    }
+    
     isFetching = false
   }
 }

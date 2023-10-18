@@ -10,6 +10,7 @@ import SwiftUI
 struct RestDayCell: View {
   
   let user: User
+  @EnvironmentObject var viewModel: TrainingSessionViewModel
   
   var body: some View {
     
@@ -30,11 +31,13 @@ struct RestDayCell: View {
       Text("Rest Day 😞")
         .font(.largeTitle)
       //          .fontWeight(.)
-      HStack {
-        Image(systemName: "plus")
-        Text("Add Training Session")
-          .font(.subheadline)
-          .fontWeight(.medium)
+      if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
+        HStack {
+          Image(systemName: "plus")
+          Text("Add Training Session")
+            .font(.subheadline)
+            .fontWeight(.medium)
+        }
       }
     }
   }

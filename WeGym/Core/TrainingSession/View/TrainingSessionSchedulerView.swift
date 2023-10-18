@@ -158,12 +158,14 @@ struct TrainingSessionSchedulerView: View {
         }
       }
     }.onAppear {
-      if let session = self.viewModel.currentUserTrainingSesssion {
+      if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
         focus = Set<String>(session.focus)
         guard let location = session.location else { return }
         gym.insert(location)
+      } else {
+        workoutTime = viewModel.day
       }
     }
     .onTapGesture {

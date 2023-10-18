@@ -24,7 +24,9 @@ struct TrainingSessionView: View {
       ScrollView {
         
         Button {
-          showingEditSheet.toggle()
+          if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
+            showingEditSheet.toggle()
+          }
         } label: {
           
           if let session = viewModel.currentUserTrainingSesssion {
@@ -48,12 +50,14 @@ struct TrainingSessionView: View {
         }
       }
       .foregroundColor(.black)
-      .navigationTitle("Today")
+      .navigationTitle(viewModel.relaiveDay())
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-            print("navigate to tomorrow's view")
+            viewModel.day = viewModel.day.addingTimeInterval(86400)
+            selectedDate = selectedDate.addingTimeInterval(86400)
+            Task{ try await viewModel.fetchTrainingSessions() }
           } label: {
             Image(systemName: "arrowtriangle.forward")
               .foregroundColor(.black)
@@ -69,7 +73,11 @@ struct TrainingSessionView: View {
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
-              .onChange(of: selectedDate) { _ in showingDateSheet.toggle() }
+              .onChange(of: selectedDate) { _ in
+                showingDateSheet.toggle()
+                viewModel.day = selectedDate
+                Task{ try await viewModel.fetchTrainingSessions() }
+              }
               .datePickerStyle(.graphical)
               .presentationDetents([.medium])
               .presentationDragIndicator(.hidden)
@@ -77,8 +85,9 @@ struct TrainingSessionView: View {
         }
       }
     }
-    
     .onAppear{
+      selectedDate = Date()
+      viewModel.day = selectedDate
       Task{ try await viewModel.fetchTrainingSessions() }
     }
     .environmentObject(viewModel)
