@@ -25,7 +25,7 @@ struct TrainingSessionService {
       let sessionUser = try await UserService.fetchUser(withUid: ownerUid)
       // Single Source of Truth on the backend
       // setting the user on the post such that the user info will be up to date
-      // yes, we could store username etc. w/ Post, however consider what would
+      // yes, we could store name etc. w/ Post, however consider what would
       // happen if the user had changed thier info (name, etc.) since making the
       // Post. The user info stored with the Post would be outdated
       trainingSessions[i].user = sessionUser

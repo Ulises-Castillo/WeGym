@@ -18,8 +18,8 @@ struct RestDayCell: View {
       HStack {
         // user profile image
         CircularProfileImageView(user: user, size: .xSmall)
-        // username
-        Text(user.fullName!) //FIXME: unwrap
+        // name
+        Text(user.name)
           .font(.subheadline)
           .fontWeight(.semibold)
         

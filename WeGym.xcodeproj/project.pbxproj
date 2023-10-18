@@ -24,7 +24,7 @@
 		1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */; };
 		1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */; };
 		1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */; };
-		1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */; };
+		1CDEE2B12AD8F56100F1A2D6 /* CreateNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B02AD8F56100F1A2D6 /* CreateNameView.swift */; };
 		1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */; };
 		1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */; };
 		1CDEE2B72AD9C1AD00F1A2D6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2B62AD9C1AD00F1A2D6 /* User.swift */; };
@@ -102,7 +102,7 @@
 		1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailView.swift; sourceTree = "<group>"; };
 		1CDEE2AE2AD8F37900F1A2D6 /* WGTextFieldModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGTextFieldModifier.swift; sourceTree = "<group>"; };
-		1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameView.swift; sourceTree = "<group>"; };
+		1CDEE2B02AD8F56100F1A2D6 /* CreateNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNameView.swift; sourceTree = "<group>"; };
 		1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
 		1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteSignUpView.swift; sourceTree = "<group>"; };
 		1CDEE2B62AD9C1AD00F1A2D6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -340,7 +340,7 @@
 			children = (
 				1CDEE2A82AD8CF0F00F1A2D6 /* LoginView.swift */,
 				1CDEE2AA2AD8EFEE00F1A2D6 /* AddEmailView.swift */,
-				1CDEE2B02AD8F56100F1A2D6 /* CreateUsernameView.swift */,
+				1CDEE2B02AD8F56100F1A2D6 /* CreateNameView.swift */,
 				1CDEE2B22AD8F7FB00F1A2D6 /* CreatePasswordView.swift */,
 				1CDEE2B42AD8F9AF00F1A2D6 /* CompleteSignUpView.swift */,
 			);
@@ -634,7 +634,7 @@
 				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
-				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
+				1CDEE2B12AD8F56100F1A2D6 /* CreateNameView.swift in Sources */,
 				1CDEE3012ADA1B6100F1A2D6 /* UserService.swift in Sources */,
 				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,

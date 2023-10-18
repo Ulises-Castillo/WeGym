@@ -19,7 +19,7 @@ struct ProfileView: View {
       
       PostGridView(user: user)
     }
-    .navigationTitle(user.username) // yes, I like this better
+    .navigationTitle("WeGym") // yes, I like this better
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .navigationBarLeading) {
