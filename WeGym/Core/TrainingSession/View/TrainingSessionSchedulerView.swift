@@ -113,20 +113,33 @@ struct TrainingSessionSchedulerView: View {
             Task {
               
               
-              if viewModel.currentUserTrainingSesssion == nil {
+              if let prevSession = viewModel.currentUserTrainingSesssion {
                 
-                // new training session
-                //TODO: consider updating existing training session w/ ID
+                let newSession = TrainingSession(id: prevSession.id,
+                                                 ownerUid: user.id,
+                                                 date: Timestamp(date: workoutTime),
+                                                 focus: [String](focus),
+                                                 location: gym.first,
+                                                 caption: workoutCaption,
+                                                 user: user)
+                
+                try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
+                
+              } else {
                 try await TrainingSessionService
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
                                          focus: [String](focus),
                                          location: gym.first,
                                          caption: workoutCaption)
-              } else {
-                // update fields of existing session
+                
+                viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
+                                                                        ownerUid: "",
+                                                                        date: Timestamp(date: workoutTime),
+                                                                        focus: [String](focus),
+                                                                        location: gym.first,
+                                                                        caption: workoutCaption,
+                                                                        user: user)
               }
-              
-              viewModel.currentUserTrainingSesssion = TrainingSession(id: "", ownerUid: "", date: Timestamp(date: workoutTime), focus: [String](focus), location: gym.first, caption: workoutCaption, user: user)
               try await viewModel.fetchTrainingSessions()
             }
             dismiss()

@@ -48,8 +48,13 @@ struct TrainingSessionService {
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await postRef.setData(encodedTrainingSession)
   }
+  
+  static func updateTrainingSession(trainingSession: TrainingSession) async throws {
+    
+    guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
+    try await Firestore.firestore().collection("training_sessions").document(trainingSession.id).setData(encodedTrainingSession)
+  }
 }
-
 
 //TODO: move to appropriate location
 extension Date {
