@@ -28,10 +28,9 @@ struct TrainingSessionView: View {
             showingEditSheet.toggle()
           }
         } label: {
-          
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session)
-          } else {
+          } else if !viewModel.isFirstFetch && !viewModel.isFetching {
             RestDayCell(user: user)
           }
         }

@@ -16,6 +16,7 @@ class TrainingSessionViewModel: ObservableObject {
   //TODO: consider making this an array such that the user can have multiple training sessions scheduled in the same day (big for martial arts)
   @Published var currentUserTrainingSesssion: TrainingSession?
   
+  var isFirstFetch = true
   var isFetching = false // prevent redundant calls
   
   init() {
@@ -37,6 +38,7 @@ class TrainingSessionViewModel: ObservableObject {
   
   @MainActor
   func fetchTrainingSessions() async throws {
+    isFirstFetch = false
     guard !isFetching else { return }
     isFetching = true
     
