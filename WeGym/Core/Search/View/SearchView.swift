@@ -39,7 +39,7 @@ struct SearchView: View {
         ProfileView(user: user)
           .navigationBarBackButtonHidden()
       })
-      .navigationTitle("Add Gym Rats")
+      .navigationTitle("Add Gym Bros")
       .navigationBarTitleDisplayMode(.inline)
     }
     .onAppear {

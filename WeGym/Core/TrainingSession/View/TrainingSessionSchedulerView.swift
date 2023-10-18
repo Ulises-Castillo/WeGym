@@ -90,7 +90,7 @@ struct TrainingSessionSchedulerView: View {
           showingSearchSheet.toggle()
         } label: {
           HStack {
-            Text("Invite Gym Rats")
+            Text("Invite Gym Bros")
             Image(systemName: "plus")
           }
           .font(.headline)
