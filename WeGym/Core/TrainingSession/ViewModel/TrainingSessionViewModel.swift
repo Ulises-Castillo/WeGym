@@ -16,12 +16,17 @@ class TrainingSessionViewModel: ObservableObject {
   //TODO: consider making this an array such that the user can have multiple training sessions scheduled in the same day (big for martial arts)
   @Published var currentUserTrainingSesssion: TrainingSession?
   
+  var isFetching = false // prevent redundant calls
+  
   init() {
     Task { try await fetchTrainingSessions() }
   }
   
   @MainActor
   func fetchTrainingSessions() async throws {
+    guard !isFetching else { return }
+    isFetching = true
+    
     trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: day)
     
     for i in 0..<trainingSessions.count {
@@ -32,5 +37,6 @@ class TrainingSessionViewModel: ObservableObject {
         break
       }
     }
+    isFetching = false
   }
 }
