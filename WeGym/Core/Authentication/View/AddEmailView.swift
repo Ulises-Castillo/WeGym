@@ -31,7 +31,7 @@ struct AddEmailView: View {
         .padding(.top)
       
       NavigationLink {
-        CreateNameView()
+        CreateUsernameView()
           .navigationBarBackButtonHidden()
       } label: {
         Text("Next")

@@ -73,7 +73,7 @@ struct EditProfileView: View {
       
       // edit profile info
       VStack {
-        EditProfileRowView(title: "Name", placeholder: "Enter your name", text: $viewModel.name)
+        EditProfileRowView(title: "Name", placeholder: "Enter your name", text: $viewModel.fullName)
         EditProfileRowView(title: "Bio", placeholder: "Enter your bio", text: $viewModel.bio)
       }
       

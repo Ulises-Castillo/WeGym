@@ -21,7 +21,12 @@ struct SearchView: View {
                 CircularProfileImageView(user: user, size: .xSmall)
                 
                 VStack(alignment: .leading) {
-                  Text(user.name)
+                  Text(user.username)
+                    .fontWeight(.semibold)
+                  
+                  if let fullName = user.fullName {
+                    Text(fullName)
+                  }
                 }
                 .font(.footnote)
                 

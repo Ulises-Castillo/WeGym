@@ -33,10 +33,11 @@ struct ProfileHeaderView: View {
       
       // name and bio
       VStack(alignment: .leading, spacing: 4) {
-        
-        Text(user.name)
-          .font(.footnote)
-          .fontWeight(.semibold)
+        if let fullName = user.fullName {
+          Text(fullName)
+            .font(.footnote)
+            .fontWeight(.semibold)
+        }
         if let bio = user.bio {
           Text(bio)
             .font(.footnote)

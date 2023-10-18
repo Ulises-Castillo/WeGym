@@ -19,7 +19,7 @@ class EditProfileViewModel: ObservableObject {
   
   @Published var profileImage: Image?
   
-  @Published var name = ""
+  @Published var fullName = ""
   @Published var bio = ""
   
   private var uiImage: UIImage?
@@ -27,9 +27,9 @@ class EditProfileViewModel: ObservableObject {
   init(user: User) {
     self.user = user
     
-//    if let name = user.name {
-    self.name = user.name
-//    }
+    if let fullName = user.fullName {
+      self.fullName = fullName
+    }
     
     if let bio = user.bio {
       self.bio = bio
@@ -56,8 +56,8 @@ class EditProfileViewModel: ObservableObject {
     }
     
     // update name if changed
-    if !name.isEmpty && user.name != name {
-      data["name"] = name // fullName ?
+    if !fullName.isEmpty && user.fullName != fullName {
+      data["fullName"] = fullName // fullName ?
     }
     
     // update bio if changed

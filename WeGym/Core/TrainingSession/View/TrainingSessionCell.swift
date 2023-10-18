@@ -16,8 +16,8 @@ struct TrainingSessionCell: View {
       HStack {
         // user profile image
         CircularProfileImageView(user: trainingSession.user!, size: .xSmall) //FIXME: unwrap
-        // name
-        Text(trainingSession.user?.name ?? "")
+        // username
+        Text(trainingSession.user!.fullName!) //FIXME: unwrap
           .font(.subheadline)
           .fontWeight(.semibold)
         

@@ -1,5 +1,5 @@
 //
-//  CreateNameView.swift
+//  CreateUsernameView.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/12/23.
@@ -8,26 +8,26 @@
 import SwiftUI
 
 //TODO: refactor – duplicate of "Add Email View"
-struct CreateNameView: View {
+struct CreateUsernameView: View {
   
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: RegistrationViewModel
   
   var body: some View {
     VStack(spacing: 12) {
-      Text("Add your name")
+      Text("Create username")
         .font(.title2)
         .fontWeight(.bold)
         .padding(.top)
       
-      Text("Name must be at least 4 characters.")
+      Text("Username must be at least 4 characters.")
         .font(.footnote)
         .foregroundColor(.gray)
         .multilineTextAlignment(.center)
         .padding(.horizontal, 24)
         .padding(.top, 1)
       
-      TextField("Name", text: $viewModel.name)
+      TextField("Username", text: $viewModel.username)
         .autocapitalization(.none)
         .modifier(WGTextFieldModifier())
         .padding(.top)
@@ -61,5 +61,5 @@ struct CreateNameView: View {
 }
 
 #Preview {
-  CreateNameView()
+  CreateUsernameView()
 }

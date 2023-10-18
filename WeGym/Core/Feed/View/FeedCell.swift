@@ -14,12 +14,12 @@ struct FeedCell: View {
   var body: some View {
     VStack {
       
-      // image + name
+      // image + username
       HStack {
         if let user = post.user {
           CircularProfileImageView(user: user, size: .xSmall)
           
-          Text(user.name)
+          Text(user.username)
             .font(.footnote)
             .fontWeight(.semibold)
         }
@@ -74,7 +74,7 @@ struct FeedCell: View {
       
       // caption label
       HStack {
-        Text("\(post.user?.name ?? "") ").fontWeight(.semibold) +
+        Text("\(post.user?.fullName ?? "") ").fontWeight(.semibold) +
         Text(post.caption)
       }
       .font(.footnote)
