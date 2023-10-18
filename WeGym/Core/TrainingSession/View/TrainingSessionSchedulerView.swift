@@ -24,6 +24,10 @@ struct TrainingSessionSchedulerView: View {
   
   @Environment(\.dismiss) var dismiss
   
+  @EnvironmentObject var viewModel: TrainingSessionViewModel
+  
+  let user: User
+  
   var body: some View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
@@ -101,22 +105,29 @@ struct TrainingSessionSchedulerView: View {
           SearchView()
         }
       }
-      
-      .navigationTitle("Edit Workout")
+      .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             Task {
-              //TODO: update existing training session w/ ID
               
               
-              // new training session
-              try await TrainingSessionService
-                .uploadTrainingSession(date: Timestamp(date: workoutTime),
-                                       focus: [String](focus),
-                                       location: gym.first,
-                                       caption: workoutCaption)
+              if viewModel.currentUserTrainingSesssion == nil {
+                
+                // new training session
+                //TODO: consider updating existing training session w/ ID
+                try await TrainingSessionService
+                  .uploadTrainingSession(date: Timestamp(date: workoutTime),
+                                         focus: [String](focus),
+                                         location: gym.first,
+                                         caption: workoutCaption)
+              } else {
+                // update fields of existing session
+              }
+              
+              viewModel.currentUserTrainingSesssion = TrainingSession(id: "", ownerUid: "", date: Timestamp(date: workoutTime), focus: [String](focus), location: gym.first, caption: workoutCaption, user: user)
+              try await viewModel.fetchTrainingSessions()
             }
             dismiss()
           } label: {
@@ -133,16 +144,23 @@ struct TrainingSessionSchedulerView: View {
           .foregroundColor(.red)
         }
       }
+    }.onAppear {
+      if let session = self.viewModel.currentUserTrainingSesssion {
+        workoutTime = session.date.dateValue()
+        workoutCaption = session.caption ?? ""
+        focus = Set<String>(session.focus)
+        guard let location = session.location else { return }
+        gym.insert(location)
+      }
     }
     .onTapGesture {
-      
       self.endTextEditing()
     }
   }
 }
 
 #Preview {
-  TrainingSessionSchedulerView()
+  TrainingSessionSchedulerView(user: User.MOCK_USERS[0])
 }
 
 

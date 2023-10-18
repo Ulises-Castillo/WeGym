@@ -12,7 +12,6 @@ struct TrainingSessionView: View {
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
-  @State private var showingAddSheet = false
   
   @StateObject var viewModel = TrainingSessionViewModel()
   
@@ -23,32 +22,28 @@ struct TrainingSessionView: View {
     NavigationStack {
       Divider()
       ScrollView {
-        if let currentUserTrainingSesssion = viewModel.currentUserTrainingSesssion {
-          Button {
-            showingAddSheet.toggle()
-          } label: {
-            TrainingSessionCell(trainingSession: currentUserTrainingSesssion)
-              .padding(.vertical, 12)
-          }
-          .sheet(isPresented: $showingAddSheet) {
-            TrainingSessionSchedulerView()
-          }
-        } else {
-          // Rest Day / No workout today cell // Add a workout
-          RestDayCell(user: user)
-        }
         
+        Button {
+          showingEditSheet.toggle()
+        } label: {
+          
+          if let session = viewModel.currentUserTrainingSesssion {
+            TrainingSessionCell(trainingSession: session)
+          } else {
+            RestDayCell(user: user)
+          }
+        }
+        .padding(.vertical, 12)
+        .sheet(isPresented: $showingEditSheet) {
+          TrainingSessionSchedulerView(user: user)
+        }
+        Divider()
         ForEach(viewModel.trainingSessions) { session in
           Button {
-            if let user = session.user, user.isCurrentUser {
-              showingEditSheet.toggle()
-            }
+            print("Join bro's session")
           } label: {
             TrainingSessionCell(trainingSession: session)
               .padding(.vertical, 12)
-          }
-          .sheet(isPresented: $showingEditSheet) {
-            TrainingSessionSchedulerView()
           }
         }
       }
@@ -82,6 +77,11 @@ struct TrainingSessionView: View {
         }
       }
     }
+    
+    .onAppear{
+      Task{ try await viewModel.fetchTrainingSessions() }
+    }
+    .environmentObject(viewModel)
   }
 }
 
