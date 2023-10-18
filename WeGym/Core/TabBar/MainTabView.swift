@@ -21,7 +21,7 @@ struct MainTabView: View {
           Image(systemName: "house.fill")
         }.tag(0)
       
-      TrainingSessionView()
+      TrainingSessionView(user: user)
         .onAppear {
           selectedIndex = 1
         }
