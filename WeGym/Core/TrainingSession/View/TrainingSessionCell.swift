@@ -14,43 +14,32 @@ struct TrainingSessionCell: View {
     VStack(alignment: .leading, spacing: 9) {
       
       HStack {
-        // user profile image
-        CircularProfileImageView(user: trainingSession.user!, size: .xSmall) //FIXME: unwrap
-        // username
-        Text(trainingSession.user!.fullName!) //FIXME: unwrap
-          .font(.subheadline)
-          .fontWeight(.semibold)
-        
-         + Text(" ") + Text(trainingSession.caption ?? "")
-          .fontWeight(.regular)
-          .font(.subheadline)
+        if let user = trainingSession.user {
+          // user profile image
+          CircularProfileImageView(user: user, size: .xSmall)
+          // username
+          Text(user.fullName ?? user.username)
+            .font(.subheadline)
+            .fontWeight(.semibold)
           
-        
+          + Text(" ") + Text(trainingSession.caption ?? "")
+            .fontWeight(.regular)
+            .font(.subheadline)
+        }
         Spacer()
       }
       .frame(maxWidth: .infinity, alignment: .leading) // may not need this
       .multilineTextAlignment(.leading)
-
       
-
+      
+      
       HStack {
         // body parts / workout type
         ForEach(trainingSession.focus, id: \.self) { focus in
-          Text("  \(focus)  ")
+          Text(" \(focus)   ")
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
-        
-//        Text(" Chest    ")
-//          .background(.green)
-//          .cornerRadius(6)
-//        Text("   Back     ")
-//          .background(.red)
-//          .cornerRadius(6)
-//        Text("    Abs      ")
-//          .background(.blue)
-//          .cornerRadius(6)
-//          
       }
       .foregroundColor(.white)
       .fontWeight(.bold)
@@ -58,7 +47,6 @@ struct TrainingSessionCell: View {
       
       HStack {
         // TrainingSession time
-//        Text(trainingSession.date.formatted(.time(pattern: .hourMinute)))
         Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
           .fontWeight(.semibold)
         // TrainingSession location / gym

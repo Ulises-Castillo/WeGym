@@ -19,7 +19,7 @@ struct RestDayCell: View {
         // user profile image
         CircularProfileImageView(user: user, size: .xSmall)
         // username
-        Text(user.fullName!) //FIXME: unwrap
+        Text(user.fullName ?? user.username)
           .font(.subheadline)
           .fontWeight(.semibold)
         
