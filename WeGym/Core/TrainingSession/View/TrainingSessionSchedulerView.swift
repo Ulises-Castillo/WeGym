@@ -30,11 +30,20 @@ struct TrainingSessionSchedulerView: View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
       ScrollView {
-        TagField(tags: $schedulerViewModel.workoutCategories, set: $schedulerViewModel.selectedWorkoutCategory, placeholder: "", prefix: "", multiSelect: false, isSelector: true)
-          .accentColor(Color(.systemBlue))
+        TagField(tags: $schedulerViewModel.workoutCategories,
+                 set: $schedulerViewModel.selectedWorkoutCategory,
+                 placeholder: "", prefix: "",
+                 multiSelect: false,
+                 isSelector: true)
+        .accentColor(Color(.systemBlue))
         
         // select workout / body parts
-        TagField(tags: $schedulerViewModel.workoutFocuses, set: $schedulerViewModel.selectedWorkoutFocuses, placeholder: "Other", prefix: "", multiSelect: true, isSelector: false)
+        TagField(tags: $schedulerViewModel.workoutFocuses,
+                 set: $schedulerViewModel.selectedWorkoutFocuses,
+                 placeholder: "Other",
+                 prefix: "",
+                 multiSelect: true,
+                 isSelector: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
@@ -47,7 +56,12 @@ struct TrainingSessionSchedulerView: View {
           .fontWeight(.medium)
         
         // set gym / workout location
-        TagField(tags: $schedulerViewModel.gyms, set: $schedulerViewModel.selectedGym, placeholder: "Other", prefix: "", multiSelect: false, isSelector: false)
+        TagField(tags: $schedulerViewModel.gyms,
+                 set: $schedulerViewModel.selectedGym,
+                 placeholder: "Other",
+                 prefix: "",
+                 multiSelect: false,
+                 isSelector: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
