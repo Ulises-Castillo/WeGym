@@ -14,17 +14,15 @@ struct TrainingSessionSchedulerView: View {
   @State var workoutCaption = ""
   @State var workoutIsRecurring = false
   @State var workoutBroLimit = ""
-  @State var gyms: [String] = ["Redwood City 24", "San Carlos 24", "Mountain View 24", "Vallejo In-Shape"]
-  @State var workoutTypes: [String] = ["Chest", "Back", "Arms", "Legs", "Shoulders", "Abs", "Biceps", "Triceps", "Calves", "Upper Body", "Lower Body", "Full Body"]
   
-  @State var focus = [String]()
-  @State var gym = [String]()
+
   
   @State private var showingSearchSheet = false
   
   @Environment(\.dismiss) var dismiss
   
   @EnvironmentObject var viewModel: TrainingSessionViewModel
+  @StateObject var schedulerViewModel = TrainingSessionSchedulerViewModel()
   
   let user: User
   
@@ -32,8 +30,11 @@ struct TrainingSessionSchedulerView: View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
       ScrollView {
+        TagField(tags: $schedulerViewModel.workoutCategories, set: $schedulerViewModel.selectedWorkoutCategory, placeholder: "", prefix: "", multiSelect: false, isSelector: true)
+          .accentColor(Color(.systemBlue))
+        
         // select workout / body parts
-        TagField(tags: $workoutTypes, set: $focus, placeholder: "Other", prefix: "", multiSelect: true)
+        TagField(tags: $schedulerViewModel.workoutFocuses, set: $schedulerViewModel.selectedWorkoutFocuses, placeholder: "Other", prefix: "", multiSelect: true, isSelector: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
@@ -46,7 +47,7 @@ struct TrainingSessionSchedulerView: View {
           .fontWeight(.medium)
         
         // set gym / workout location
-        TagField(tags: $gyms, set: $gym, placeholder: "Other", prefix: "", multiSelect: false)
+        TagField(tags: $schedulerViewModel.gyms, set: $schedulerViewModel.selectedGym, placeholder: "Other", prefix: "", multiSelect: false, isSelector: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
@@ -109,6 +110,7 @@ struct TrainingSessionSchedulerView: View {
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
       .navigationBarTitleDisplayMode(.inline)
+      .environmentObject(schedulerViewModel)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
@@ -120,8 +122,8 @@ struct TrainingSessionSchedulerView: View {
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
-                                                 focus: [String](focus),
-                                                 location: gym.first,
+                                                 focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                 location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user)
                 
@@ -130,15 +132,15 @@ struct TrainingSessionSchedulerView: View {
               } else {
                 try await TrainingSessionService
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
-                                         focus: [String](focus),
-                                         location: gym.first,
+                                         focus: schedulerViewModel.selectedWorkoutFocuses,
+                                         location: schedulerViewModel.selectedGym.first,
                                          caption: workoutCaption)
                 
                 viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
                                                                         ownerUid: "",
                                                                         date: Timestamp(date: workoutTime),
-                                                                        focus: [String](focus),
-                                                                        location: gym.first,
+                                                                        focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                                        location: schedulerViewModel.selectedGym.first,
                                                                         caption: workoutCaption,
                                                                         user: user)
               }
@@ -163,9 +165,9 @@ struct TrainingSessionSchedulerView: View {
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
-        focus = session.focus
+        schedulerViewModel.selectedWorkoutFocuses = session.focus
         guard let location = session.location else { return }
-        gym.append(location)
+        schedulerViewModel.selectedGym.append(location)
       } else {
         workoutTime = viewModel.day
       }
