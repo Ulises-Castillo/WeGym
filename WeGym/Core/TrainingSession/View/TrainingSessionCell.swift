@@ -31,6 +31,7 @@ struct TrainingSessionCell: View {
       }
       .frame(maxWidth: .infinity, alignment: .leading) // may not need this
       .multilineTextAlignment(.leading)
+      .lineLimit(2)
       
       
       
