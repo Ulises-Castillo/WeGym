@@ -48,10 +48,16 @@ struct TrainingSessionSchedulerView: View {
 
         // set workout time
         //TODO: start date range should round up to the next 30min / hour
-        DatePicker("Time:", selection: $workoutTime, in: Date()..., displayedComponents: .hourAndMinute)
+        DatePicker("Time:", 
+                   selection: $workoutTime,
+                   in: Date()...,
+                   displayedComponents: .hourAndMinute)
           .padding()
           .font(.title3)
           .fontWeight(.medium)
+          .onTapGesture {
+            viewModel.shouldShowTime = true
+          }
 
         // set gym / workout location
         TagField(tags: $schedulerViewModel.gyms,
@@ -159,6 +165,7 @@ struct TrainingSessionSchedulerView: View {
         guard let location = session.location else { return }
         schedulerViewModel.selectedGym.append(location)
       } else {
+        viewModel.shouldShowTime = false
         workoutTime = viewModel.day
       }
     }

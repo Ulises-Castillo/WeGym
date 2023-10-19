@@ -29,7 +29,7 @@ struct TrainingSessionView: View {
           }
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
-            TrainingSessionCell(trainingSession: session)
+            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
           } else if !viewModel.isFirstFetch && !viewModel.isFetching {
             RestDayCell(user: user)
           }
@@ -46,7 +46,7 @@ struct TrainingSessionView: View {
           Button {
             print("Join bro's session")
           } label: {
-            TrainingSessionCell(trainingSession: session)
+            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }
         }
