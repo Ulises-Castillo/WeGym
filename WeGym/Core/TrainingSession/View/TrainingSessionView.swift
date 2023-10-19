@@ -83,6 +83,23 @@ struct TrainingSessionView: View {
         }
       }
     }
+    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+      .onEnded { value in
+        print(value.translation)
+        switch(value.translation.width, value.translation.height) {
+        case (...0, -30...30):
+          viewModel.day = viewModel.day.addingTimeInterval(86400)
+          selectedDate = selectedDate.addingTimeInterval(86400)
+          Task{ try await viewModel.fetchTrainingSessions() }
+        case (0..., -30...30):
+          viewModel.day = viewModel.day.addingTimeInterval(-86400)
+          selectedDate = selectedDate.addingTimeInterval(-86400)
+          Task{ try await viewModel.fetchTrainingSessions() }
+        default:
+          break
+        }
+      }
+    )
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate
