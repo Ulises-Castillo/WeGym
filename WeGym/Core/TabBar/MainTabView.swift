@@ -37,7 +37,7 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(2)
     }
-    .accentColor(.black)
+    .accentColor(.primary)
   }
 }
 

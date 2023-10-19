@@ -52,12 +52,14 @@ struct TrainingSessionCell: View {
         // TrainingSession location / gym
         if let location = trainingSession.location {
           Text(location)
-            .fontWeight(.thin)
+            .font(.footnote)
+            .foregroundColor(.secondary)
         }
       }
       .font(.subheadline)
     }
     .padding(.leading, 21)
+    .foregroundColor(.primary)
   }
 }
 

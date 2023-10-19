@@ -36,7 +36,7 @@ struct SearchView: View {
             }
           }
         }
-        .foregroundColor(.black)
+        .foregroundColor(.primary)
         .padding(.top, 8)
         .searchable(text: $searchText, prompt: "Search..")
       }
