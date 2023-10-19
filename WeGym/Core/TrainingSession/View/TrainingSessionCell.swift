@@ -38,7 +38,7 @@ struct TrainingSessionCell: View {
         // body parts / workout type
         ForEach(trainingSession.focus, id: \.self) { focus in
           Text(" \(focus)   ")
-            .frame(height: 39)
+            .frame(height: 33)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
