@@ -20,11 +20,12 @@ struct TrainingSessionCell: View {
           // username
           Text(user.fullName ?? user.username)
             .font(.subheadline)
-            .fontWeight(.semibold)
+            .fontWeight(.bold)
           
           + Text(" ") + Text(trainingSession.caption ?? "")
-            .fontWeight(.regular)
+            .fontWeight(.semibold)
             .font(.subheadline)
+            .foregroundColor(.secondary)
         }
         Spacer()
       }
@@ -37,6 +38,7 @@ struct TrainingSessionCell: View {
         // body parts / workout type
         ForEach(trainingSession.focus, id: \.self) { focus in
           Text(" \(focus)   ")
+            .frame(height: 45)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
@@ -52,7 +54,6 @@ struct TrainingSessionCell: View {
         // TrainingSession location / gym
         if let location = trainingSession.location {
           Text(location)
-            .font(.footnote)
             .foregroundColor(.secondary)
         }
       }

@@ -38,7 +38,7 @@ struct RestDayCell: View {
             .fontWeight(.medium)
             
         }
-        .foregroundColor(.secondary)
+        .foregroundColor(Color(.systemBlue))
       }
     }
     .foregroundColor(.primary)
