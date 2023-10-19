@@ -36,7 +36,7 @@ struct SearchView: View {
             }
           }
         }
-        .foregroundColor(.black)
+        .foregroundColor(.primary)
         .padding(.top, 8)
         .searchable(text: $searchText, prompt: "Search..")
       }
@@ -44,7 +44,7 @@ struct SearchView: View {
         ProfileView(user: user)
           .navigationBarBackButtonHidden()
       })
-      .navigationTitle("Add Gym Rats")
+      .navigationTitle("Add Gym Bros")
       .navigationBarTitleDisplayMode(.inline)
     }
     .onAppear {

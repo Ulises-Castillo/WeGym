@@ -21,9 +21,12 @@ struct EditProfileView: View {
       // toolbar
       VStack {
         HStack {
-          Button("Cancel") {
+          Button {
             dismiss()
+          } label: {
+            Image(systemName: "xmark")
           }
+          .foregroundColor(.red)
           
           Spacer()
           
@@ -37,10 +40,9 @@ struct EditProfileView: View {
             Task { try await viewModel.updateUserData() }
             dismiss()
           } label: {
-            Text("Done")
-              .font(.subheadline)
-              .fontWeight(.bold)
+            Image(systemName: "checkmark")
           }
+          .foregroundColor(.green)
           
         }
         .padding(.horizontal)

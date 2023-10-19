@@ -80,6 +80,7 @@ struct TrainingSessionSchedulerView: View {
             .padding()
             .font(.title3)
             .fontWeight(.medium)
+            .tint(Color(.systemBlue))
         }
         .padding()
         .font(.title3)
@@ -90,7 +91,7 @@ struct TrainingSessionSchedulerView: View {
           showingSearchSheet.toggle()
         } label: {
           HStack {
-            Text("Invite Gym Rats")
+            Text("Invite Gym Bros")
             Image(systemName: "plus")
           }
           .font(.headline)
@@ -105,6 +106,7 @@ struct TrainingSessionSchedulerView: View {
           SearchView()
         }
       }
+      .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {

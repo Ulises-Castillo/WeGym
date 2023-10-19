@@ -28,10 +28,9 @@ struct TrainingSessionView: View {
             showingEditSheet.toggle()
           }
         } label: {
-          
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session)
-          } else {
+          } else if !viewModel.isFirstFetch && !viewModel.isFetching {
             RestDayCell(user: user)
           }
         }
@@ -39,7 +38,9 @@ struct TrainingSessionView: View {
         .sheet(isPresented: $showingEditSheet) {
           TrainingSessionSchedulerView(user: user)
         }
-        Divider()
+        if viewModel.trainingSessions.count > 0 {
+          Divider()
+        }
         ForEach(viewModel.trainingSessions) { session in
           Button {
             print("Join bro's session")
@@ -60,7 +61,7 @@ struct TrainingSessionView: View {
             Task{ try await viewModel.fetchTrainingSessions() }
           } label: {
             Image(systemName: "arrowtriangle.forward")
-              .foregroundColor(.black)
+              .foregroundColor(.primary)
               .padding(.horizontal, 9)
           }
         }
@@ -69,7 +70,7 @@ struct TrainingSessionView: View {
             showingDateSheet.toggle()
           } label: {
             Image(systemName: "calendar")
-              .foregroundColor(.black)
+              .foregroundColor(.primary)
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
@@ -85,6 +86,23 @@ struct TrainingSessionView: View {
         }
       }
     }
+    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+      .onEnded { value in
+        print(value.translation)
+        switch(value.translation.width, value.translation.height) {
+        case (...0, -30...30):
+          viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
+          selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
+          Task{ try await viewModel.fetchTrainingSessions() }
+        case (0..., -30...30):
+          viewModel.day = viewModel.day.addingTimeInterval(-86400)
+          selectedDate = selectedDate.addingTimeInterval(-86400)
+          Task{ try await viewModel.fetchTrainingSessions() }
+        default:
+          break
+        }
+      }
+    )
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate

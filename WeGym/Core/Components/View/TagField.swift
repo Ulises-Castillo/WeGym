@@ -42,7 +42,7 @@ public struct TagField: View {
               } label: {
                 Text("\(prefix + tag)")
                   .fixedSize()
-                  .foregroundColor(color.opacity(0.8))
+                  .foregroundColor((isSelected.contains(tag)) ? Color.white : color.opacity(0.8))
                   .font(.system(size: 15, weight: .medium, design: .rounded))
                   .padding([.horizontal], 10)
                   .padding(.vertical, 5)
@@ -56,7 +56,7 @@ public struct TagField: View {
                 //                                        .font(.system(size: 12, weight: .bold, design: .rounded))
                 //                                        .padding([.trailing], 10)
                 //                                }
-              }.background((isSelected.contains(tag)) ? Color.red.opacity(0.1).cornerRadius(.infinity) : color.opacity(0.1).cornerRadius(.infinity))
+              }.background((isSelected.contains(tag)) ? Color(.systemBlue).opacity(1).cornerRadius(.infinity) : color.opacity(0.1).cornerRadius(.infinity))
             }
             TextField(placeholder, text: $newTag, onEditingChanged: { _ in
               //              appendNewTag()

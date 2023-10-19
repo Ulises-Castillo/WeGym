@@ -19,7 +19,7 @@ struct RestDayCell: View {
         // user profile image
         CircularProfileImageView(user: user, size: .xSmall)
         // username
-        Text(user.fullName!) //FIXME: unwrap
+        Text(user.fullName ?? user.username)
           .font(.subheadline)
           .fontWeight(.semibold)
         
@@ -30,16 +30,19 @@ struct RestDayCell: View {
       
       Text("Rest Day 😞")
         .font(.largeTitle)
-      //          .fontWeight(.)
       if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
         HStack {
           Image(systemName: "plus")
-          Text("Add Training Session")
+          Text("Add Workout")
             .font(.subheadline)
             .fontWeight(.medium)
+            .padding(.trailing)
+            
         }
+        .foregroundColor(Color(.systemBlue))
       }
     }
+    .foregroundColor(.primary)
   }
 }
 
