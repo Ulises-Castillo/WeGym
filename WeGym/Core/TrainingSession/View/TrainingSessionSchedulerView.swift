@@ -17,8 +17,8 @@ struct TrainingSessionSchedulerView: View {
   @State var gyms: [String] = ["Redwood City 24", "San Carlos 24", "Mountain View 24", "Vallejo In-Shape"]
   @State var workoutTypes: [String] = ["Chest", "Back", "Arms", "Legs", "Shoulders", "Abs", "Biceps", "Triceps", "Calves", "Upper Body", "Lower Body", "Full Body"]
   
-  @State var focus = Set<String>()
-  @State var gym = Set<String>()
+  @State var focus = [String]()
+  @State var gym = [String]()
   
   @State private var showingSearchSheet = false
   
@@ -163,9 +163,9 @@ struct TrainingSessionSchedulerView: View {
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
-        focus = Set<String>(session.focus)
+        focus = session.focus
         guard let location = session.location else { return }
-        gym.insert(location)
+        gym.append(location)
       } else {
         workoutTime = viewModel.day
       }

@@ -20,7 +20,7 @@ public struct TagField: View {
   private var lowercase: Bool = false
   private var multiSelect: Bool
   
-  @Binding var isSelected: Set<String>
+  @Binding var isSelected: [String]
   
   public var body: some View {
     VStack(spacing: 0){
@@ -31,13 +31,13 @@ public struct TagField: View {
             ForEach(tags, id: \.self) { tag in
               Button {
                 
-                if isSelected.contains(tag) {
-                  isSelected.remove(tag)
+                if let index = isSelected.firstIndex(of: tag) {
+                  isSelected.remove(at: index)
                 } else if !multiSelect {
                   isSelected.removeAll()
-                  isSelected.insert(tag)
+                  isSelected.append(tag)
                 } else {
-                  isSelected.insert(tag)
+                  isSelected.append(tag)
                 }
               } label: {
                 Text("\(prefix + tag)")
@@ -138,14 +138,14 @@ public struct TagField: View {
       return false
     }
   }
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, multiSelect: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
     self.multiSelect = multiSelect
   }
   
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, multiSelect: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
@@ -153,7 +153,7 @@ public struct TagField: View {
     self.multiSelect = multiSelect
   }
   
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool) {
     self._tags = tags
     self._isSelected = set
     self.prefix = prefix
