@@ -70,56 +70,6 @@ struct TrainingSessionSchedulerView: View {
         TextField("Caption:", text: $workoutCaption, axis: .vertical)
           .padding()
           .font(.title3)
-        
-        
-        HStack{
-          // set reoccuring + set bro limit
-          HStack {
-            Text("Bro Limit:")
-              .lineLimit(1)
-              .minimumScaleFactor(0.01) //FIXME: all text should be same size on any given screen size
-            
-            TextField("None", text: $workoutBroLimit)
-              .keyboardType(.numberPad)
-              .onReceive(Just(workoutBroLimit)) { newValue in
-                let filtered = newValue.filter { "0123456789".contains($0) }
-                if filtered != newValue {
-                  self.workoutBroLimit = filtered
-                }
-              }
-          }
-          
-          Spacer()
-          
-          Toggle("Weekly:", isOn: $workoutIsRecurring)
-            .padding()
-            .font(.title3)
-            .fontWeight(.medium)
-            .tint(Color(.systemBlue))
-        }
-        .padding()
-        .font(.title3)
-        
-        // Invite gym bros, if bro limit greater than 0
-        // (if more bros invited than limit, adjust limit auto)
-        Button {
-          showingSearchSheet.toggle()
-        } label: {
-          HStack {
-            Text("Invite Gym Bros")
-            Image(systemName: "plus")
-          }
-          .font(.headline)
-          .fontWeight(.semibold)
-          .frame(width: 360, height: 50)
-          .background(Color(.systemBlue))
-          .foregroundColor(.white)
-          .cornerRadius(6)
-          .overlay(RoundedRectangle(cornerRadius: 6).stroke(.clear, lineWidth: 1))
-        }
-        .sheet(isPresented: $showingSearchSheet) {
-          SearchView()
-        }
       }
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
