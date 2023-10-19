@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */; };
+		1C2FFA512AE1D6A0009CDA2D /* SlideButton in Frameworks */ = {isa = PBXBuildFile; productRef = 1C2FFA502AE1D6A0009CDA2D /* SlideButton */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -163,6 +164,7 @@
 				1CDEE2CC2AD9D71800F1A2D6 /* FirebaseAuthCombine-Community in Frameworks */,
 				1CDEE2EA2AD9D71800F1A2D6 /* FirebasePerformance in Frameworks */,
 				1CDEE2E22AD9D71800F1A2D6 /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
+				1C2FFA512AE1D6A0009CDA2D /* SlideButton in Frameworks */,
 				1CDEE2F02AD9D71800F1A2D6 /* FirebaseStorage in Frameworks */,
 				1CDEE2D42AD9D71800F1A2D6 /* FirebaseDynamicLinks in Frameworks */,
 				1CDEE2D82AD9D71800F1A2D6 /* FirebaseFirestoreCombine-Community in Frameworks */,
@@ -545,6 +547,7 @@
 				1CDEE2EF2AD9D71800F1A2D6 /* FirebaseStorage */,
 				1CDEE2F12AD9D71800F1A2D6 /* FirebaseStorageCombine-Community */,
 				1CDEE3112ADA67B400F1A2D6 /* Kingfisher */,
+				1C2FFA502AE1D6A0009CDA2D /* SlideButton */,
 			);
 			productName = WeGym;
 			productReference = 1CDEE2802AD6621900F1A2D6 /* WeGym.app */;
@@ -577,6 +580,7 @@
 			packageReferences = (
 				1CDEE2BC2AD9D71800F1A2D6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1CDEE3102ADA67B400F1A2D6 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */,
 			);
 			productRefGroup = 1CDEE2812AD6621900F1A2D6 /* Products */;
 			projectDirPath = "";
@@ -858,6 +862,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/no-comment/SlideButton";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		1CDEE2BC2AD9D71800F1A2D6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -877,6 +889,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1C2FFA502AE1D6A0009CDA2D /* SlideButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */;
+			productName = SlideButton;
+		};
 		1CDEE2BD2AD9D71800F1A2D6 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1CDEE2BC2AD9D71800F1A2D6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

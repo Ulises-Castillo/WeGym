@@ -8,35 +8,33 @@
 import SwiftUI
 import Combine
 import Firebase
+import SlideButton
 
 struct TrainingSessionSchedulerView: View {
   @State var workoutTime = Date()
   @State var workoutCaption = ""
   @State var workoutIsRecurring = false
   @State var workoutBroLimit = ""
-  
-
-  
   @State private var showingSearchSheet = false
-  
+
   @Environment(\.dismiss) var dismiss
-  
   @EnvironmentObject var viewModel: TrainingSessionViewModel
   @StateObject var schedulerViewModel = TrainingSessionSchedulerViewModel()
-  
+
   let user: User
-  
+
   var body: some View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
       ScrollView {
+
         TagField(tags: $schedulerViewModel.workoutCategories,
                  set: $schedulerViewModel.selectedWorkoutCategory,
                  placeholder: "", prefix: "",
                  multiSelect: false,
                  isSelector: true)
         .accentColor(Color(.systemBlue))
-        
+
         // select workout / body parts
         TagField(tags: $schedulerViewModel.workoutFocuses,
                  set: $schedulerViewModel.selectedWorkoutFocuses,
@@ -44,17 +42,17 @@ struct TrainingSessionSchedulerView: View {
                  prefix: "",
                  multiSelect: true,
                  isSelector: false)
-          .styled(.Modern)
-          .accentColor(Color(.systemBlue))
-          .padding()
-        
+        .styled(.Modern)
+        .accentColor(Color(.systemBlue))
+        .padding()
+
         // set workout time
         //TODO: start date range should round up to the next 30min / hour
-        DatePicker("Set workout time:", selection: $workoutTime, in: Date()..., displayedComponents: .hourAndMinute)
+        DatePicker("Time:", selection: $workoutTime, in: Date()..., displayedComponents: .hourAndMinute)
           .padding()
           .font(.title3)
           .fontWeight(.medium)
-        
+
         // set gym / workout location
         TagField(tags: $schedulerViewModel.gyms,
                  set: $schedulerViewModel.selectedGym,
@@ -62,14 +60,42 @@ struct TrainingSessionSchedulerView: View {
                  prefix: "",
                  multiSelect: false,
                  isSelector: false)
-          .styled(.Modern)
-          .accentColor(Color(.systemBlue))
-          .padding()
-        
+        .styled(.Modern)
+        .accentColor(Color(.systemBlue))
+        .padding()
+
         // set workout comment / theme (perhaps image in the future)
         TextField("Caption:", text: $workoutCaption, axis: .vertical)
           .padding()
+          .padding(.bottom, 90)
           .font(.title3)
+          .lineLimit(2)
+
+        let slideButtonStyling = SlideButtonStyling(
+            indicatorSize: 60,
+            indicatorSpacing: 5,
+            indicatorColor: .red,
+            backgroundColor: .red.opacity(0.3),
+            textColor: .secondary,
+            indicatorSystemName: "trash",
+            indicatorDisabledSystemName: "xmark",
+            textAlignment: .globalCenter,
+            textFadesOpacity: true,
+            textHiddenBehindIndicator: true,
+            textShimmers: false
+        )
+
+        if let session = viewModel.currentUserTrainingSesssion {
+          SlideButton("Delete", styling: slideButtonStyling, action: {
+            Task {
+              viewModel.currentUserTrainingSesssion = nil
+              try await TrainingSessionService.deleteTrainingSession(withId: session.id)
+              try await viewModel.fetchTrainingSessions()
+            }
+            dismiss()
+          })
+          .padding()
+        }
       }
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
@@ -79,10 +105,10 @@ struct TrainingSessionSchedulerView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             Task {
-              
-              
+
+
               if let prevSession = viewModel.currentUserTrainingSesssion {
-                
+
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
@@ -90,16 +116,16 @@ struct TrainingSessionSchedulerView: View {
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user)
-                
+
                 try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
-                
+
               } else {
                 try await TrainingSessionService
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
                                          focus: schedulerViewModel.selectedWorkoutFocuses,
                                          location: schedulerViewModel.selectedGym.first,
                                          caption: workoutCaption)
-                
+
                 viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
                                                                         ownerUid: "",
                                                                         date: Timestamp(date: workoutTime),
@@ -140,6 +166,7 @@ struct TrainingSessionSchedulerView: View {
       self.endTextEditing()
     }
   }
+
 }
 
 #Preview {

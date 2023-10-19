@@ -54,6 +54,10 @@ struct TrainingSessionService {
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await Firestore.firestore().collection("training_sessions").document(trainingSession.id).setData(encodedTrainingSession)
   }
+
+  static func deleteTrainingSession(withId id: String) async throws {
+    try await Firestore.firestore().collection("training_sessions").document(id).delete()
+  }
 }
 
 //TODO: move to appropriate location
