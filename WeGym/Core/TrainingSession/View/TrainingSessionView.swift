@@ -34,7 +34,8 @@ struct TrainingSessionView: View {
             RestDayCell(user: user)
           }
         }
-        .padding(.vertical, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 15)
         .sheet(isPresented: $showingEditSheet) {
           TrainingSessionSchedulerView(user: user)
         }

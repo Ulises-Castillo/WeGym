@@ -27,9 +27,11 @@ struct RestDayCell: View {
         Spacer()
       }
       .padding(.leading, 21)
+      .padding(.bottom, -12)
       
       Text("Rest Day 😞")
         .font(.largeTitle)
+        .padding(.bottom, 6)
       if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
         HStack {
           Image(systemName: "plus")
