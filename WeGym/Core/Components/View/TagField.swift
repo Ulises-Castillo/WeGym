@@ -63,7 +63,7 @@ public struct TagField: View {
                 //                                        .font(.system(size: 12, weight: .bold, design: .rounded))
                 //                                        .padding([.trailing], 10)
                 //                                }
-              }.background((isSelected.contains(tag)) ? Color(.systemBlue).opacity(1).cornerRadius(.infinity) : color.opacity(0.1).cornerRadius(.infinity))
+              }.background((isSelected.contains(tag)) ? Color(.systemBlue).opacity(1).cornerRadius(isSelector ? 0 : .infinity) : color.opacity(0.1).cornerRadius(isSelector ? 0 : .infinity))
             }
             TextField(placeholder, text: $newTag, onEditingChanged: { _ in
               //              appendNewTag()
