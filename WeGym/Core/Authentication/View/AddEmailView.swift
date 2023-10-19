@@ -27,6 +27,7 @@ struct AddEmailView: View {
       
       TextField("Email", text: $viewModel.email)
         .autocapitalization(.none)
+        .autocorrectionDisabled()
         .modifier(WGTextFieldModifier())
         .padding(.top)
       

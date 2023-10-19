@@ -33,9 +33,10 @@ struct RestDayCell: View {
       if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
         HStack {
           Image(systemName: "plus")
-          Text("Add Training Session")
+          Text("Add Workout")
             .font(.subheadline)
             .fontWeight(.medium)
+            .padding(.trailing)
             
         }
         .foregroundColor(Color(.systemBlue))

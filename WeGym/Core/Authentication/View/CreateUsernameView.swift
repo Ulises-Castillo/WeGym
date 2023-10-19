@@ -31,6 +31,7 @@ struct CreateUsernameView: View {
         .autocapitalization(.none)
         .modifier(WGTextFieldModifier())
         .padding(.top)
+        .autocorrectionDisabled()
       
       NavigationLink {
         CreatePasswordView()

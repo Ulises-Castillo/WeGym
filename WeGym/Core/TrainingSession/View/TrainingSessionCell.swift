@@ -38,14 +38,14 @@ struct TrainingSessionCell: View {
         // body parts / workout type
         ForEach(trainingSession.focus, id: \.self) { focus in
           Text(" \(focus)   ")
-            .frame(height: 45)
+            .frame(height: 39)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
       }
       .foregroundColor(.white)
       .fontWeight(.bold)
-      .font(.title)
+      .font(.title2)
       
       HStack {
         // TrainingSession time
