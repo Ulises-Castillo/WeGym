@@ -166,7 +166,7 @@ struct TrainingSessionSchedulerView: View {
         schedulerViewModel.selectedGym.append(location)
       } else {
         viewModel.shouldShowTime = false
-        workoutTime = viewModel.day
+        workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
       }
     }
     .onTapGesture {
@@ -186,5 +186,19 @@ extension View {
   func endTextEditing() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                     to: nil, from: nil, for: nil)
+  }
+}
+
+extension Date {
+  func advancedToNextHour() -> Date? {
+    var date = self
+    date += TimeInterval(59*60+59)
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.second, .minute], from: date)
+    guard let minutes = components.minute,
+          let seconds = components.second else {
+      return nil
+    }
+    return date - TimeInterval(minutes)*60 - TimeInterval(seconds)
   }
 }
