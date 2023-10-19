@@ -61,6 +61,7 @@ struct TrainingSessionCell: View {
       .font(.subheadline)
     }
     .padding(.leading, 21)
+    .padding(.trailing, 9)
     .foregroundColor(.primary)
   }
 }
