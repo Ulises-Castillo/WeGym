@@ -47,14 +47,12 @@ struct TrainingSessionSchedulerView: View {
         .accentColor(Color(.systemBlue))
         .padding()
 
-        // set workout time
-        //TODO: start date range should round up to the next 30min / hour
-        DatePicker("Time:", 
+        DatePicker("",
                    selection: $workoutTime,
                    in: Date()...,
                    displayedComponents: .hourAndMinute)
           .padding()
-          .font(.title3)
+          .font(.headline)
           .fontWeight(.medium)
           .onTapGesture {
             viewModel.shouldShowTime = true

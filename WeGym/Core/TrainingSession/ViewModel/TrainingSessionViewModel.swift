@@ -48,29 +48,6 @@ class TrainingSessionViewModel: ObservableObject {
     }
   }
 
-  // return cached data immediately, if present
-  // trigger cache update, background fetch
-  // if not present (first fetch), wait for fetch
-  // return data from fetch
-
-//  func getTrainingSessions(forDay date: Date) async throws -> TrainingSessionViewData {
-//    if let cachedData = trainingSessionsCache[date] {
-//
-//      async let _ = try await fetchTrainingSessionsUpdateCache(forDay: date)
-//
-//      return cachedData
-//    } else {
-//      
-//      try await fetchTrainingSessionsUpdateCache(forDay: date)
-//
-//      return trainingSessionsCache[date] ?? 
-//      TrainingSessionViewData(
-//        currentUserTrainingSession: nil,
-//        followingTrainingSessions: []
-//      )
-//    }
-//  }
-
   @MainActor
   func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
     var trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: date)
@@ -92,33 +69,6 @@ class TrainingSessionViewModel: ObservableObject {
     )
 
     trainingSessionsCache[date] = data
-  }
-
-
-  @MainActor
-  func fetchTrainingSessions() async throws {
-    isFirstFetch = false
-    guard !isFetching else { return }
-    isFetching = true
-
-    trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: day)
-
-    var isFound = false
-
-    for i in 0..<trainingSessions.count {
-      let session = trainingSessions[i]
-      if let user = session.user, user.isCurrentUser {
-        currentUserTrainingSesssion = session
-        trainingSessions.remove(at: i)
-        isFound = true
-        break
-      }
-    }
-    if !isFound {
-      currentUserTrainingSesssion = nil
-    }
-
-    isFetching = false
   }
 }
 
