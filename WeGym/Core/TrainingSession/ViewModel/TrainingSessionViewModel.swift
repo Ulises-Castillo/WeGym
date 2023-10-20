@@ -15,7 +15,8 @@ class TrainingSessionViewModel: ObservableObject {
   
   //TODO: consider making this an array such that the user can have multiple training sessions scheduled in the same day (big for martial arts)
   @Published var currentUserTrainingSesssion: TrainingSession?
-  
+  @Published var shouldShowTime = true
+
   var isFirstFetch = true
   var isFetching = false // prevent redundant calls
   

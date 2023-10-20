@@ -19,8 +19,10 @@ public struct TagField: View {
   private var style: TagFieldStyle = .RoundedBorder
   private var lowercase: Bool = false
   private var multiSelect: Bool
+  private var isSelector: Bool
   
-  @Binding var isSelected: Set<String>
+  @Binding var isSelected: [String]
+  @EnvironmentObject var viewModel: TrainingSessionSchedulerViewModel
   
   public var body: some View {
     VStack(spacing: 0){
@@ -31,14 +33,19 @@ public struct TagField: View {
             ForEach(tags, id: \.self) { tag in
               Button {
                 
-                if isSelected.contains(tag) {
-                  isSelected.remove(tag)
+                if let index = isSelected.firstIndex(of: tag), !isSelector {
+                  isSelected.remove(at: index)
                 } else if !multiSelect {
                   isSelected.removeAll()
-                  isSelected.insert(tag)
+                  isSelected.append(tag)
                 } else {
-                  isSelected.insert(tag)
+                  isSelected.append(tag)
                 }
+                
+                if let selected = isSelected.first, isSelector {
+                  viewModel.workoutFocuses = viewModel.workoutCategoryFocusesMap[selected] ?? []
+                }
+                
               } label: {
                 Text("\(prefix + tag)")
                   .fixedSize()
@@ -56,7 +63,7 @@ public struct TagField: View {
                 //                                        .font(.system(size: 12, weight: .bold, design: .rounded))
                 //                                        .padding([.trailing], 10)
                 //                                }
-              }.background((isSelected.contains(tag)) ? Color(.systemBlue).opacity(1).cornerRadius(.infinity) : color.opacity(0.1).cornerRadius(.infinity))
+              }.background((isSelected.contains(tag)) ? Color(.systemBlue).opacity(1).cornerRadius(isSelector ? 0 : .infinity) : color.opacity(0.1).cornerRadius(isSelector ? 0 : .infinity))
             }
             TextField(placeholder, text: $newTag, onEditingChanged: { _ in
               //              appendNewTag()
@@ -71,6 +78,12 @@ public struct TagField: View {
                 scrollView.scrollTo("TextField", anchor: .trailing)
               }
               
+            }
+            .onAppear {
+              if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
+                isSelected.append(initiallySelectedWorkoutCategory) //TODO: clean up logic
+                viewModel.workoutFocuses = viewModel.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
+              }
             }
             .fixedSize()
             .disableAutocorrection(true)
@@ -138,22 +151,24 @@ public struct TagField: View {
       return false
     }
   }
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, multiSelect: Bool, isSelector: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
     self.multiSelect = multiSelect
+    self.isSelector = isSelector
   }
   
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, multiSelect: Bool, isSelector: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
     self.prefix = prefix
     self.multiSelect = multiSelect
+    self.isSelector = isSelector
   }
   
-  public init(tags: Binding<[String]>, set: Binding<Set<String>>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool) {
+  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool, isSelector: Bool) {
     self._tags = tags
     self._isSelected = set
     self.prefix = prefix
@@ -162,6 +177,7 @@ public struct TagField: View {
     self.style = style
     self.lowercase = lowercase
     self.multiSelect = multiSelect
+    self.isSelector = isSelector
   }
 }
 
@@ -173,7 +189,8 @@ extension TagField {
              color: color,
              style: self.style,
              lowercase: self.lowercase,
-             multiSelect: self.multiSelect)
+             multiSelect: self.multiSelect,
+             isSelector: self.isSelector)
   }
   public func styled(_ style: TagFieldStyle) -> TagField {
     TagField(tags: self.$tags,
@@ -182,7 +199,8 @@ extension TagField {
              color: self.color,
              style: style,
              lowercase: self.lowercase,
-             multiSelect: self.multiSelect)
+             multiSelect: self.multiSelect,
+             isSelector: self.isSelector)
   }
   public func lowercase(_ bool: Bool) -> TagField {
     TagField(tags: self.$tags,
@@ -192,6 +210,7 @@ extension TagField {
              color: self.color,
              style: self.style,
              lowercase: bool,
-             multiSelect: self.multiSelect)
+             multiSelect: self.multiSelect,
+             isSelector: self.isSelector)
   }
 }

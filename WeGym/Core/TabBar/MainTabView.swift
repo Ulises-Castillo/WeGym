@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabView: View {
   let user: User
   @State private var selectedIndex = 0
-  
+
   var body: some View {
     TabView(selection: $selectedIndex) {
       TrainingSessionView(user: user)
@@ -20,17 +20,17 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(0)
-      
+
       SearchView()
         .onAppear {
           selectedIndex = 1
         }
         .tabItem {
-          Image(systemName: "magnifyingglass")
-        }.tag(1)
-      
-      CurrentUserProfileView(user: user)
-        .onAppear {
+          Image(systemName: "magnifyingglass")  //TODO: Consider replacing this with WeGym logo (arms)
+        }.tag(1)                                // actually makes sense considering you add gym bros here
+                                                // (arms clutching each other) + notifications there
+      CurrentUserProfileView(user: user)        // so its not just a search tab. Would also be cool to
+        .onAppear {                             // have the logo centered at the bottom, always visible.
           selectedIndex = 2
         }
         .tabItem {

@@ -8,52 +8,32 @@
 import SwiftUI
 
 struct SearchView: View {
-  @State private var searchText = ""
-  @State var viewModel = SearchViewModel()
-  
+  @State var searchText = ""
+  @State var inSearchMode = false
+  @State var showingNotificationsSheet = false
+
   var body: some View {
     NavigationStack {
-      ScrollView {
-        LazyVStack(spacing: 12) {
-          ForEach(viewModel.users) { user in
-            NavigationLink(value: user) {
-              HStack {
-                CircularProfileImageView(user: user, size: .xSmall)
-                
-                VStack(alignment: .leading) {
-                  Text(user.username)
-                    .fontWeight(.semibold)
-                  
-                  if let fullName = user.fullName {
-                    Text(fullName)
-                  }
-                }
-                .font(.footnote)
-                
-                Spacer()
-              }
-              .padding(.horizontal)
+      UserListView(config: .search)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: User.self) { user in
+          ProfileView(user: user)
+        }
+        .toolbar {
+          ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+              showingNotificationsSheet.toggle()
+            } label: {
+              Image(systemName: "bell")
+                .foregroundColor(.primary)
+                .padding(.horizontal, 9)
             }
           }
         }
-        .foregroundColor(.primary)
-        .padding(.top, 8)
-        .searchable(text: $searchText, prompt: "Search..")
-      }
-      .navigationDestination(for: User.self, destination: { user in
-        ProfileView(user: user)
-          .navigationBarBackButtonHidden()
-      })
-      .navigationTitle("Add Gym Bros")
-      .navigationBarTitleDisplayMode(.inline)
-    }
-    .onAppear {
-      print("# of users: \(viewModel.users.count)") //FIXME: why are users disappearing when SearchView() called from the scheduler?
+        .sheet(isPresented: $showingNotificationsSheet) {
+          NotificationsView()
+            .foregroundColor(.primary)
+        }
     }
   }
-    
-}
-
-#Preview {
-  SearchView()
 }

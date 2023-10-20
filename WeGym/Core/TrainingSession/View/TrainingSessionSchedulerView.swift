@@ -8,137 +8,139 @@
 import SwiftUI
 import Combine
 import Firebase
+import SlideButton
 
 struct TrainingSessionSchedulerView: View {
   @State var workoutTime = Date()
   @State var workoutCaption = ""
   @State var workoutIsRecurring = false
   @State var workoutBroLimit = ""
-  @State var gyms: [String] = ["Redwood City 24", "San Carlos 24", "Mountain View 24", "Vallejo In-Shape"]
-  @State var workoutTypes: [String] = ["Chest", "Back", "Arms", "Legs", "Shoulders", "Abs", "Biceps", "Triceps", "Calves", "Upper Body", "Lower Body", "Full Body"]
-  
-  @State var focus = Set<String>()
-  @State var gym = Set<String>()
-  
   @State private var showingSearchSheet = false
-  
+
   @Environment(\.dismiss) var dismiss
-  
   @EnvironmentObject var viewModel: TrainingSessionViewModel
-  
+  @StateObject var schedulerViewModel = TrainingSessionSchedulerViewModel()
+
   let user: User
-  
+  let captionLengthLimit = 99
+
   var body: some View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
       ScrollView {
+
+        TagField(tags: $schedulerViewModel.workoutCategories,
+                 set: $schedulerViewModel.selectedWorkoutCategory,
+                 placeholder: "", prefix: "",
+                 multiSelect: false,
+                 isSelector: true)
+        .accentColor(Color(.systemBlue))
+
         // select workout / body parts
-        TagField(tags: $workoutTypes, set: $focus, placeholder: "Other", prefix: "", multiSelect: true)
-          .styled(.Modern)
-          .accentColor(Color(.systemBlue))
-          .padding()
-        
+        TagField(tags: $schedulerViewModel.workoutFocuses,
+                 set: $schedulerViewModel.selectedWorkoutFocuses,
+                 placeholder: "Other",
+                 prefix: "",
+                 multiSelect: true,
+                 isSelector: false)
+        .styled(.Modern)
+        .accentColor(Color(.systemBlue))
+        .padding()
+
         // set workout time
         //TODO: start date range should round up to the next 30min / hour
-        DatePicker("Set workout time:", selection: $workoutTime, in: Date()..., displayedComponents: .hourAndMinute)
+        DatePicker("Time:", 
+                   selection: $workoutTime,
+                   in: Date()...,
+                   displayedComponents: .hourAndMinute)
           .padding()
           .font(.title3)
           .fontWeight(.medium)
-        
+          .onTapGesture {
+            viewModel.shouldShowTime = true
+          }
+
         // set gym / workout location
-        TagField(tags: $gyms, set: $gym, placeholder: "Other", prefix: "", multiSelect: false)
-          .styled(.Modern)
-          .accentColor(Color(.systemBlue))
-          .padding()
-        
-        // set workout comment / theme (perhaps image in the future)
-        TextField("Caption:", text: $workoutCaption, axis: .vertical)
-          .padding()
-          .font(.title3)
-        
-        
-        HStack{
-          // set reoccuring + set bro limit
-          HStack {
-            Text("Bro Limit:")
-              .lineLimit(1)
-              .minimumScaleFactor(0.01) //FIXME: all text should be same size on any given screen size
-            
-            TextField("None", text: $workoutBroLimit)
-              .keyboardType(.numberPad)
-              .onReceive(Just(workoutBroLimit)) { newValue in
-                let filtered = newValue.filter { "0123456789".contains($0) }
-                if filtered != newValue {
-                  self.workoutBroLimit = filtered
-                }
-              }
-          }
-          
-          Spacer()
-          
-          Toggle("Weekly:", isOn: $workoutIsRecurring)
-            .padding()
-            .font(.title3)
-            .fontWeight(.medium)
-            .tint(Color(.systemBlue))
-        }
+        TagField(tags: $schedulerViewModel.gyms,
+                 set: $schedulerViewModel.selectedGym,
+                 placeholder: "Other",
+                 prefix: "",
+                 multiSelect: false,
+                 isSelector: false)
+        .styled(.Modern)
+        .accentColor(Color(.systemBlue))
         .padding()
-        .font(.title3)
-        
-        // Invite gym bros, if bro limit greater than 0
-        // (if more bros invited than limit, adjust limit auto)
-        Button {
-          showingSearchSheet.toggle()
-        } label: {
-          HStack {
-            Text("Invite Gym Bros")
-            Image(systemName: "plus")
-          }
-          .font(.headline)
-          .fontWeight(.semibold)
-          .frame(width: 360, height: 50)
-          .background(Color(.systemBlue))
-          .foregroundColor(.white)
-          .cornerRadius(6)
-          .overlay(RoundedRectangle(cornerRadius: 6).stroke(.clear, lineWidth: 1))
-        }
-        .sheet(isPresented: $showingSearchSheet) {
-          SearchView()
+
+        // set workout comment / theme (perhaps image in the future)
+        TextField("Add caption:", text: $workoutCaption, axis: .vertical)
+          .padding()
+          .padding(.bottom, 90)
+          .font(.title3)
+          .lineLimit(2)
+          .disableAutocorrection(true)
+          .onReceive(Just(workoutCaption)) { _ in limitText(captionLengthLimit) }
+
+        let slideButtonStyling = SlideButtonStyling(
+            indicatorSize: 60,
+            indicatorSpacing: 5,
+            indicatorColor: .red,
+            backgroundColor: .red.opacity(0.3),
+            textColor: .secondary,
+            indicatorSystemName: "trash",
+            indicatorDisabledSystemName: "xmark",
+            textAlignment: .globalCenter,
+            textFadesOpacity: true,
+            textHiddenBehindIndicator: true,
+            textShimmers: false
+        )
+
+        if let session = viewModel.currentUserTrainingSesssion {
+          SlideButton("Delete", styling: slideButtonStyling, action: {
+            Task {
+              viewModel.currentUserTrainingSesssion = nil
+              try await TrainingSessionService.deleteTrainingSession(withId: session.id)
+              try await viewModel.fetchTrainingSessions()
+            }
+            dismiss()
+          })
+          .padding()
         }
       }
+      .keyboardAvoiding()
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
       .navigationBarTitleDisplayMode(.inline)
+      .environmentObject(schedulerViewModel)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             Task {
-              
-              
+
+
               if let prevSession = viewModel.currentUserTrainingSesssion {
-                
+
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
-                                                 focus: [String](focus),
-                                                 location: gym.first,
+                                                 focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                 location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user)
-                
+
                 try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
-                
+
               } else {
                 try await TrainingSessionService
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
-                                         focus: [String](focus),
-                                         location: gym.first,
+                                         focus: schedulerViewModel.selectedWorkoutFocuses,
+                                         location: schedulerViewModel.selectedGym.first,
                                          caption: workoutCaption)
-                
+
                 viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
                                                                         ownerUid: "",
                                                                         date: Timestamp(date: workoutTime),
-                                                                        focus: [String](focus),
-                                                                        location: gym.first,
+                                                                        focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                                        location: schedulerViewModel.selectedGym.first,
                                                                         caption: workoutCaption,
                                                                         user: user)
               }
@@ -163,15 +165,22 @@ struct TrainingSessionSchedulerView: View {
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
-        focus = Set<String>(session.focus)
+        schedulerViewModel.selectedWorkoutFocuses = session.focus
         guard let location = session.location else { return }
-        gym.insert(location)
+        schedulerViewModel.selectedGym.append(location)
       } else {
-        workoutTime = viewModel.day
+        viewModel.shouldShowTime = false
+        workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
       }
     }
     .onTapGesture {
       self.endTextEditing()
+    }
+  }
+
+  func limitText(_ upper: Int) {
+    if workoutCaption.count > upper {
+      workoutCaption = String(workoutCaption.prefix(upper))
     }
   }
 }
@@ -186,5 +195,57 @@ extension View {
   func endTextEditing() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                     to: nil, from: nil, for: nil)
+  }
+}
+
+extension Date {
+  func advancedToNextHour() -> Date? {
+    var date = self
+    date += TimeInterval(59*60+59)
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.second, .minute], from: date)
+    guard let minutes = components.minute,
+          let seconds = components.second else {
+      return nil
+    }
+    return date - TimeInterval(minutes)*60 - TimeInterval(seconds)
+  }
+}
+
+public extension Publishers {
+  static var keyboardHeight: AnyPublisher<CGFloat, Never> {
+    let willShow = NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)
+      .map { $0.keyboardHeight }
+    let willHide = NotificationCenter.default.publisher(for: UIApplication.keyboardWillHideNotification)
+      .map { _ in CGFloat(0) }
+
+    return MergeMany(willShow, willHide)
+      .eraseToAnyPublisher()
+  }
+}
+
+public extension Notification {
+  var keyboardHeight: CGFloat {
+    return (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
+  }
+}
+
+public struct KeyboardAvoiding: ViewModifier {
+  @State private var keyboardActiveAdjustment: CGFloat = 0
+
+  public func body(content: Content) -> some View {
+    content
+      .safeAreaInset(edge: .bottom, spacing: keyboardActiveAdjustment) {
+        EmptyView().frame(height: 0)
+      }
+      .onReceive(Publishers.keyboardHeight) {
+        self.keyboardActiveAdjustment = min($0, 66) // keyboard padding
+      }
+  }
+}
+
+public extension View {
+  func keyboardAvoiding() -> some View {
+    modifier(KeyboardAvoiding())
   }
 }

@@ -21,7 +21,7 @@ struct TrainingSessionView: View {
     
     NavigationStack {
       Divider()
-      ScrollView {
+      ScrollView(.vertical, showsIndicators: false) {
         
         Button {
           if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
@@ -29,12 +29,13 @@ struct TrainingSessionView: View {
           }
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
-            TrainingSessionCell(trainingSession: session)
+            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
           } else if !viewModel.isFirstFetch && !viewModel.isFetching {
             RestDayCell(user: user)
           }
         }
-        .padding(.vertical, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 15)
         .sheet(isPresented: $showingEditSheet) {
           TrainingSessionSchedulerView(user: user)
         }
@@ -45,7 +46,7 @@ struct TrainingSessionView: View {
           Button {
             print("Join bro's session")
           } label: {
-            TrainingSessionCell(trainingSession: session)
+            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }
         }

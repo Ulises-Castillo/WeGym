@@ -6,72 +6,56 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProfileHeaderView: View {
-  let user: User
-  @State private var showEditProfile = false
-  
-  var body: some View {
-    // header
-    VStack(spacing: 10) {
-      // pic and stats
-      HStack {
-        Spacer()
-        CircularProfileImageView(user: user, size: .large)
-        
-        Spacer()
-        
-        HStack(spacing: 8) {
-          UserStatView(value: 315, title: "Squat")
-          UserStatView(value: 245, title: "Bench")
-          UserStatView(value: 365, title: "Deadlift")
-        }
-        
-      }
-      .padding(.horizontal)
-      .padding(.bottom, 4)
-      
-      // name and bio
-      VStack(alignment: .leading, spacing: 4) {
-        if let fullName = user.fullName {
-          Text(fullName)
-            .font(.footnote)
-            .fontWeight(.semibold)
-        }
-        if let bio = user.bio {
-          Text(bio)
-            .font(.footnote)
-        }
-      }
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .padding(.horizontal)
-      
-      // action button //FIXME: should be follow button
-      Button {
-        if user.isCurrentUser {
-          showEditProfile.toggle()
-        } else {
-          print("Follow user")
-        }
-      } label: {
-        Text(user.isCurrentUser ? "Edit Profile" : "Follow")
-          .font(.subheadline)
-          .fontWeight(.semibold)
-          .frame(width: 360, height: 32)
-          .background(user.isCurrentUser ? .white : Color(.systemBlue))
-          .foregroundColor(user.isCurrentUser ? .black : .white)
-          .cornerRadius(6)
-          .overlay(RoundedRectangle(cornerRadius: 6).stroke(user.isCurrentUser ? .gray : .clear, lineWidth: 1))
-      }
-      
-      Divider()
-    }
-    .fullScreenCover(isPresented: $showEditProfile) {
-      EditProfileView(user: user)
-    }
-  }
-}
+    @ObservedObject var viewModel: ProfileViewModel
 
-#Preview {
-  ProfileHeaderView(user: User.MOCK_USERS_2[0])
+    var body: some View {
+        VStack {
+            HStack {
+                CircularProfileImageView(user: viewModel.user, size: .large)
+                    .padding(.leading)
+
+                Spacer()
+
+//                HStack(spacing: 16) {
+//                    UserStatView(value: viewModel.user.stats?.posts, title: "Posts")
+//
+//                    NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+//                        UserStatView(value: viewModel.user.stats?.followers, title: "Followers")
+//                    }
+//                    .disabled(viewModel.user.stats?.followers == 0)
+//
+//                    NavigationLink(value: SearchViewModelConfig.following(viewModel.user.id)) {
+//                        UserStatView(value: viewModel.user.stats?.following, title: "Following")
+//                    }
+//                    .disabled(viewModel.user.stats?.following == 0)
+//                }
+//                .padding(.trailing)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                if let fullname = viewModel.user.fullName {
+                    Text(fullname)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .padding(.leading)
+                }
+
+                if let bio = viewModel.user.bio {
+                    Text(bio)
+                        .font(.footnote)
+                        .padding(.leading)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            ProfileActionButtonView(viewModel: viewModel)
+                .padding(.top)
+        }
+        .navigationDestination(for: SearchViewModelConfig.self) { config in
+            UserListView(config: config)
+        }
+    }
 }

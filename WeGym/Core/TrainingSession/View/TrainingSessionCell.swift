@@ -9,7 +9,8 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   let trainingSession: TrainingSession
-  
+  let shouldShowTime: Bool
+
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       
@@ -31,6 +32,7 @@ struct TrainingSessionCell: View {
       }
       .frame(maxWidth: .infinity, alignment: .leading) // may not need this
       .multilineTextAlignment(.leading)
+      .lineLimit(2)
       
       
       
@@ -38,7 +40,7 @@ struct TrainingSessionCell: View {
         // body parts / workout type
         ForEach(trainingSession.focus, id: \.self) { focus in
           Text(" \(focus)   ")
-            .frame(height: 39)
+            .frame(height: 33)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
@@ -48,9 +50,11 @@ struct TrainingSessionCell: View {
       .font(.title2)
       
       HStack {
-        // TrainingSession time
-        Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
-          .fontWeight(.semibold)
+        if shouldShowTime {
+          // TrainingSession time
+          Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
+            .fontWeight(.semibold)
+        }
         // TrainingSession location / gym
         if let location = trainingSession.location {
           Text(location)
@@ -60,10 +64,11 @@ struct TrainingSessionCell: View {
       .font(.subheadline)
     }
     .padding(.leading, 21)
+    .padding(.trailing, 9)
     .foregroundColor(.primary)
   }
 }
 
 #Preview {
-  TrainingSessionCell(trainingSession: TrainingSession.MOCK_TRAINING_SESSIONS[0])
+  TrainingSessionCell(trainingSession: TrainingSession.MOCK_TRAINING_SESSIONS[0], shouldShowTime: true)
 }
