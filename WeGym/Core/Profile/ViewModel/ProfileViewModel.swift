@@ -35,7 +35,7 @@ extension ProfileViewModel {
             try await UserService.follow(uid: user.id)
             user.isFollowed = true
 //            user.stats?.followers += 1
-//            NotificationService.uploadNotification(toUid: user.id, type: .follow) //TODO: bring this in
+            NotificationService.uploadNotification(toUid: user.id, type: .follow) //TODO: bring this in
         }
     }
 

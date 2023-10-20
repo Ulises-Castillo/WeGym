@@ -36,6 +36,13 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "person")
         }.tag(2)
+      NotificationsView()
+          .tabItem {
+              Image(systemName: selectedIndex == 3 ? "heart.fill" : "heart")
+                  .environment(\.symbolVariants, selectedIndex == 3 ? .fill : .none)
+          }
+          .onAppear { selectedIndex = 3 }
+          .tag(3)
     }
     .accentColor(.primary)
   }

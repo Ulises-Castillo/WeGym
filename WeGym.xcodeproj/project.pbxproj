@@ -16,6 +16,13 @@
 		1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA722AE23EA9009CDA2D /* UserCell.swift */; };
 		1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA742AE24084009CDA2D /* ProfileActionButtonView.swift */; };
 		1C2FFA792AE24599009CDA2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA782AE24599009CDA2D /* Extensions.swift */; };
+		1C2FFA7C2AE2476A009CDA2D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA7B2AE2476A009CDA2D /* NotificationService.swift */; };
+		1C2FFA7E2AE2479F009CDA2D /* NotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA7D2AE2479F009CDA2D /* NotificationType.swift */; };
+		1C2FFA842AE24853009CDA2D /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA832AE24853009CDA2D /* NotificationViewModel.swift */; };
+		1C2FFA862AE2487E009CDA2D /* NotificationsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA852AE2487E009CDA2D /* NotificationsCellViewModel.swift */; };
+		1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA872AE248B5009CDA2D /* NotificationsView.swift */; };
+		1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */; };
+		1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA8B2AE24931009CDA2D /* Notification.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -100,6 +107,13 @@
 		1C2FFA722AE23EA9009CDA2D /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		1C2FFA742AE24084009CDA2D /* ProfileActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileActionButtonView.swift; sourceTree = "<group>"; };
 		1C2FFA782AE24599009CDA2D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		1C2FFA7B2AE2476A009CDA2D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		1C2FFA7D2AE2479F009CDA2D /* NotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationType.swift; sourceTree = "<group>"; };
+		1C2FFA832AE24853009CDA2D /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
+		1C2FFA852AE2487E009CDA2D /* NotificationsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCellViewModel.swift; sourceTree = "<group>"; };
+		1C2FFA872AE248B5009CDA2D /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		1C2FFA8B2AE24931009CDA2D /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
@@ -206,6 +220,52 @@
 			path = Models/Utils;
 			sourceTree = "<group>";
 		};
+		1C2FFA7A2AE2472C009CDA2D /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				1C2FFA7F2AE247EE009CDA2D /* Model */,
+				1C2FFA802AE247F4009CDA2D /* View */,
+				1C2FFA812AE247F9009CDA2D /* ViewModel */,
+				1C2FFA822AE2480D009CDA2D /* Service */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		1C2FFA7F2AE247EE009CDA2D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1C2FFA7D2AE2479F009CDA2D /* NotificationType.swift */,
+				1C2FFA8B2AE24931009CDA2D /* Notification.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1C2FFA802AE247F4009CDA2D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1C2FFA872AE248B5009CDA2D /* NotificationsView.swift */,
+				1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1C2FFA812AE247F9009CDA2D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1C2FFA832AE24853009CDA2D /* NotificationViewModel.swift */,
+				1C2FFA852AE2487E009CDA2D /* NotificationsCellViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1C2FFA822AE2480D009CDA2D /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				1C2FFA7B2AE2476A009CDA2D /* NotificationService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		1CDEE2772AD6621900F1A2D6 = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +320,7 @@
 				1CDEE2962AD8AC7F00F1A2D6 /* Authentication */,
 				1CDEE2A32AD8B96700F1A2D6 /* Components */,
 				1CDEE2972AD8ACA300F1A2D6 /* Feed */,
+				1C2FFA7A2AE2472C009CDA2D /* Notifications */,
 				1CDEE2982AD8ACB500F1A2D6 /* Profile */,
 				1CDEE2992AD8ACC000F1A2D6 /* Root */,
 				1CDEE29A2AD8ACCA00F1A2D6 /* Search */,
@@ -654,6 +715,7 @@
 				1CDEE31C2ADA7FBE00F1A2D6 /* PostGridView.swift in Sources */,
 				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
 				1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */,
+				1C2FFA862AE2487E009CDA2D /* NotificationsCellViewModel.swift in Sources */,
 				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
@@ -662,6 +724,7 @@
 				1CDEE31A2ADA745600F1A2D6 /* FeedCell.swift in Sources */,
 				1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */,
 				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */,
+				1C2FFA7E2AE2479F009CDA2D /* NotificationType.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
 				1C2FFA712AE23E7A009CDA2D /* SearchViewModel.swift in Sources */,
@@ -678,6 +741,7 @@
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
 				1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */,
 				1CDEE3142ADA681000F1A2D6 /* CircularProfileImageView.swift in Sources */,
+				1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */,
 				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
@@ -686,8 +750,12 @@
 				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
 				1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */,
+				1C2FFA842AE24853009CDA2D /* NotificationViewModel.swift in Sources */,
 				1C2FFA682AE23B05009CDA2D /* ProfileViewModel.swift in Sources */,
+				1C2FFA7C2AE2476A009CDA2D /* NotificationService.swift in Sources */,
+				1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */,
 				1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */,
+				1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */,
 				1CDEE3392ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift in Sources */,
 				1C2FFA792AE24599009CDA2D /* Extensions.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
