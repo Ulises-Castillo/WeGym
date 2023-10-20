@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State var searchText = ""
-    @State var inSearchMode = false
-
-    var body: some View {
-        NavigationStack {
-            UserListView(config: .search)
-                .navigationTitle("")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: User.self) { user in
-                    ProfileView(user: user)
-                }
+  @State var searchText = ""
+  @State var inSearchMode = false
+  
+  var body: some View {
+    NavigationStack {
+      UserListView(config: .search)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: User.self) { user in
+          ProfileView(user: user)
         }
     }
+  }
 }
