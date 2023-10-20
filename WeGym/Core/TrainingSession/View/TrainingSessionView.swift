@@ -21,7 +21,7 @@ struct TrainingSessionView: View {
     
     NavigationStack {
       Divider()
-      ScrollView {
+      ScrollView(.vertical, showsIndicators: false) {
         
         Button {
           if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
