@@ -50,6 +50,9 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
+    isFirstFetch = false
+    guard !isFetching else { return }
+
     var trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: date)
 
     var currentUserTrainingSession: TrainingSession?
@@ -69,6 +72,7 @@ class TrainingSessionViewModel: ObservableObject {
     )
 
     trainingSessionsCache[date] = data
+    isFetching = false
   }
 }
 

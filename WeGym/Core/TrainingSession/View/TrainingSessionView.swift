@@ -30,7 +30,7 @@ struct TrainingSessionView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else /*if !viewModel.isFirstFetch && !viewModel.isFetching*/ {
+          } else if !viewModel.isFirstFetch && !viewModel.isFetching {
             RestDayCell(user: user)
           }
         }
