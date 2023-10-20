@@ -13,6 +13,8 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var trainingSessions = [TrainingSession]()
   public var day = Date.now {// changing this day and re-fetching will be the sauce
     didSet {
+      currentUserTrainingSesssion = trainingSessionsCache[day]?.currentUserTrainingSession
+      trainingSessions = trainingSessionsCache[day]?.followingTrainingSessions ?? []
       Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
     }
   }
