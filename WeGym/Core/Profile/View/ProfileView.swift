@@ -21,16 +21,16 @@ struct ProfileView: View {
     }
     .navigationTitle(user.username) // yes, I like this better
     .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarLeading) {
-        Image(systemName: "chevron.left")
-          .imageScale(.large)
-          .onTapGesture {
-            dismiss()
-          }
-        
-      }
-    }
+//    .toolbar {
+//      ToolbarItem(placement: .navigationBarLeading) {
+//        Image(systemName: "chevron.left")
+//          .imageScale(.large)
+//          .onTapGesture {
+//            dismiss()
+//          }
+//        
+//      }
+//    }
   }
 }
 

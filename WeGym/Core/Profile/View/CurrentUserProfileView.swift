@@ -17,7 +17,7 @@ struct CurrentUserProfileView: View {
         // header
         ProfileHeaderView(user: user)
           .fullScreenCover(isPresented: $showEditProfile) {
-            EditProfileView(user: user)
+//            EditProfileView(user: user) //TODO:
           }
         
         PostGridView(user: user)
