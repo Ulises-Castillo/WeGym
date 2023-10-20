@@ -97,9 +97,9 @@ struct TrainingSessionSchedulerView: View {
         if let session = viewModel.currentUserTrainingSesssion {
           SlideButton("Delete", styling: slideButtonStyling, action: {
             Task {
-              viewModel.currentUserTrainingSesssion = nil
+              viewModel.currentUserTrainingSesssion = nil //TODO: these 3 lines should be in the viewModel
               try await TrainingSessionService.deleteTrainingSession(withId: session.id)
-              try await viewModel.fetchTrainingSessions()
+              try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
             }
             dismiss()
           })
@@ -130,12 +130,6 @@ struct TrainingSessionSchedulerView: View {
                 try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
 
               } else {
-                try await TrainingSessionService
-                  .uploadTrainingSession(date: Timestamp(date: workoutTime),
-                                         focus: schedulerViewModel.selectedWorkoutFocuses,
-                                         location: schedulerViewModel.selectedGym.first,
-                                         caption: workoutCaption)
-
                 viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
                                                                         ownerUid: "",
                                                                         date: Timestamp(date: workoutTime),
@@ -143,8 +137,15 @@ struct TrainingSessionSchedulerView: View {
                                                                         location: schedulerViewModel.selectedGym.first,
                                                                         caption: workoutCaption,
                                                                         user: user)
+
+                try await TrainingSessionService
+                  .uploadTrainingSession(date: Timestamp(date: workoutTime),
+                                         focus: schedulerViewModel.selectedWorkoutFocuses,
+                                         location: schedulerViewModel.selectedGym.first,
+                                         caption: workoutCaption)
+
               }
-              try await viewModel.fetchTrainingSessions()
+              try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
             }
             dismiss()
           } label: {

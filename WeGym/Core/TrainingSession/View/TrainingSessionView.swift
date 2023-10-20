@@ -30,7 +30,7 @@ struct TrainingSessionView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch && !viewModel.isFetching {
+          } else /*if !viewModel.isFirstFetch && !viewModel.isFetching*/ {
             RestDayCell(user: user)
           }
         }
@@ -59,7 +59,6 @@ struct TrainingSessionView: View {
           Button {
             viewModel.day = viewModel.day.addingTimeInterval(86400)
             selectedDate = selectedDate.addingTimeInterval(86400)
-            Task{ try await viewModel.fetchTrainingSessions() }
           } label: {
             Image(systemName: "arrowtriangle.forward")
               .foregroundColor(.primary)
@@ -78,7 +77,6 @@ struct TrainingSessionView: View {
               .onChange(of: selectedDate) { _ in
                 showingDateSheet.toggle()
                 viewModel.day = selectedDate
-                Task{ try await viewModel.fetchTrainingSessions() }
               }
               .datePickerStyle(.graphical)
               .presentationDetents([.medium])
@@ -94,11 +92,9 @@ struct TrainingSessionView: View {
         case (...0, -30...30):
           viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
           selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
-          Task{ try await viewModel.fetchTrainingSessions() }
         case (0..., -30...30):
-          viewModel.day = viewModel.day.addingTimeInterval(-86400)
+          viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
           selectedDate = selectedDate.addingTimeInterval(-86400)
-          Task{ try await viewModel.fetchTrainingSessions() }
         default:
           break
         }
@@ -107,7 +103,6 @@ struct TrainingSessionView: View {
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate
-      Task{ try await viewModel.fetchTrainingSessions() }
     }
     .environmentObject(viewModel)
   }
