@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */; };
 		1C2FFA512AE1D6A0009CDA2D /* SlideButton in Frameworks */ = {isa = PBXBuildFile; productRef = 1C2FFA502AE1D6A0009CDA2D /* SlideButton */; };
-		1C2FFA662AE23A93009CDA2D /* ProfileActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA652AE23A93009CDA2D /* ProfileActionButtonView.swift */; };
 		1C2FFA682AE23B05009CDA2D /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA672AE23B05009CDA2D /* ProfileViewModel.swift */; };
 		1C2FFA6B2AE23BAD009CDA2D /* FirestoreConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA6A2AE23BAD009CDA2D /* FirestoreConstants.swift */; };
 		1C2FFA6F2AE23E45009CDA2D /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA6E2AE23E45009CDA2D /* UserListView.swift */; };
 		1C2FFA712AE23E7A009CDA2D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA702AE23E7A009CDA2D /* SearchViewModel.swift */; };
 		1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA722AE23EA9009CDA2D /* UserCell.swift */; };
+		1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA742AE24084009CDA2D /* ProfileActionButtonView.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -92,12 +92,12 @@
 
 /* Begin PBXFileReference section */
 		1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionSchedulerViewModel.swift; sourceTree = "<group>"; };
-		1C2FFA652AE23A93009CDA2D /* ProfileActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileActionButtonView.swift; sourceTree = "<group>"; };
 		1C2FFA672AE23B05009CDA2D /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		1C2FFA6A2AE23BAD009CDA2D /* FirestoreConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreConstants.swift; sourceTree = "<group>"; };
 		1C2FFA6E2AE23E45009CDA2D /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		1C2FFA702AE23E7A009CDA2D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		1C2FFA722AE23EA9009CDA2D /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		1C2FFA742AE24084009CDA2D /* ProfileActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileActionButtonView.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 		1CDEE3172ADA744800F1A2D6 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		1CDEE3192ADA745600F1A2D6 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		1CDEE31B2ADA7FBE00F1A2D6 /* PostGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostGridView.swift; sourceTree = "<group>"; };
-		1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
+		1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileHeaderView.swift; path = ../View/ProfileHeaderView.swift; sourceTree = "<group>"; };
 		1CDEE31F2ADA848700F1A2D6 /* UploadPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostView.swift; sourceTree = "<group>"; };
 		1CDEE3212ADA87DC00F1A2D6 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
 		1CDEE3272ADB101700F1A2D6 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
@@ -189,7 +189,8 @@
 		1C2FFA642AE23A35009CDA2D /* ProfileComponents */ = {
 			isa = PBXGroup;
 			children = (
-				1C2FFA652AE23A93009CDA2D /* ProfileActionButtonView.swift */,
+				1C2FFA742AE24084009CDA2D /* ProfileActionButtonView.swift */,
+				1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */,
 			);
 			path = ProfileComponents;
 			sourceTree = "<group>";
@@ -444,7 +445,6 @@
 				1CDEE2A12AD8B15300F1A2D6 /* ProfileView.swift */,
 				1CDEE2B82AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift */,
 				1CDEE3082ADA3EE800F1A2D6 /* EditProfileView.swift */,
-				1CDEE31D2ADA816200F1A2D6 /* ProfileHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -657,6 +657,7 @@
 				1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */,
 				1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */,
 				1CDEE31A2ADA745600F1A2D6 /* FeedCell.swift in Sources */,
+				1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */,
 				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
@@ -686,7 +687,6 @@
 				1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */,
 				1CDEE3392ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
-				1C2FFA662AE23A93009CDA2D /* ProfileActionButtonView.swift in Sources */,
 				1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
 				1CDEE3222ADA87DC00F1A2D6 /* UploadPostViewModel.swift in Sources */,

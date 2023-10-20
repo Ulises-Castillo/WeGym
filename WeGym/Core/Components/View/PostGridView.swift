@@ -10,34 +10,41 @@ import Kingfisher
 
 
 struct PostGridView: View {
-  @StateObject var viewModel: PostGridViewModel
-  
-  init(user: User) {
-    self._viewModel = StateObject(wrappedValue: PostGridViewModel(user: user))
-  }
-  
-  private let gridItems: [GridItem] = [
-    .init(.flexible(), spacing: 1),
-    .init(.flexible(), spacing: 1),
-    .init(.flexible(), spacing: 1),
-  ]
-  
-  private let imageDimension: CGFloat = UIScreen.main.bounds.width / 3 - 1
-  
-  
-  var body: some View {
-    LazyVGrid(columns: gridItems, spacing: 1) {
-      ForEach(viewModel.posts) { post in
-        KFImage(URL(string: post.imageUrl))
-          .resizable()
-          .scaledToFill()
-          .frame(width: imageDimension, height: imageDimension)
-          .clipped()
-      }
-    }
-  }
-}
+    private let items = [
+        GridItem(.flexible(), spacing: 1),
+        GridItem(.flexible(), spacing: 1),
+        GridItem(.flexible(), spacing: 1),
+    ]
+    private let width = (UIScreen.main.bounds.width / 3) - 2
 
-#Preview {
-  PostGridView(user: User.MOCK_USERS[0])
+    let config: PostGridConfiguration
+    @StateObject var viewModel: PostGridViewModel
+
+    init(config: PostGridConfiguration) {
+        self.config = config
+        self._viewModel = StateObject(wrappedValue: PostGridViewModel(config: config))
+    }
+
+    var body: some View {
+        LazyVGrid(columns: items, spacing: 2, content: {
+            ForEach(viewModel.posts) { post in
+                NavigationLink(value: post) {
+                    KFImage(URL(string: post.imageUrl))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width, height: width)
+                        .clipped()
+                }
+                .onAppear {
+                    guard let index = viewModel.posts.firstIndex(where: { $0.id == post.id }) else { return }
+                    if case .explore = config, index == viewModel.posts.count - 1 {
+//                        viewModel.fetchExplorePagePosts() //TODO: add this
+                    }
+                }
+            }
+        })
+        .navigationDestination(for: Post.self) { post in
+            FeedCell(post: post)
+        }
+    }
 }

@@ -8,32 +8,24 @@
 import SwiftUI
 
 struct ProfileView: View {
-  
-  let user: User
-  @Environment(\.dismiss) var dismiss
-  
-  
-  var body: some View {
-    ScrollView {
-      ProfileHeaderView(user: user)
-      
-      PostGridView(user: user)
-    }
-    .navigationTitle(user.username) // yes, I like this better
-    .navigationBarTitleDisplayMode(.inline)
-//    .toolbar {
-//      ToolbarItem(placement: .navigationBarLeading) {
-//        Image(systemName: "chevron.left")
-//          .imageScale(.large)
-//          .onTapGesture {
-//            dismiss()
-//          }
-//        
-//      }
-//    }
-  }
-}
+    let user: User
+    @StateObject var viewModel: ProfileViewModel
 
-#Preview {
-  ProfileView(user: User.MOCK_USERS_2[0])
+    init(user: User) {
+        self.user = user
+        self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: user))
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                ProfileHeaderView(viewModel: viewModel)
+
+                PostGridView(config: .profile(user))
+            }
+            .padding(.top)
+        }
+        .navigationTitle(user.username)
+        .navigationBarTitleDisplayMode(.inline)
+    }
 }
