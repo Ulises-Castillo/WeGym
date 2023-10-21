@@ -43,7 +43,8 @@ struct CurrentUserProfileView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
 //                        selectedSettingsOption = nil
-                        showSettingsSheet.toggle()
+//                        showSettingsSheet.toggle()
+                      AuthService.shared.signOut()
                     } label: {
                         Image(systemName: "line.3.horizontal")
                     }

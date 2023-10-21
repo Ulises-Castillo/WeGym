@@ -10,13 +10,17 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
-  static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] { //TODO: test
+  static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] {
     
     let start = Timestamp(date: forDay.startOfDay)
     let end = Timestamp(date: forDay.endOfDay)
-    
-    let snapshot = try await Firestore.firestore().collection("training_sessions").whereField("date", isGreaterThan: start).whereField("date", isLessThan: end).getDocuments()
-    
+
+    let snapshot = try await FirestoreConstants
+      .TrainingSessionsCollection
+      .whereField("date", isGreaterThan: start)
+      .whereField("date", isLessThan: end)
+      .getDocuments()
+
     var trainingSessions = snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) })
     
     for i in 0..<trainingSessions.count {
@@ -36,8 +40,8 @@ struct TrainingSessionService {
   static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?) async throws {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    let postRef = Firestore.firestore().collection("training_sessions").document()
-    
+    let postRef = FirestoreConstants.TrainingSessionsCollection.document()
+
     let trainingSession = TrainingSession(id: postRef.documentID,
                                           ownerUid: uid,
                                           date: date,
@@ -52,24 +56,42 @@ struct TrainingSessionService {
   static func updateTrainingSession(trainingSession: TrainingSession) async throws {
     
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
-    try await Firestore.firestore().collection("training_sessions").document(trainingSession.id).setData(encodedTrainingSession)
+    try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).setData(encodedTrainingSession)
   }
 
   static func deleteTrainingSession(withId id: String) async throws {
-    try await Firestore.firestore().collection("training_sessions").document(id).delete()
+    try await FirestoreConstants.TrainingSessionsCollection.document(id).delete()
   }
 }
 
-//TODO: move to appropriate location
-extension Date {
-  var startOfDay: Date {
-    return Calendar.current.startOfDay(for: self)
+extension TrainingSessionService {
+  static func fetchUserTrainingSession(uid: String, date: Date) async throws -> TrainingSession? {
+
+    let start = Timestamp(date: date.startOfDay)
+    let end = Timestamp(date: date.endOfDay)
+
+    async let snapshot = FirestoreConstants
+      .TrainingSessionsCollection
+      .whereField("ownerUid", isEqualTo: uid)
+      .whereField("date", isGreaterThan: start)
+      .whereField("date", isLessThan: end)
+      .getDocuments()
+
+    return try await snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) }).first
   }
-  
-  var endOfDay: Date {
-    var components = DateComponents()
-    components.day = 1
-    components.second = -1
-    return Calendar.current.date(byAdding: components, to: startOfDay)!
+
+  static func fetchUserFollowingTrainingSessions(uid: String, date: Date) async throws -> [TrainingSession] {
+
+    let following = try await UserService.fetchUserFollowing(uid: uid)
+
+    var trainingSessions = [TrainingSession]()
+    for followee in following {
+      async let session = try await fetchUserTrainingSession(uid: followee.id, date: date)
+      if var session = try await session {
+        session.user = followee
+        trainingSessions.append(session)
+      }
+    }
+    return trainingSessions
   }
 }

@@ -23,6 +23,7 @@
 		1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA872AE248B5009CDA2D /* NotificationsView.swift */; };
 		1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */; };
 		1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA8B2AE24931009CDA2D /* Notification.swift */; };
+		1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -114,6 +115,9 @@
 		1C2FFA872AE248B5009CDA2D /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		1C2FFA8B2AE24931009CDA2D /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		1C2FFA8D2AE3B6F5009CDA2D /* WeGym.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WeGym.entitlements; sourceTree = "<group>"; };
+		1C2FFA8E2AE3B707009CDA2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
@@ -285,6 +289,8 @@
 		1CDEE2822AD6621900F1A2D6 /* WeGym */ = {
 			isa = PBXGroup;
 			children = (
+				1C2FFA8E2AE3B707009CDA2D /* Info.plist */,
+				1C2FFA8D2AE3B6F5009CDA2D /* WeGym.entitlements */,
 				1CDEE2912AD8ABF100F1A2D6 /* App */,
 				1CDEE2922AD8ABF200F1A2D6 /* Core */,
 				1CDEE2932AD8ABF300F1A2D6 /* Extensions */,
@@ -310,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */,
+				1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -761,6 +768,7 @@
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
+				1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */,
 				1CDEE3222ADA87DC00F1A2D6 /* UploadPostViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -892,12 +900,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WeGym/WeGym.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WeGym/Preview Content\"";
 				DEVELOPMENT_TEAM = 65NB8C7JBQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WeGym/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -922,12 +932,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WeGym/WeGym.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WeGym/Preview Content\"";
 				DEVELOPMENT_TEAM = 65NB8C7JBQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WeGym/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
