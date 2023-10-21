@@ -13,10 +13,15 @@ struct TrainingSessionView: View {
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
   
-  @StateObject var viewModel = TrainingSessionViewModel()
-  
+  @StateObject var viewModel: TrainingSessionViewModel
+
   let user: User
   
+  init(user: User) {
+    self.user = user
+    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel(user: user))
+  }
+
   var body: some View {
     
     NavigationStack {

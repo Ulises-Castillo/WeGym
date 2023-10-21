@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
-  static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] { //TODO: test
+  static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] {
     
     let start = Timestamp(date: forDay.startOfDay)
     let end = Timestamp(date: forDay.endOfDay)
@@ -60,16 +60,34 @@ struct TrainingSessionService {
   }
 }
 
-//TODO: move to appropriate location
-extension Date {
-  var startOfDay: Date {
-    return Calendar.current.startOfDay(for: self)
+extension TrainingSessionService {
+  static func fetchUserTrainingSession(uid: String, date: Date) async throws -> TrainingSession? {
+
+    let start = Timestamp(date: date.startOfDay)
+    let end = Timestamp(date: date.endOfDay)
+
+    async let snapshot = FirestoreConstants
+      .TrainingSessionsCollection
+      .whereField("ownerUid", isEqualTo: uid)
+      .whereField("date", isGreaterThan: start)
+      .whereField("date", isLessThan: end)
+      .getDocuments()
+
+    return try await snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) }).first
   }
-  
-  var endOfDay: Date {
-    var components = DateComponents()
-    components.day = 1
-    components.second = -1
-    return Calendar.current.date(byAdding: components, to: startOfDay)!
+
+  static func fetchUserFollowingTrainingSessions(uid: String, date: Date) async throws -> [TrainingSession] {
+
+    let following = try await UserService.fetchUserFollowing(uid: uid)
+
+    var trainingSessions = [TrainingSession]()
+    for followee in following {
+      async let session = try await fetchUserTrainingSession(uid: followee.id, date: date)
+      if var session = try await session {
+        session.user = followee
+        trainingSessions.append(session)
+      }
+    }
+    return trainingSessions
   }
 }

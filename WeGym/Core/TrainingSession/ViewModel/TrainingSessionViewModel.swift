@@ -23,10 +23,13 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var currentUserTrainingSesssion: TrainingSession?
   @Published var shouldShowTime = true
 
+  let user: User
+
   var isFirstFetch = true
   var isFetching = false // prevent redundant calls
 
-  init() {
+  init(user: User) {
+    self.user = user
     Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
   }
 
@@ -55,22 +58,15 @@ class TrainingSessionViewModel: ObservableObject {
     isFirstFetch = false
     guard !isFetching else { return }
 
-    var trainingSessions = try await TrainingSessionService.fetchTrainingSessions(forDay: date)
+    var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
+    currentUserTrainingSession?.user = user //TODO: all training sessions need this
+    self.currentUserTrainingSesssion = currentUserTrainingSession
 
-    var currentUserTrainingSession: TrainingSession?
-
-    for i in 0..<trainingSessions.count {
-      let session = trainingSessions[i]
-      if let user = session.user, user.isCurrentUser {
-        currentUserTrainingSession = session
-        trainingSessions.remove(at: i)
-        break
-      }
-    }
+    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
 
     let data = TrainingSessionViewData(
       currentUserTrainingSession: currentUserTrainingSession,
-      followingTrainingSessions: trainingSessions
+      followingTrainingSessions: followingTrainingSessions
     )
 
     trainingSessionsCache[date] = data
