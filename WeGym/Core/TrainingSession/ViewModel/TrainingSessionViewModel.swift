@@ -16,6 +16,19 @@ class TrainingSessionViewModel: ObservableObject {
       currentUserTrainingSesssion = trainingSessionsCache[day.startOfDay]?.currentUserTrainingSession
       trainingSessions = trainingSessionsCache[day.startOfDay]?.followingTrainingSessions ?? []
       Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
+
+      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
+      if trainingSessionsCache[tomorrow.startOfDay] == nil {
+        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
+      }
+      let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
+      if trainingSessionsCache[dayAfterTmr.startOfDay] == nil {
+        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
+      }
+      let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
+      if trainingSessionsCache[yesterday.startOfDay] == nil {
+        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
+      }
     }
   }
 
