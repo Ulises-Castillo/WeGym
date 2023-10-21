@@ -13,8 +13,8 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var trainingSessions = [TrainingSession]()
   public var day = Date.now {// changing this day and re-fetching will be the sauce
     didSet {
-      currentUserTrainingSesssion = trainingSessionsCache[day]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day]?.followingTrainingSessions ?? []
+      currentUserTrainingSesssion = trainingSessionsCache[day.startOfDay]?.currentUserTrainingSession
+      trainingSessions = trainingSessionsCache[day.startOfDay]?.followingTrainingSessions ?? []
       Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
     }
   }
@@ -48,8 +48,10 @@ class TrainingSessionViewModel: ObservableObject {
 
   @Published var trainingSessionsCache = [Date : TrainingSessionViewData]() {
     didSet {
-      currentUserTrainingSesssion = trainingSessionsCache[day]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day]?.followingTrainingSessions ?? []
+//      print("trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
+//      print("trainingSessionsCacheCount: \(trainingSessionsCache.count)")
+      currentUserTrainingSesssion = trainingSessionsCache[day.startOfDay]?.currentUserTrainingSession
+      trainingSessions = trainingSessionsCache[day.startOfDay]?.followingTrainingSessions ?? []
     }
   }
 
@@ -59,17 +61,17 @@ class TrainingSessionViewModel: ObservableObject {
     guard !isFetching else { return }
 
     var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
-    currentUserTrainingSession?.user = user //TODO: all training sessions need this
+    currentUserTrainingSession?.user = user
     self.currentUserTrainingSesssion = currentUserTrainingSession
 
-    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
+    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date) //TODO: fire at the same time?
 
     let data = TrainingSessionViewData(
       currentUserTrainingSession: currentUserTrainingSession,
       followingTrainingSessions: followingTrainingSessions
     )
 
-    trainingSessionsCache[date] = data
+    trainingSessionsCache[date.startOfDay] = data
     isFetching = false
   }
 }
