@@ -189,7 +189,6 @@ struct TrainingSessionSchedulerView: View {
 }
 
 
-//TODO: move to appropirate place for extensions, constant, etc.
 extension View {
   func endTextEditing() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
