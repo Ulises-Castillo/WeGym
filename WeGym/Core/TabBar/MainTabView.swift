@@ -10,12 +10,16 @@ import SwiftUI
 struct MainTabView: View {
   let user: User
   @State private var selectedIndex = 0
+  @StateObject var notificationManager = NotificationManager()
 
   var body: some View {
     TabView(selection: $selectedIndex) {
       TrainingSessionView(user: user)
         .onAppear {
           selectedIndex = 0
+          if !notificationManager.hasPermission {
+            Task { await notificationManager.request() }
+          }
         }
         .tabItem {
           Image(systemName: "dumbbell")
@@ -38,6 +42,7 @@ struct MainTabView: View {
         }.tag(2)
     }
     .accentColor(.primary)
+    .task { await notificationManager.getAuthStatus() }
   }
 }
 
