@@ -66,7 +66,7 @@ class TrainingSessionViewModel: ObservableObject {
     if var majorFocus = majorFocus {
       // remove original focus
       if let index = beautifiedFocuses.firstIndex(of: majorFocus) {
-          beautifiedFocuses.remove(at: index)
+        beautifiedFocuses.remove(at: index)
       }
       // make singular, if plural
       if majorFocus.last == "s" {
@@ -85,13 +85,29 @@ class TrainingSessionViewModel: ObservableObject {
     let relativeDateFormatter = DateFormatter()
     relativeDateFormatter.timeStyle = .none
     relativeDateFormatter.dateStyle = .medium
-    relativeDateFormatter.locale = Locale(identifier: "en_GB")
+    relativeDateFormatter.locale = Locale(identifier: "en_US")
     relativeDateFormatter.doesRelativeDateFormatting = true
 
-    let inputFormatter = DateFormatter()
-    inputFormatter.dateFormat = "yyyy-MM-dd"
+    guard let dayOfWeek = day.dayOfWeek(),
+          let diff = Calendar.current.dateComponents([.day], from: day, to: Date()).day else { return "" }
 
-    return relativeDateFormatter.string(from: day)
+    let relativeDate = relativeDateFormatter.string(from: day)
+    let daySet: Set<String> = ["Yesterday", "Today", "Tomorrow"]
+
+    if daySet.contains(relativeDate)  {
+      return relativeDate
+    } else if diff <= 6 && diff >= -6 {
+      let calendar = Calendar.current
+      if calendar.component(.weekOfYear, from: day) == calendar.component(.weekOfYear, from: Date()) {
+        return dayOfWeek
+      } else if diff > 0 {
+        return "Past " + dayOfWeek
+      } else {
+        return "Next " + dayOfWeek
+      }
+    } else {
+      return dayOfWeek + ", " + relativeDate.dropLast(6)
+    }
   }
 
   @Published var trainingSessionsCache = [Date : TrainingSessionViewData]() {
