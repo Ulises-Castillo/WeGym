@@ -37,11 +37,9 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var currentUserTrainingSesssion: TrainingSession?
   @Published var shouldShowTime = true
 
-  let user: User
   var isFirstFetch = [Date: Bool]()
 
-  init(user: User) {
-    self.user = user
+  init() {
     Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
   }
 
@@ -121,8 +119,9 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
+    guard let user = CurrentUser.shared.user else { return }
     var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
-    currentUserTrainingSession?.user = user
+    currentUserTrainingSession?.user = CurrentUser.shared.user
 
     let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
 

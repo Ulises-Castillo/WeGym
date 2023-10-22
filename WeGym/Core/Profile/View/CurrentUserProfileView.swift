@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct CurrentUserProfileView: View {
-    let user: User
+
     @StateObject var viewModel: ProfileViewModel
     @State private var showSettingsSheet = false
 //    @State private var selectedSettingsOption: SettingsItemModel?
     @State private var showDetail = false
 
-    init(user: User) {
-        self.user = user
-        self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: user))
+    init() {
+      self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: CurrentUser.shared.user!))
     }
 
     var body: some View {
@@ -25,7 +24,7 @@ struct CurrentUserProfileView: View {
                 VStack(spacing: 24) {
                     ProfileHeaderView(viewModel: viewModel)
 
-                    PostGridView(config: .profile(user))
+                  PostGridView(config: .profile(CurrentUser.shared.user!))
                 }
             }
             .navigationTitle("Profile")

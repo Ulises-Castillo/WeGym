@@ -16,11 +16,8 @@ struct TrainingSessionView: View {
 
   @StateObject var viewModel: TrainingSessionViewModel
 
-  let user: User
-
-  init(user: User) {
-    self.user = user
-    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel(user: user))
+  init() {
+    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
 
   var body: some View {
@@ -37,7 +34,7 @@ struct TrainingSessionView: View {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
           } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
-            RestDayCell(user: user)
+            RestDayCell(user: CurrentUser.shared.user!)
           } else {
             ProgressView()
               .scaleEffect(1.5, anchor: .center)
@@ -49,7 +46,7 @@ struct TrainingSessionView: View {
         .padding(.top, 12)
         .padding(.bottom, 15)
         .sheet(isPresented: $showingEditSheet) {
-          TrainingSessionSchedulerView(user: user)
+          TrainingSessionSchedulerView(user: CurrentUser.shared.user!)
         }
 
         ForEach(viewModel.trainingSessions) { session in
@@ -125,6 +122,6 @@ struct TrainingSessionView: View {
 }
 
 #Preview {
-  TrainingSessionView(user: User.MOCK_USERS[0])
+  TrainingSessionView()
 }
 
