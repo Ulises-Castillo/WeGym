@@ -114,7 +114,6 @@ struct TrainingSessionSchedulerView: View {
           Button {
             Task {
 
-
               if let prevSession = viewModel.currentUserTrainingSesssion {
 
                 let newSession = TrainingSession(id: prevSession.id,

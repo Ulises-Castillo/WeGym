@@ -24,6 +24,7 @@
 		1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA892AE248FF009CDA2D /* NotificationCell.swift */; };
 		1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA8B2AE24931009CDA2D /* Notification.swift */; };
 		1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */; };
+		1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -118,6 +119,7 @@
 		1C2FFA8D2AE3B6F5009CDA2D /* WeGym.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WeGym.entitlements; sourceTree = "<group>"; };
 		1C2FFA8E2AE3B707009CDA2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerConstants.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				1C2FFA6A2AE23BAD009CDA2D /* FirestoreConstants.swift */,
+				1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */,
 			);
 			name = Utils;
 			path = Models/Utils;
@@ -743,6 +746,7 @@
 				1CDEE32E2ADB1BEA00F1A2D6 /* PostGridViewModel.swift in Sources */,
 				1CD4CDD62ADE7D9500B2BB0D /* TrainingSessionViewModel.swift in Sources */,
 				1CDEE31E2ADA816200F1A2D6 /* ProfileHeaderView.swift in Sources */,
+				1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */,
 				1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */,
 				1CDEE2FF2AD9F8B000F1A2D6 /* LoginViewModel.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,

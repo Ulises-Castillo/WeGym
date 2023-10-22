@@ -11,6 +11,8 @@ struct TrainingSessionCell: View {
   let trainingSession: TrainingSession
   let shouldShowTime: Bool
 
+  @EnvironmentObject var viewModel: TrainingSessionViewModel
+
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       
@@ -38,7 +40,7 @@ struct TrainingSessionCell: View {
       
       HStack {
         // body parts / workout type
-        ForEach(trainingSession.focus, id: \.self) { focus in
+        ForEach(viewModel.beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
           Text(" \(focus)   ")
             .frame(height: 33)
             .background(Color(.systemBlue))

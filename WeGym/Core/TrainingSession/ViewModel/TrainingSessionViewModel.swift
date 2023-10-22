@@ -48,6 +48,42 @@ class TrainingSessionViewModel: ObservableObject {
     Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
   }
 
+  func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
+    var beautifiedFocuses = focuses
+    // make set with BRO & PPL
+    let categorySet = Set<String>(SchedulerConstants.workoutCategoryFocusesMap["BRO"]! +
+                                  SchedulerConstants.workoutCategoryFocusesMap["PPL"]!)
+    var majorFocus: String?
+
+    // loop through selected focuses
+    for focus in beautifiedFocuses {
+      if categorySet.contains(focus) {
+        if majorFocus != nil {
+          return beautifiedFocuses
+        } else {
+          majorFocus = focus
+        }
+      }
+    }
+    // if only one tag from BRO or PPL found
+    if var majorFocus = majorFocus {
+      // remove original focus
+      if let index = beautifiedFocuses.firstIndex(of: majorFocus) {
+          beautifiedFocuses.remove(at: index)
+      }
+      // make singular, if plural
+      if majorFocus.last == "s" {
+        majorFocus = String(majorFocus.dropLast(1))
+      }
+      // append "Day"
+      majorFocus = majorFocus + " Day"
+      beautifiedFocuses.insert(majorFocus, at: 0)
+    }
+    return beautifiedFocuses
+  }
+
+
+
   func relaiveDay() -> String {
     let relativeDateFormatter = DateFormatter()
     relativeDateFormatter.timeStyle = .none
