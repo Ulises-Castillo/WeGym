@@ -11,22 +11,24 @@ import Foundation
 class TrainingSessionViewModel: ObservableObject {
 
   @Published var trainingSessions = [TrainingSession]()
-  public var day = Date.now {// changing this day and re-fetching will be the sauce
+  var day = Date.now {
     didSet {
-      currentUserTrainingSesssion = trainingSessionsCache[day.startOfDay]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day.startOfDay]?.followingTrainingSessions ?? []
-      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
-
+//      print("*** DAY set: \(day.formatted())")
+      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
+      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
+      if !isFirstFetch{
+        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
+      }
       let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
-      if trainingSessionsCache[tomorrow.startOfDay] == nil {
+      if trainingSessionsCache[tomorrow.noon] == nil {
         Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
       }
       let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
-      if trainingSessionsCache[dayAfterTmr.startOfDay] == nil {
+      if trainingSessionsCache[dayAfterTmr.noon] == nil {
         Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
       }
       let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
-      if trainingSessionsCache[yesterday.startOfDay] == nil {
+      if trainingSessionsCache[yesterday.noon] == nil {
         Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
       }
     }
@@ -61,31 +63,26 @@ class TrainingSessionViewModel: ObservableObject {
 
   @Published var trainingSessionsCache = [Date : TrainingSessionViewData]() {
     didSet {
-//      print("trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
-//      print("trainingSessionsCacheCount: \(trainingSessionsCache.count)")
-      currentUserTrainingSesssion = trainingSessionsCache[day.startOfDay]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day.startOfDay]?.followingTrainingSessions ?? []
+//      print("*** trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
+//      print("*** trainingSessionsCacheCount: \(trainingSessionsCache.count)")
+      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
+      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
     }
   }
 
   @MainActor
   func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
-    isFirstFetch = false
-    guard !isFetching else { return }
-
     var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
     currentUserTrainingSession?.user = user
-    self.currentUserTrainingSesssion = currentUserTrainingSession
 
-    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date) //TODO: fire at the same time?
+    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
 
     let data = TrainingSessionViewData(
       currentUserTrainingSession: currentUserTrainingSession,
       followingTrainingSessions: followingTrainingSessions
     )
-
-    trainingSessionsCache[date.startOfDay] = data
-    isFetching = false
+    trainingSessionsCache[date.noon] = data
+    isFirstFetch = false
   }
 }
 

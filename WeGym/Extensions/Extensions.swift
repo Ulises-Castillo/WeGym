@@ -31,6 +31,10 @@ extension Date {
     return Calendar.current.startOfDay(for: self)
   }
 
+  var noon: Date {
+    return NSCalendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self) ?? self
+  }
+
   var endOfDay: Date {
     var components = DateComponents()
     components.day = 1
