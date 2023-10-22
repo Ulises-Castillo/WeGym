@@ -42,7 +42,21 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
       print("\n\nfcm**", fcm)
     }
   }
+
+  // user did tap notification from outside the app
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
+      print("DEEP: BOOM !")
+    }
+  }
+
+  // handle push nottifications recieved in the foreground
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    return [.sound, .badge, .banner, .list]
+  }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

@@ -44,9 +44,9 @@ struct TrainingSessionView: View {
         .sheet(isPresented: $showingEditSheet) {
           TrainingSessionSchedulerView(user: user)
         }
-        if viewModel.trainingSessions.count > 0 {
-          Divider()
-        }
+//        if viewModel.trainingSessions.count > 0 {
+//          Divider()
+//        }
         ForEach(viewModel.trainingSessions) { session in
           Button {
             print("Join bro's session")
