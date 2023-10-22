@@ -116,6 +116,15 @@ struct TrainingSessionSchedulerView: View {
 
               if let prevSession = viewModel.currentUserTrainingSesssion {
 
+                viewModel.currentUserTrainingSesssion = TrainingSession(id: prevSession.id,
+                                                                        ownerUid: user.id,
+                                                                        date: Timestamp(date: workoutTime),
+                                                                        focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                                        location: schedulerViewModel.selectedGym.first,
+                                                                        caption: workoutCaption,
+                                                                        user: user)
+
+
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
@@ -128,7 +137,7 @@ struct TrainingSessionSchedulerView: View {
 
               } else {
                 viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
-                                                                        ownerUid: "",
+                                                                        ownerUid: user.id,
                                                                         date: Timestamp(date: workoutTime),
                                                                         focus: schedulerViewModel.selectedWorkoutFocuses,
                                                                         location: schedulerViewModel.selectedGym.first,
