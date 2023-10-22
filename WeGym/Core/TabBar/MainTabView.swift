@@ -17,7 +17,7 @@ struct MainTabView: View {
       TrainingSessionView(user: user)
         .onAppear {
           selectedIndex = 0
-          if !notificationManager.hasPermission {
+          if !notificationManager.hasPermission { //TODO: move notification stuff to the App Delegate see online example
             Task { await notificationManager.request() }
           }
         }

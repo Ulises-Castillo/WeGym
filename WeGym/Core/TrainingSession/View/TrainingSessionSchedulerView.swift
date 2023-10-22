@@ -196,20 +196,6 @@ extension View {
   }
 }
 
-extension Date {
-  func advancedToNextHour() -> Date? {
-    var date = self
-    date += TimeInterval(59*60+59)
-    let calendar = Calendar.current
-    let components = calendar.dateComponents([.second, .minute], from: date)
-    guard let minutes = components.minute,
-          let seconds = components.second else {
-      return nil
-    }
-    return date - TimeInterval(minutes)*60 - TimeInterval(seconds)
-  }
-}
-
 public extension Publishers {
   static var keyboardHeight: AnyPublisher<CGFloat, Never> {
     let willShow = NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)
