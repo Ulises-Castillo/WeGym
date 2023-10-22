@@ -8,26 +8,27 @@
 import SwiftUI
 
 struct TrainingSessionView: View {
-  
+
+  @Environment(\.scenePhase) var scenePhase
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
-  
+
   @StateObject var viewModel: TrainingSessionViewModel
 
   let user: User
-  
+
   init(user: User) {
     self.user = user
     self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel(user: user))
   }
 
   var body: some View {
-    
+
     NavigationStack {
       Divider()
       ScrollView(.vertical, showsIndicators: false) {
-        
+
         Button {
           if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
             showingEditSheet.toggle()
@@ -109,6 +110,12 @@ struct TrainingSessionView: View {
         }
       }
     )
+    .onChange(of: scenePhase) { newPhase in
+      if newPhase == .active {
+        selectedDate = Date()
+        viewModel.day = selectedDate
+      }
+    }
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate
