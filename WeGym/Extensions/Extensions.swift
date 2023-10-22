@@ -31,10 +31,26 @@ extension Date {
     return Calendar.current.startOfDay(for: self)
   }
 
+  var noon: Date {
+    return NSCalendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self) ?? self
+  }
+
   var endOfDay: Date {
     var components = DateComponents()
     components.day = 1
     components.second = -1
     return Calendar.current.date(byAdding: components, to: startOfDay)!
+  }
+
+  func advancedToNextHour() -> Date? {
+    var date = self
+    date += TimeInterval(59*60+59)
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.second, .minute], from: date)
+    guard let minutes = components.minute,
+          let seconds = components.second else {
+      return nil
+    }
+    return date - TimeInterval(minutes)*60 - TimeInterval(seconds)
   }
 }

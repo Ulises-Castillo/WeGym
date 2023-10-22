@@ -10,7 +10,8 @@ import SwiftUI
 struct LoginView: View {
   
   @StateObject var viewModel = LoginViewModel()
-  
+  @AppStorage("USER_EMAIL") var savedEmail = ""
+
   var body: some View {
     NavigationStack {
       VStack {
@@ -25,7 +26,13 @@ struct LoginView: View {
           TextField("Enter your email", text: $viewModel.email)
             .autocapitalization(.none)
             .modifier(WGTextFieldModifier())
-          
+            .onChange(of: viewModel.email) { email in
+              self.savedEmail = email
+            }
+            .onAppear {
+              viewModel.email = savedEmail
+            }
+
           SecureField("Enter your password", text: $viewModel.password)
             .modifier(WGTextFieldModifier())
         }

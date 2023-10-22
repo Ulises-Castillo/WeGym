@@ -43,7 +43,7 @@ public struct TagField: View {
                 }
                 
                 if let selected = isSelected.first, isSelector {
-                  viewModel.workoutFocuses = viewModel.workoutCategoryFocusesMap[selected] ?? []
+                  viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[selected] ?? []
                 }
                 
               } label: {
@@ -82,7 +82,7 @@ public struct TagField: View {
             .onAppear {
               if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
                 isSelected.append(initiallySelectedWorkoutCategory) //TODO: clean up logic
-                viewModel.workoutFocuses = viewModel.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
+                viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
               }
             }
             .fixedSize()

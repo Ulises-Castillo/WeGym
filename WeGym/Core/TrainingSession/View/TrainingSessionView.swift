@@ -8,26 +8,27 @@
 import SwiftUI
 
 struct TrainingSessionView: View {
-  
+
+  @Environment(\.scenePhase) var scenePhase
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
-  
+
   @StateObject var viewModel: TrainingSessionViewModel
 
   let user: User
-  
+
   init(user: User) {
     self.user = user
     self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel(user: user))
   }
 
   var body: some View {
-    
+
     NavigationStack {
       Divider()
       ScrollView(.vertical, showsIndicators: false) {
-        
+
         Button {
           if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
             showingEditSheet.toggle()
@@ -35,8 +36,14 @@ struct TrainingSessionView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch && !viewModel.isFetching {
+          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
             RestDayCell(user: user)
+          } else {
+            ProgressView()
+              .scaleEffect(1.5, anchor: .center)
+              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+              .padding(.top, 15)
+              .frame(width: 50)
           }
         }
         .padding(.top, 12)
@@ -44,9 +51,7 @@ struct TrainingSessionView: View {
         .sheet(isPresented: $showingEditSheet) {
           TrainingSessionSchedulerView(user: user)
         }
-        if viewModel.trainingSessions.count > 0 {
-          Divider()
-        }
+
         ForEach(viewModel.trainingSessions) { session in
           Button {
             print("Join bro's session")
@@ -105,6 +110,12 @@ struct TrainingSessionView: View {
         }
       }
     )
+    .onChange(of: scenePhase) { newPhase in
+      if newPhase == .active {
+        selectedDate = Date()
+        viewModel.day = selectedDate
+      }
+    }
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate
