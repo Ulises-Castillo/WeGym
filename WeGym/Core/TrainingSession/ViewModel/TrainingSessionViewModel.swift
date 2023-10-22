@@ -40,7 +40,7 @@ class TrainingSessionViewModel: ObservableObject {
 
   let user: User
 
-  var isFirstFetch = true
+  var isFirstFetch = true //TODO: improve; make a map to know if a certain day isFirstFetch [show spinner if so, instead of rest day cell]
   var isFetching = false // prevent redundant calls
 
   init(user: User) {

@@ -51,12 +51,12 @@ struct TrainingSessionSchedulerView: View {
                    selection: $workoutTime,
                    in: Date()...,
                    displayedComponents: .hourAndMinute)
-          .padding()
-          .font(.headline)
-          .fontWeight(.medium)
-          .onTapGesture {
-            viewModel.shouldShowTime = true
-          }
+        .padding()
+        .font(.headline)
+        .fontWeight(.medium)
+        .onTapGesture {
+          viewModel.shouldShowTime = true
+        }
 
         // set gym / workout location
         TagField(tags: $schedulerViewModel.gyms,
@@ -79,17 +79,17 @@ struct TrainingSessionSchedulerView: View {
           .onReceive(Just(workoutCaption)) { _ in limitText(captionLengthLimit) }
 
         let slideButtonStyling = SlideButtonStyling(
-            indicatorSize: 60,
-            indicatorSpacing: 5,
-            indicatorColor: .red,
-            backgroundColor: .red.opacity(0.3),
-            textColor: .secondary,
-            indicatorSystemName: "trash",
-            indicatorDisabledSystemName: "xmark",
-            textAlignment: .globalCenter,
-            textFadesOpacity: true,
-            textHiddenBehindIndicator: true,
-            textShimmers: false
+          indicatorSize: 60,
+          indicatorSpacing: 5,
+          indicatorColor: .red,
+          backgroundColor: .red.opacity(0.3),
+          textColor: .secondary,
+          indicatorSystemName: "trash",
+          indicatorDisabledSystemName: "xmark",
+          textAlignment: .globalCenter,
+          textFadesOpacity: true,
+          textHiddenBehindIndicator: true,
+          textShimmers: false
         )
 
         if let session = viewModel.currentUserTrainingSesssion {
@@ -116,15 +116,6 @@ struct TrainingSessionSchedulerView: View {
 
               if let prevSession = viewModel.currentUserTrainingSesssion {
 
-                viewModel.currentUserTrainingSesssion = TrainingSession(id: prevSession.id,
-                                                                        ownerUid: user.id,
-                                                                        date: Timestamp(date: workoutTime),
-                                                                        focus: schedulerViewModel.selectedWorkoutFocuses,
-                                                                        location: schedulerViewModel.selectedGym.first,
-                                                                        caption: workoutCaption,
-                                                                        user: user)
-
-
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
@@ -133,16 +124,28 @@ struct TrainingSessionSchedulerView: View {
                                                  caption: workoutCaption,
                                                  user: user)
 
+                let data = TrainingSessionViewData(
+                  currentUserTrainingSession: newSession,
+                  followingTrainingSessions: viewModel.trainingSessionsCache[viewModel.day.noon]?.followingTrainingSessions ?? []
+                )
+                viewModel.trainingSessionsCache[viewModel.day.noon] = data
+
                 try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
 
               } else {
-                viewModel.currentUserTrainingSesssion = TrainingSession(id: "",
-                                                                        ownerUid: user.id,
-                                                                        date: Timestamp(date: workoutTime),
-                                                                        focus: schedulerViewModel.selectedWorkoutFocuses,
-                                                                        location: schedulerViewModel.selectedGym.first,
-                                                                        caption: workoutCaption,
-                                                                        user: user)
+                let newSession = TrainingSession(id: "",
+                                                 ownerUid: user.id,
+                                                 date: Timestamp(date: workoutTime),
+                                                 focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                 location: schedulerViewModel.selectedGym.first,
+                                                 caption: workoutCaption,
+                                                 user: user)
+
+                let data = TrainingSessionViewData(
+                  currentUserTrainingSession: newSession,
+                  followingTrainingSessions: viewModel.trainingSessionsCache[viewModel.day.noon]?.followingTrainingSessions ?? []
+                )
+                viewModel.trainingSessionsCache[viewModel.day.noon] = data
 
                 try await TrainingSessionService
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
