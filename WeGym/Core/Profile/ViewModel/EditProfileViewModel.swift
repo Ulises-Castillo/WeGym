@@ -21,7 +21,9 @@ class EditProfileViewModel: ObservableObject {
   
   @Published var fullName = ""
   @Published var bio = ""
-  
+
+  @Published var updatedImageURL: String?
+
   private var uiImage: UIImage?
   
   init(user: User) {
@@ -44,8 +46,7 @@ class EditProfileViewModel: ObservableObject {
     self.uiImage = uiImage
     profileImage = Image(uiImage: uiImage)
   }
-  
-  
+
   func updateUserData() async throws {
     // update profile image if changed
     var data = [String: Any]()
@@ -53,6 +54,7 @@ class EditProfileViewModel: ObservableObject {
     if let uiImage = uiImage {
       let imageUrl = try await ImageUploader.uploadImage(image: uiImage)
       data["profileImageUrl"] = imageUrl
+      updatedImageURL = imageUrl
     }
     
     // update name if changed

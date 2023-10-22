@@ -10,6 +10,7 @@ import Kingfisher
 
 struct ProfileHeaderView: View {
     @ObservedObject var viewModel: ProfileViewModel
+    @State var updatedProfileImageUrl: String?
 
     var body: some View {
         VStack {
@@ -58,4 +59,5 @@ struct ProfileHeaderView: View {
             UserListView(config: config)
         }
     }
+
 }
