@@ -35,8 +35,14 @@ struct TrainingSessionView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch {
+          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
             RestDayCell(user: user)
+          } else {
+            ProgressView()
+              .scaleEffect(1.5, anchor: .center)
+              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+              .padding(.top, 15)
+              .frame(width: 50)
           }
         }
         .padding(.top, 12)

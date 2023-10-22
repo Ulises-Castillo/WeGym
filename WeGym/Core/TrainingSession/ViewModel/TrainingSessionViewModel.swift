@@ -16,9 +16,8 @@ class TrainingSessionViewModel: ObservableObject {
 //      print("*** DAY set: \(day.formatted())")
       currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
       trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
-      if !isFirstFetch{
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
-      }
+
+      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
       let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
       if trainingSessionsCache[tomorrow.noon] == nil {
         Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
@@ -39,9 +38,7 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var shouldShowTime = true
 
   let user: User
-
-  var isFirstFetch = true //TODO: improve; make a map to know if a certain day isFirstFetch [show spinner if so, instead of rest day cell]
-  var isFetching = false // prevent redundant calls
+  var isFirstFetch = [Date: Bool]()
 
   init(user: User) {
     self.user = user
@@ -118,7 +115,7 @@ class TrainingSessionViewModel: ObservableObject {
       followingTrainingSessions: followingTrainingSessions
     )
     trainingSessionsCache[date.noon] = data
-    isFirstFetch = false
+    isFirstFetch[date.noon] = false
   }
 }
 
