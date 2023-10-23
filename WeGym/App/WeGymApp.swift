@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import FirebaseCore
+import Firebase
 import FirebaseMessaging
+
 
 #if DEBUG
 import FirebaseAppCheck
@@ -49,6 +50,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
   }
 
+  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+    //    print("Recieved Remote notification")
+    return UIBackgroundFetchResult(rawValue: 8)!
+  }
+
   // handle push nottifications recieved in the foreground
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
@@ -62,11 +68,17 @@ extension AppDelegate: MessagingDelegate {
     Messaging.messaging().apnsToken = deviceToken
   }
 
-  //TODO: is this needed? or only for push notification testing
+  //TODO: implement stale token pruning
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-    if let fcm = Messaging.messaging().fcmToken {
-      print("\n\nfcm**", fcm)
-    } 
+    guard let token = Messaging.messaging().fcmToken,
+          let uid = Auth.auth().currentUser?.uid else { return }
+
+    let deviceToken: [String: Any] = [
+      "token": token,
+      "timestamp": Timestamp()
+    ]
+
+    Firestore.firestore().collection("fcmTokens").document(uid).setData(deviceToken)
   }
 }
 
