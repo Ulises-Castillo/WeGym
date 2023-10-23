@@ -13,7 +13,7 @@ import FirebaseMessaging
 import FirebaseAppCheck
 #endif
 
-class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
@@ -35,8 +35,27 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     }
     return true
   }
+}
 
-  func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+extension AppDelegate: UNUserNotificationCenterDelegate {
+  // user did tap notification from outside the app
+  func userNotificationCenter(_ center: UNUserNotificationCenter, 
+                              didReceive response: UNNotificationResponse) async {
+    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
+      print("DEEP: BOOM !")
+    }
+  }
+
+  // handle push nottifications recieved in the foreground
+  func userNotificationCenter(_ center: UNUserNotificationCenter, 
+                              willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    return [.sound, .badge, .banner, .list]
+  }
+}
+
+extension AppDelegate: MessagingDelegate {
+  func application(_ application: UIApplication, 
+                   didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     Messaging.messaging().apnsToken = deviceToken
   }
 
@@ -46,21 +65,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
       print("\n\nfcm**", fcm)
     }
   }
-
-  // user did tap notification from outside the app
-  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
-      print("DEEP: BOOM !")
-    }
-  }
-
-  // handle push nottifications recieved in the foreground
-  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-    return [.sound, .badge, .banner, .list]
-  }
 }
-
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
