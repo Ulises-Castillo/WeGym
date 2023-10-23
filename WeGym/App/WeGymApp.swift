@@ -13,7 +13,6 @@ import FirebaseMessaging
 import FirebaseAppCheck
 #endif
 
-
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -28,7 +27,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     Messaging.messaging().delegate = self
     UNUserNotificationCenter.current().delegate = self
 
-
+    Task {
+      let notificationManager = NotificationManager()
+      await notificationManager.getAuthStatus()
+      guard !notificationManager.hasPermission else { return }
+      await notificationManager.request()
+    }
     return true
   }
 
