@@ -44,7 +44,9 @@ struct MainTabView: View {
     }
 
     .accentColor(.primary)
-
+    .onNotification { notification in
+      shouldShowNotificationBadge = true
+    }
   }
 }
 

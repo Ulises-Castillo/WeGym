@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */; };
 		1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */; };
 		1C2FFA512AE1D6A0009CDA2D /* SlideButton in Frameworks */ = {isa = PBXBuildFile; productRef = 1C2FFA502AE1D6A0009CDA2D /* SlideButton */; };
 		1C2FFA682AE23B05009CDA2D /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA672AE23B05009CDA2D /* ProfileViewModel.swift */; };
@@ -101,6 +102,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
 		1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionSchedulerViewModel.swift; sourceTree = "<group>"; };
 		1C2FFA672AE23B05009CDA2D /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		1C2FFA6A2AE23BAD009CDA2D /* FirestoreConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreConstants.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 			children = (
 				1C2FFA6A2AE23BAD009CDA2D /* FirestoreConstants.swift */,
 				1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */,
+				1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */,
 			);
 			name = Utils;
 			path = Models/Utils;
@@ -752,6 +755,7 @@
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
 				1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */,
 				1CDEE3142ADA681000F1A2D6 /* CircularProfileImageView.swift in Sources */,
+				1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */,
 				1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */,
 				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
