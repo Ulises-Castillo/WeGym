@@ -53,4 +53,12 @@ extension Date {
     }
     return date - TimeInterval(minutes)*60 - TimeInterval(seconds)
   }
+
+
+  func dayOfWeek() -> String? {
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "EEEE"
+      return dateFormatter.string(from: self).capitalized
+      // or use capitalized(with: locale) if you want
+  }
 }

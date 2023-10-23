@@ -7,19 +7,20 @@
 
 import SwiftUI
 
+
+
 struct MainTabView: View {
-  let user: User
   @State private var selectedIndex = 0
-  @StateObject var notificationManager = NotificationManager()
+
+  init(user: User) {
+    CurrentUser.shared.user = user
+  }
 
   var body: some View {
     TabView(selection: $selectedIndex) {
-      TrainingSessionView(user: user)
+      TrainingSessionView()
         .onAppear {
           selectedIndex = 0
-          if !notificationManager.hasPermission { //TODO: move notification stuff to the App Delegate see online example
-            Task { await notificationManager.request() }
-          }
         }
         .tabItem {
           Image(systemName: "dumbbell")
@@ -33,7 +34,7 @@ struct MainTabView: View {
           Image(systemName: "magnifyingglass")  //TODO: Consider replacing this with WeGym logo (arms)
         }.tag(1)                                // actually makes sense considering you add gym bros here
                                                 // (arms clutching each other) + notifications there
-      CurrentUserProfileView(user: user)        // so its not just a search tab. Would also be cool to
+      CurrentUserProfileView()                  // so its not just a search tab. Would also be cool to
         .onAppear {                             // have the logo centered at the bottom, always visible.
           selectedIndex = 2
         }
@@ -42,7 +43,6 @@ struct MainTabView: View {
         }.tag(2)
     }
     .accentColor(.primary)
-    .task { await notificationManager.getAuthStatus() }
   }
 }
 

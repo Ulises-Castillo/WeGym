@@ -8,6 +8,11 @@
 import Foundation
 import Firebase
 
+class CurrentUser: ObservableObject {
+  static let shared = CurrentUser()
+  @Published var user: User?
+}
+
 struct User: Identifiable, Hashable, Codable {
   let id: String
   let email: String

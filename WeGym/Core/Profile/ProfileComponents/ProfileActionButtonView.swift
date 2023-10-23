@@ -26,7 +26,7 @@ struct ProfileActionButtonView: View {
                                 .stroke(Color.gray, lineWidth: 1)
                         )
                 }).fullScreenCover(isPresented: $showEditProfile) {
-                    EditProfileView(user: $viewModel.user)
+                    EditProfileView()
                 }
             } else {
                 VStack {

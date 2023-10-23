@@ -13,13 +13,11 @@ struct EditProfileView: View {
   @State private var username = ""
 
   @StateObject private var viewModel: EditProfileViewModel
-  @Binding var user: User
   @Environment(\.dismiss) var dismiss
 
-  init(user: Binding<User>) {
-    self._user = user
-    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: user.wrappedValue))
-    self._username = State(initialValue: _user.wrappedValue.username)
+  init() {
+    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: CurrentUser.shared.user!))
+    self._username = State(initialValue: CurrentUser.shared.user!.username)
   }
 
   var body: some View {
@@ -38,7 +36,7 @@ struct EditProfileView: View {
                   .clipShape(Circle())
                   .foregroundColor(Color(.systemGray4))
               } else {
-                CircularProfileImageView(user: user, size: .large)
+                CircularProfileImageView(user: CurrentUser.shared.user!, size: .large)
               }
               Text("Edit profile picture")
                 .font(.footnote)
@@ -73,10 +71,13 @@ struct EditProfileView: View {
               try await viewModel.updateUserData()
 
               if let url = viewModel.updatedImageURL {
-                viewModel.user.profileImageUrl = url
+//                viewModel.user.profileImageUrl = url
+                CurrentUser.shared.user?.profileImageUrl = url
               }
-              viewModel.user.fullName = viewModel.fullName
-              viewModel.user.bio = viewModel.bio
+//              viewModel.user.fullName = viewModel.fullName
+              CurrentUser.shared.user?.fullName = viewModel.fullName
+//              viewModel.user.bio = viewModel.bio
+              CurrentUser.shared.user?.bio = viewModel.bio
               dismiss()
             }
           }
@@ -85,7 +86,7 @@ struct EditProfileView: View {
         }
       }
       .onReceive(viewModel.$user, perform: { user in
-        self.user = user
+        CurrentUser.shared.user = user
       })
       .navigationTitle("Edit Profile")
       .navigationBarTitleDisplayMode(.inline)
