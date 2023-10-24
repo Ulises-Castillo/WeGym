@@ -28,9 +28,11 @@ struct TrainingSessionCell: View {
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
+  @State private var showComments = false
+
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
-      
+
       HStack {
         if let user = trainingSession.user?.isCurrentUser ?? false ? CurrentUser.shared.user : trainingSession.user {
           // user profile image
@@ -39,7 +41,7 @@ struct TrainingSessionCell: View {
           Text(user.fullName ?? user.username)
             .font(.subheadline)
             .fontWeight(.bold)
-          
+
           + Text(" ") + Text(trainingSession.caption ?? "")
             .fontWeight(.semibold)
             .font(.subheadline)
@@ -50,9 +52,9 @@ struct TrainingSessionCell: View {
       .frame(maxWidth: .infinity, alignment: .leading) // may not need this
       .multilineTextAlignment(.leading)
       .lineLimit(2)
-      
-      
-      
+
+
+
       HStack {
         // body parts / workout type
         ForEach(viewModel.beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
@@ -65,7 +67,7 @@ struct TrainingSessionCell: View {
       .foregroundColor(.white)
       .fontWeight(.bold)
       .font(.title2)
-      
+
       HStack {
         if shouldShowTime {
           // TrainingSession time
@@ -91,7 +93,7 @@ struct TrainingSessionCell: View {
         }
 
         Button {
-          print("Comment on post")
+          showComments.toggle()
         } label: {
           Image(systemName: "bubble.right")
             .imageScale(.medium)
@@ -110,18 +112,24 @@ struct TrainingSessionCell: View {
       .foregroundColor(.blue)
 
       // likes label
-      Text("\(trainingSession.likes) likes")
-        .font(.footnote)
-        .fontWeight(.semibold)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.leading, 10)
-        .padding(.top, 1)
+      if trainingSession.likes > 0 {
+        Text("\(trainingSession.likes) like".appending(trainingSession.likes > 1 || trainingSession.likes == 0 ? "s" : ""))
+          .font(.footnote)
+          .fontWeight(.semibold)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(.leading, 10)
+          .padding(.top, 1)
+      }
     }
     .padding(.leading, 21)
     .padding(.trailing, 9)
     .foregroundColor(.primary)
+    .sheet(isPresented: $showComments) {
+      CommentsView(trainingSession: trainingSession)
+        .presentationDragIndicator(.visible)
+    }
   }
-  
+
   private func handleLikeTapped() {
     Task {
       if didLike {
