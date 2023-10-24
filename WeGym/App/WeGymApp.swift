@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import FirebaseCore
+import Firebase
 import FirebaseMessaging
+
 
 #if DEBUG
 import FirebaseAppCheck
@@ -39,38 +40,52 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
   // user did tap notification from outside the app
-  func userNotificationCenter(_ center: UNUserNotificationCenter, 
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse) async {
+
+    NotificationHandler.shared.handle(notification: response)
+    
     if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
       print("DEEP: BOOM !")
     }
   }
 
+  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+    //    print("Recieved Remote notification")
+    return UIBackgroundFetchResult(rawValue: 8)!
+  }
+
   // handle push nottifications recieved in the foreground
-  func userNotificationCenter(_ center: UNUserNotificationCenter, 
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
     return [.sound, .badge, .banner, .list]
   }
 }
 
 extension AppDelegate: MessagingDelegate {
-  func application(_ application: UIApplication, 
+  func application(_ application: UIApplication,
                    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     Messaging.messaging().apnsToken = deviceToken
   }
 
-  //TODO: is this needed? or only for push notification testing
+  //TODO: implement stale token pruning
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-    if let fcm = Messaging.messaging().fcmToken {
-      print("\n\nfcm**", fcm)
-    }
+    guard let token = Messaging.messaging().fcmToken,
+          let uid = Auth.auth().currentUser?.uid else { return }
+
+    let deviceToken: [String: Any] = [
+      "token": token,
+      "timestamp": Timestamp()
+    ]
+
+    Firestore.firestore().collection("fcmTokens").document(uid).setData(deviceToken)
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+  static var previews: some View {
+    ContentView()
+  }
 }
 
 @main

@@ -27,7 +27,7 @@ struct CurrentUserProfileView: View {
                   PostGridView(config: .profile(CurrentUser.shared.user!))
                 }
             }
-            .navigationTitle("Profile")
+            .navigationTitle(CurrentUser.shared.user!.username)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showDetail, destination: {
 //                Text(selectedSettingsOption?.title ?? "")

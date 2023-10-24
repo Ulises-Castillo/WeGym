@@ -25,7 +25,6 @@ extension Timestamp {
     }
 }
 
-
 extension Date {
   var startOfDay: Date {
     return Calendar.current.startOfDay(for: self)
@@ -62,3 +61,16 @@ extension Date {
       // or use capitalized(with: locale) if you want
   }
 }
+
+extension View { //TODO: test
+  @ViewBuilder
+  func decreaseBadgeProminence() -> some View {
+    if #available(iOS 17, *) {
+      self
+        .badgeProminence(.decreased)
+    } else {
+      self
+    }
+  }
+}
+

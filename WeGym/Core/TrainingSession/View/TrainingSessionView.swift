@@ -13,6 +13,7 @@ struct TrainingSessionView: View {
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
+  
 
   @StateObject var viewModel: TrainingSessionViewModel
 
@@ -37,7 +38,7 @@ struct TrainingSessionView: View {
             RestDayCell(user: CurrentUser.shared.user!)
           } else {
             ProgressView()
-              .scaleEffect(1.5, anchor: .center)
+              .scaleEffect(1, anchor: .center)
               .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
               .padding(.top, 15)
               .frame(width: 50)
@@ -61,6 +62,7 @@ struct TrainingSessionView: View {
       .foregroundColor(.black)
       .navigationTitle(viewModel.relaiveDay())
       .navigationBarTitleDisplayMode(.inline)
+
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-
-
 struct MainTabView: View {
   @State private var selectedIndex = 0
+  @State var shouldShowNotificationBadge = false
 
   init(user: User) {
     CurrentUser.shared.user = user
+    UITabBarItem.appearance().badgeColor = UIColor(Color(.systemBlue))
   }
 
   var body: some View {
@@ -25,24 +25,28 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(0)
-
-      SearchView()
+      SearchView(isNewNotification: $shouldShowNotificationBadge)
         .onAppear {
           selectedIndex = 1
         }
         .tabItem {
-          Image(systemName: "magnifyingglass")  //TODO: Consider replacing this with WeGym logo (arms)
-        }.tag(1)                                // actually makes sense considering you add gym bros here
-                                                // (arms clutching each other) + notifications there
-      CurrentUserProfileView()                  // so its not just a search tab. Would also be cool to
-        .onAppear {                             // have the logo centered at the bottom, always visible.
+          Image(systemName: "magnifyingglass")        //TODO: Consider replacing this with WeGym logo (arms)
+        }.tag(1)                                      // actually makes sense considering you add gym bros here
+        .badge(shouldShowNotificationBadge ? "" : nil)// (arms clutching each other) + notifications there
+        .decreaseBadgeProminence()
+      CurrentUserProfileView()                        // so its not just a search tab. Would also be cool to
+        .onAppear {                                   // have the logo centered at the bottom, always visible.
           selectedIndex = 2
         }
         .tabItem {
           Image(systemName: "person")
         }.tag(2)
     }
+
     .accentColor(.primary)
+    .onNotification { notification in
+      shouldShowNotificationBadge = true
+    }
   }
 }
 

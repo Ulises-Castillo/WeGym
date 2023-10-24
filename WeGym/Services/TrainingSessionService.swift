@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
   static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] {
-    
+
     let start = Timestamp(date: forDay.startOfDay)
     let end = Timestamp(date: forDay.endOfDay)
 
@@ -22,7 +22,7 @@ struct TrainingSessionService {
       .getDocuments()
 
     var trainingSessions = snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) })
-    
+
     for i in 0..<trainingSessions.count {
       let session = trainingSessions[i]
       let ownerUid = session.ownerUid
@@ -36,9 +36,9 @@ struct TrainingSessionService {
     }
     return trainingSessions
   }
-  
-  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?) async throws {
-    
+
+  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?, likes: Int) async throws {
+
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let postRef = FirestoreConstants.TrainingSessionsCollection.document()
 
@@ -47,14 +47,15 @@ struct TrainingSessionService {
                                           date: date,
                                           focus: focus,
                                           location: location,
-                                          caption: caption)
-    
+                                          caption: caption,
+                                          likes: likes)
+
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await postRef.setData(encodedTrainingSession)
   }
-  
+
   static func updateTrainingSession(trainingSession: TrainingSession) async throws {
-    
+
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).setData(encodedTrainingSession)
   }
@@ -93,5 +94,32 @@ extension TrainingSessionService {
       }
     }
     return trainingSessions
+  }
+}
+
+// MARK: - Likes
+
+extension TrainingSessionService {
+  static func likeTrainingSession(_ trainingSession: TrainingSession) async throws {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+
+    async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).setData([:])
+    async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes + 1])
+    async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).setData([:])
+  }
+
+  static func unlikeTrainingSession(_ trainingSession: TrainingSession) async throws {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+
+    async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).delete()
+    async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes - 1])
+    async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).delete()
+  }
+
+  static func checkIfUserLikedTrainingSession(_ trainingSession: TrainingSession) async throws -> Bool {
+    guard let uid = Auth.auth().currentUser?.uid else { return false }
+
+    let snapshot = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).getDocument()
+    return snapshot.exists
   }
 }

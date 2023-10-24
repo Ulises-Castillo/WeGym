@@ -122,7 +122,8 @@ struct TrainingSessionSchedulerView: View {
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
-                                                 user: user)
+                                                 user: user, 
+                                                 likes: prevSession.likes)
 
                 let data = TrainingSessionViewData(
                   currentUserTrainingSession: newSession,
@@ -139,7 +140,8 @@ struct TrainingSessionSchedulerView: View {
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
-                                                 user: user)
+                                                 user: user, 
+                                                 likes: 0)
 
                 let data = TrainingSessionViewData(
                   currentUserTrainingSession: newSession,
@@ -151,7 +153,9 @@ struct TrainingSessionSchedulerView: View {
                   .uploadTrainingSession(date: Timestamp(date: workoutTime),
                                          focus: schedulerViewModel.selectedWorkoutFocuses,
                                          location: schedulerViewModel.selectedGym.first,
-                                         caption: workoutCaption)
+                                         caption: workoutCaption,
+                                         likes: 0)
+
 
               }
               try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
