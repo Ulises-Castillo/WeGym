@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-struct TrainingSession: Identifiable, Hashable, Codable {
+struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   let id: String
   let ownerUid: String
   var date: Timestamp
@@ -16,11 +16,13 @@ struct TrainingSession: Identifiable, Hashable, Codable {
   var location: String? // optional, user may choose not to share location
   var caption: String?
   var user: User?       // left optional for same reason as Post data model
+  var likes: Int
   //  var broLimit: Int?  //TODO: not part of MVP
   //  var weekly: Bool = false
+  var didLike: Bool? = false
 }
 
-
+/*
 extension TrainingSession {
   static let MOCK_TRAINING_SESSIONS: [TrainingSession] = [
     .init(id: NSUUID().uuidString,
@@ -88,3 +90,4 @@ extension TrainingSession {
             user: User.MOCK_USERS[7]),
   ]
 }
+*/

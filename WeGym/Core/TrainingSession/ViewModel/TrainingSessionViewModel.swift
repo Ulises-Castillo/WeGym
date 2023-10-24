@@ -77,8 +77,6 @@ class TrainingSessionViewModel: ObservableObject {
     return beautifiedFocuses
   }
 
-
-
   func relaiveDay() -> String {
     let relativeDateFormatter = DateFormatter()
     relativeDateFormatter.timeStyle = .none
@@ -112,8 +110,12 @@ class TrainingSessionViewModel: ObservableObject {
     didSet {
 //      print("*** trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
 //      print("*** trainingSessionsCacheCount: \(trainingSessionsCache.count)")
-      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
+      if currentUserTrainingSesssion != trainingSessionsCache[day.noon]?.currentUserTrainingSession {
+        currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
+      }
+      if trainingSessions != trainingSessionsCache[day.noon]?.followingTrainingSessions ?? [] {
+        trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
+      }
     }
   }
 

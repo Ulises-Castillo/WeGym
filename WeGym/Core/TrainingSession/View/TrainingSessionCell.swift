@@ -8,7 +8,21 @@
 import SwiftUI
 
 struct TrainingSessionCell: View {
-  let trainingSession: TrainingSession
+  @ObservedObject var cellViewModel: TrainingSessionCellViewModel
+
+  init(trainingSession: TrainingSession, shouldShowTime: Bool) {
+    self.shouldShowTime = shouldShowTime
+    self.cellViewModel = TrainingSessionCellViewModel(trainingSession: trainingSession)
+  }
+
+  private var trainingSession: TrainingSession {
+    return cellViewModel.trainingSession
+  }
+
+  private var didLike: Bool {
+    return trainingSession.didLike ?? false
+  }
+
   let shouldShowTime: Bool
   @StateObject var currentUser = CurrentUser.shared
 
@@ -65,13 +79,60 @@ struct TrainingSessionCell: View {
         }
       }
       .font(.subheadline)
+
+      // action buttons
+      HStack(spacing: 16) {
+        Button {
+          handleLikeTapped()
+        } label: {
+          Image(systemName: didLike ? "heart.fill" : "heart")
+            .imageScale(.medium)
+            .foregroundColor(didLike ? .red : .blue)
+        }
+
+        Button {
+          print("Comment on post")
+        } label: {
+          Image(systemName: "bubble.right")
+            .imageScale(.medium)
+        }
+
+        Button {
+          print("Send Direct Message")
+        } label: {
+          Image(systemName: "envelope")
+            .imageScale(.medium)
+        }
+        Spacer()
+      }
+      .padding(.leading, 8)
+      .padding(.top, 4)
+      .foregroundColor(.blue)
+
+      // likes label
+      Text("\(trainingSession.likes) likes")
+        .font(.footnote)
+        .fontWeight(.semibold)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 10)
+        .padding(.top, 1)
     }
     .padding(.leading, 21)
     .padding(.trailing, 9)
     .foregroundColor(.primary)
   }
+  
+  private func handleLikeTapped() {
+    Task {
+      if didLike {
+        try await cellViewModel.unlike()
+      } else {
+        try await cellViewModel.like()
+      }
+    }
+  }
 }
 
-#Preview {
-  TrainingSessionCell(trainingSession: TrainingSession.MOCK_TRAINING_SESSIONS[0], shouldShowTime: true)
-}
+//#Preview {
+//  TrainingSessionCell(trainingSession: TrainingSession.MOCK_TRAINING_SESSIONS[0], shouldShowTime: true)
+//}
