@@ -33,6 +33,13 @@
 		1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA8B2AE24931009CDA2D /* Notification.swift */; };
 		1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */; };
 		1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */; };
+		1C6BBBA72AE83BA000EA80CB /* ChatTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */; };
+		1C6BBBAC2AE83F0800EA80CB /* ChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */; };
+		1C6BBBAF2AE83F4500EA80CB /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */; };
+		1C6BBBB12AE83F9400EA80CB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBB02AE83F9400EA80CB /* SettingsView.swift */; };
+		1C6BBBB32AE844F500EA80CB /* SettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBB22AE844F500EA80CB /* SettingsHeaderView.swift */; };
+		1C6BBBB52AE8453A00EA80CB /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBB42AE8453A00EA80CB /* SettingsCell.swift */; };
+		1C6BBBB72AE849A400EA80CB /* SettingsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBB62AE849A400EA80CB /* SettingsCellViewModel.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
 		1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */; };
@@ -136,6 +143,13 @@
 		1C2FFA8E2AE3B707009CDA2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerConstants.swift; sourceTree = "<group>"; };
+		1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabView.swift; sourceTree = "<group>"; };
+		1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsView.swift; sourceTree = "<group>"; };
+		1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
+		1C6BBBB02AE83F9400EA80CB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1C6BBBB22AE844F500EA80CB /* SettingsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderView.swift; sourceTree = "<group>"; };
+		1C6BBBB42AE8453A00EA80CB /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		1C6BBBB62AE849A400EA80CB /* SettingsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCellViewModel.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1CD4CDD12ADE2BCD00B2BB0D /* TrainingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSession.swift; sourceTree = "<group>"; };
@@ -334,6 +348,92 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		1C6BBBA02AE8389D00EA80CB /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBA42AE838E700EA80CB /* Model */,
+				1C6BBBA32AE838E000EA80CB /* View */,
+				1C6BBBA22AE838D700EA80CB /* ViewModel */,
+				1C6BBBA12AE838CF00EA80CB /* Utils */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		1C6BBBA12AE838CF00EA80CB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		1C6BBBA22AE838D700EA80CB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBB62AE849A400EA80CB /* SettingsCellViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1C6BBBA32AE838E000EA80CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBAA2AE83E4000EA80CB /* Channels */,
+				1C6BBBA82AE83E3400EA80CB /* Chats */,
+				1C6BBBAD2AE83F2D00EA80CB /* Conversations */,
+				1C6BBBA52AE83B9000EA80CB /* Main */,
+				1C6BBBA92AE83E3B00EA80CB /* Settings */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1C6BBBA42AE838E700EA80CB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1C6BBBA52AE83B9000EA80CB /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		1C6BBBA82AE83E3400EA80CB /* Chats */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Chats;
+			sourceTree = "<group>";
+		};
+		1C6BBBA92AE83E3B00EA80CB /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBB22AE844F500EA80CB /* SettingsHeaderView.swift */,
+				1C6BBBB02AE83F9400EA80CB /* SettingsView.swift */,
+				1C6BBBB42AE8453A00EA80CB /* SettingsCell.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		1C6BBBAA2AE83E4000EA80CB /* Channels */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */,
+			);
+			path = Channels;
+			sourceTree = "<group>";
+		};
+		1C6BBBAD2AE83F2D00EA80CB /* Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */,
+			);
+			path = Conversations;
+			sourceTree = "<group>";
+		};
 		1CDEE2772AD6621900F1A2D6 = {
 			isa = PBXGroup;
 			children = (
@@ -389,6 +489,7 @@
 			isa = PBXGroup;
 			children = (
 				1CDEE2962AD8AC7F00F1A2D6 /* Authentication */,
+				1C6BBBA02AE8389D00EA80CB /* Chat */,
 				1C05E5D42AE78CC700D53AE6 /* Comments */,
 				1CDEE2A32AD8B96700F1A2D6 /* Components */,
 				1CDEE2972AD8ACA300F1A2D6 /* Feed */,
@@ -779,10 +880,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C6BBBB32AE844F500EA80CB /* SettingsHeaderView.swift in Sources */,
 				1CDEE30D2ADA443600F1A2D6 /* EditProfileViewModel.swift in Sources */,
 				1CD4CDD42ADE678000B2BB0D /* TrainingSessionService.swift in Sources */,
 				1C2FFA6B2AE23BAD009CDA2D /* FirestoreConstants.swift in Sources */,
 				1CDEE3202ADA848700F1A2D6 /* UploadPostView.swift in Sources */,
+				1C6BBBB72AE849A400EA80CB /* SettingsCellViewModel.swift in Sources */,
 				1CDEE3092ADA3EE800F1A2D6 /* EditProfileView.swift in Sources */,
 				1CDEE2B72AD9C1AD00F1A2D6 /* User.swift in Sources */,
 				1CDEE2FD2AD9DD3500F1A2D6 /* RegistrationViewModel.swift in Sources */,
@@ -812,6 +915,7 @@
 				1CDEE32A2ADB18D900F1A2D6 /* PostService.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE32E2ADB1BEA00F1A2D6 /* PostGridViewModel.swift in Sources */,
+				1C6BBBAF2AE83F4500EA80CB /* ConversationsView.swift in Sources */,
 				1CD4CDD62ADE7D9500B2BB0D /* TrainingSessionViewModel.swift in Sources */,
 				1CDEE31E2ADA816200F1A2D6 /* ProfileHeaderView.swift in Sources */,
 				1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */,
@@ -821,6 +925,7 @@
 				1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */,
 				1CDEE3142ADA681000F1A2D6 /* CircularProfileImageView.swift in Sources */,
 				1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */,
+				1C6BBBA72AE83BA000EA80CB /* ChatTabView.swift in Sources */,
 				1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */,
 				1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */,
 				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
@@ -828,12 +933,14 @@
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
 				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
 				1CDEE3012ADA1B6100F1A2D6 /* UserService.swift in Sources */,
+				1C6BBBAC2AE83F0800EA80CB /* ChannelsView.swift in Sources */,
 				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
 				1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */,
 				1C2FFA842AE24853009CDA2D /* NotificationViewModel.swift in Sources */,
 				1C2FFA682AE23B05009CDA2D /* ProfileViewModel.swift in Sources */,
 				1C2FFA7C2AE2476A009CDA2D /* NotificationService.swift in Sources */,
+				1C6BBBB52AE8453A00EA80CB /* SettingsCell.swift in Sources */,
 				1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */,
 				1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */,
 				1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */,
@@ -841,6 +948,7 @@
 				1C2FFA792AE24599009CDA2D /* Extensions.swift in Sources */,
 				1C05E5E02AE7976300D53AE6 /* CommentService.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
+				1C6BBBB12AE83F9400EA80CB /* SettingsView.swift in Sources */,
 				1C05E5DE2AE7966B00D53AE6 /* Comment.swift in Sources */,
 				1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
