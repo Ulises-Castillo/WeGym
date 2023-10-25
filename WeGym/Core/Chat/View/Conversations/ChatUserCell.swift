@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct ChatUserCell: View {
+  let user: User
 
   var body: some View {
     VStack {
       HStack {
         // image
-        Image(systemName: "person")//TODO: non-sytem image here
-          .resizable()
-          .scaledToFill()
-          .frame(width: 48, height: 48)
-          .clipShape(Circle())
+        CircularProfileImageView(user: user, size: .xSmall)
 
         // message info
         VStack(alignment: .leading, spacing: 4) {
-          Text("venom")
+          Text(user.username)
             .font(.system(size: 14, weight: .semibold))
 
-          Text("Eddie Brock")
-            .font(.system(size: 15))
+          if let fullName = user.fullName {
+            Text(fullName)
+              .font(.system(size: 15))
+          }
         }
         .foregroundColor(.black )
 
@@ -40,6 +39,3 @@ struct ChatUserCell: View {
 
 }
 
-#Preview {
-  ChatUserCell()
-}
