@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct ChatView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+  @State private var messageText = ""
+
+  var body: some View {
+    VStack {
+      // messages
+      ScrollView {
+        VStack(alignment: .leading, spacing: 12) {
+          ForEach((0...10), id: \.self) { _ in
+            MessageView(isFromCurrentUser: true)
+          }
+        }
+      }
+      CustomInputView(text: $messageText, action: sendMessage)
     }
+    .navigationTitle("venom")
+    .navigationBarTitleDisplayMode(.inline)
+    .padding(.vertical)
+  }
+
+  func sendMessage() {
+    print("Send message \(messageText)")
+    messageText = ""
+  }
 }
 
 #Preview {
-    ChatView()
+  ChatView()
 }
