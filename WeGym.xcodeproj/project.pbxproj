@@ -58,6 +58,7 @@
 		1CD4CDD42ADE678000B2BB0D /* TrainingSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD32ADE678000B2BB0D /* TrainingSessionService.swift */; };
 		1CD4CDD62ADE7D9500B2BB0D /* TrainingSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD52ADE7D9500B2BB0D /* TrainingSessionViewModel.swift */; };
 		1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD72ADEF01A00B2BB0D /* RestDayCell.swift */; };
+		1CD59F212AE9A2CB0098FE44 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */; };
 		1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */; };
 		1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2852AD6621900F1A2D6 /* ContentView.swift */; };
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
@@ -180,6 +181,7 @@
 		1CD4CDD32ADE678000B2BB0D /* TrainingSessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionService.swift; sourceTree = "<group>"; };
 		1CD4CDD52ADE7D9500B2BB0D /* TrainingSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionViewModel.swift; sourceTree = "<group>"; };
 		1CD4CDD72ADEF01A00B2BB0D /* RestDayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDayCell.swift; sourceTree = "<group>"; };
+		1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
 		1CDEE2802AD6621900F1A2D6 /* WeGym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeGym.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeGymApp.swift; sourceTree = "<group>"; };
 		1CDEE2852AD6621900F1A2D6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 				1C6BBBCA2AE8B3B900EA80CB /* ChatViewModel.swift */,
 				1C6BBBCC2AE8CC4200EA80CB /* NewMessageViewModel.swift */,
 				1C6BBBCE2AE8F8A600EA80CB /* MessageViewModel.swift */,
+				1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -940,6 +943,7 @@
 				1CDEE31A2ADA745600F1A2D6 /* FeedCell.swift in Sources */,
 				1C6BBBCB2AE8B3B900EA80CB /* ChatViewModel.swift in Sources */,
 				1C6BBBC52AE8A7EE00EA80CB /* MessageView.swift in Sources */,
+				1CD59F212AE9A2CB0098FE44 /* ConversationsViewModel.swift in Sources */,
 				1C6BBBBB2AE8972B00EA80CB /* NewMessageView.swift in Sources */,
 				1C05E5E22AE7978000D53AE6 /* CommentsViewModel.swift in Sources */,
 				1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */,

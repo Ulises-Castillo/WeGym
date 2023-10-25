@@ -11,6 +11,7 @@ struct ConversationsView: View {
   @State private var showNewMessageView = false
   @State private var showChatView = false
   @State var selectedUser: User?
+  @ObservedObject var viewModel = ConversationsViewModel()
 
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
@@ -25,9 +26,9 @@ struct ConversationsView: View {
       ScrollView {
         VStack(alignment: .leading) {
           HStack { Spacer() }
-          ForEach((0...10), id: \.self) { _ in
+          ForEach(viewModel.recentMessages) { messsage in
             NavigationLink(destination: ChatView(user: User.MOCK_USERS_2[0]),
-                           label: { ConversationCell() })
+                           label: { ConversationCell(viewModel: MessageViewModel(message: messsage)) })
           }
         }
       }

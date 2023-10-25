@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ConversationCell: View {
+  let viewModel: MessageViewModel
+
   var body: some View {
     VStack {
       HStack {
@@ -23,7 +25,7 @@ struct ConversationCell: View {
           Text("Eddie Brock")
             .font(.system(size: 14, weight: .semibold))
 
-          Text("This is some test message for now")
+          Text(viewModel.message.text)
             .font(.system(size: 14))
         }.foregroundColor(.black)
         Spacer()
@@ -34,8 +36,4 @@ struct ConversationCell: View {
     }
     .padding(.top)
   }
-}
-
-#Preview {
-    ConversationCell()
 }
