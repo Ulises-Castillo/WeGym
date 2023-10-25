@@ -28,11 +28,10 @@ struct ConversationsView: View {
           HStack { Spacer() }
           ForEach(viewModel.recentMessages) { messsage in
             NavigationLink(destination: ChatView(user: User.MOCK_USERS_2[0]),
-                           label: { ConversationCell(viewModel: MessageViewModel(message: messsage)) })
+                           label: { ConversationCell(viewModel: MessageViewModel(messsage)) })
           }
         }
       }
-
 
       // floating button
       Button{

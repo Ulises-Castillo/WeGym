@@ -8,22 +8,20 @@
 import SwiftUI
 
 struct ConversationCell: View {
-  let viewModel: MessageViewModel
+  @ObservedObject var viewModel: MessageViewModel
 
   var body: some View {
     VStack {
       HStack {
         // image
-        Image(systemName: "person")//TODO: non-sytem image here
-          .resizable()
-          .scaledToFill()
-          .frame(width: 48, height: 48)
-          .clipShape(Circle())
+        CircularProfileImageView(user: viewModel.user, size: .xSmall) //TODO: replace all KF images with this
 
         // message info
         VStack(alignment: .leading, spacing: 4) {
-          Text("Eddie Brock")
-            .font(.system(size: 14, weight: .semibold))
+          if let user = viewModel.user {
+            Text(user.fullName ?? user.username)
+              .font(.system(size: 14, weight: .semibold))
+          }
 
           Text(viewModel.message.text)
             .font(.system(size: 14))
@@ -35,5 +33,8 @@ struct ConversationCell: View {
       Divider()
     }
     .padding(.top)
+    .onAppear {
+      Task { try await viewModel.fetchUser() }
+    }
   }
 }
