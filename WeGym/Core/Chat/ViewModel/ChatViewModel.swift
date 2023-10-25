@@ -58,6 +58,9 @@ class ChatViewModel: ObservableObject {
 
     let chatPartnerRef = FirestoreConstants.MessagesCollection.document(chatPartnerId).collection(currentUid)
 
+    let recentCurrentRef = FirestoreConstants.MessagesCollection.document(currentUid).collection("recent-messages").document(chatPartnerId)
+    let recentPartnerRef = FirestoreConstants.MessagesCollection.document(chatPartnerId).collection("recent-messages").document(currentUid)
+
     let messageId = currentUserRef.documentID
 
     let data: [String : Any] = [
@@ -70,5 +73,8 @@ class ChatViewModel: ObservableObject {
 
     currentUserRef.setData(data)
     chatPartnerRef.document(messageId).setData(data)
+
+    recentCurrentRef.setData(data)
+    recentPartnerRef.setData(data)
   }
 }
