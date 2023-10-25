@@ -19,6 +19,7 @@ class NewMessageViewModel: ObservableObject {
     FirestoreConstants.UserCollection.getDocuments { snapshot, _ in
       guard let documents = snapshot?.documents else { return }
       self.users = documents.compactMap({ try? $0.data(as: User.self) })
+        .filter({ $0.id != UserService.shared.currentUser?.id })
 
       print("DEBUG: Users \(self.users)")
     }
