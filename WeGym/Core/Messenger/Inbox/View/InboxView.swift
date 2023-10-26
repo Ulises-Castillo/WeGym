@@ -52,12 +52,12 @@ struct InboxView: View {
       })
       .navigationDestination(for: Message.self, destination: { message in
         if let user = message.user {
-//          ChatView(user: user)
+          ChatView(user: user)
         }
       })
       .navigationDestination(isPresented: $showChat, destination: {
         if let user = selectedUser {
-//          ChatView(user: user)
+          ChatView(user: user)
         }
       })
       .navigationDestination(isPresented: $showProfile, destination: {
@@ -70,8 +70,7 @@ struct InboxView: View {
         case .profile(let user):
           ProfileView(user: user)
         case .chatView(let user):
-          Text("Chat View")
-//          ChatView(user: user)
+          ChatView(user: user)
         }
       })
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
