@@ -50,6 +50,7 @@
 		1C3C0BA22AEB260000FFAA75 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0BA12AEB260000FFAA75 /* ChatBubble.swift */; };
 		1C3C0BA42AEB264E00FFAA75 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0BA32AEB264E00FFAA75 /* ChatMessageCell.swift */; };
 		1C3C0BAA2AEB274200FFAA75 /* LinkPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0BA92AEB274200FFAA75 /* LinkPreviewViewModel.swift */; };
+		1C3C0BAC2AEB279D00FFAA75 /* LPLinkViewRepresented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0BAB2AEB279D00FFAA75 /* LPLinkViewRepresented.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
@@ -171,6 +172,7 @@
 		1C3C0BA12AEB260000FFAA75 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		1C3C0BA32AEB264E00FFAA75 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		1C3C0BA92AEB274200FFAA75 /* LinkPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPreviewViewModel.swift; sourceTree = "<group>"; };
+		1C3C0BAB2AEB279D00FFAA75 /* LPLinkViewRepresented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPLinkViewRepresented.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -551,6 +553,7 @@
 		1C3C0BA72AEB270B00FFAA75 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1C3C0BAB2AEB279D00FFAA75 /* LPLinkViewRepresented.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1055,6 +1058,7 @@
 				1C3C0B982AEB237E00FFAA75 /* ChatViewModel.swift in Sources */,
 				1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */,
 				1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */,
+				1C3C0BAC2AEB279D00FFAA75 /* LPLinkViewRepresented.swift in Sources */,
 				1CDEE2FF2AD9F8B000F1A2D6 /* LoginViewModel.swift in Sources */,
 				1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */,
 				1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */,
