@@ -10,6 +10,7 @@ import Kingfisher
 
 enum ProfileImageSize {
   case xxSmall
+  case xxSmall32
   case xSmall
   case small
   case medium
@@ -20,6 +21,8 @@ enum ProfileImageSize {
     switch self {
     case .xxSmall:
       return 28
+    case .xxSmall32:
+      return 32
     case .xSmall:
       return 40
     case .small:

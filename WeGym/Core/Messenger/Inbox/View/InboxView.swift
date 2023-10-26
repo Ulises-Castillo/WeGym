@@ -79,7 +79,7 @@ struct InboxView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           if let user = viewModel.user {
-            CircularProfileImageView(user: user, size: .xSmall)
+            CircularProfileImageView(user: user, size: .xxSmall32)
               .onTapGesture { showProfile.toggle() }
           }
         }
@@ -87,8 +87,8 @@ struct InboxView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
-            .frame(width: 28, height: 28)
-            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5))
+            .frame(width: 33, height: 33)
+            .foregroundStyle(.primary, Color(.systemGray5))
             .onTapGesture {
               showNewMessageView.toggle()
               selectedUser = nil
