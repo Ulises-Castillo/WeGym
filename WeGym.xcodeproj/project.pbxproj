@@ -45,6 +45,7 @@
 		1C3C0B922AEB22DC00FFAA75 /* NewMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B912AEB22DC00FFAA75 /* NewMessageViewModel.swift */; };
 		1C3C0B982AEB237E00FFAA75 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B972AEB237E00FFAA75 /* ChatViewModel.swift */; };
 		1C3C0B9B2AEB23E200FFAA75 /* PhotosPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B9A2AEB23E200FFAA75 /* PhotosPickerHelper.swift */; };
+		1C3C0B9D2AEB244900FFAA75 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B9C2AEB244900FFAA75 /* ChatService.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
@@ -161,6 +162,7 @@
 		1C3C0B912AEB22DC00FFAA75 /* NewMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageViewModel.swift; sourceTree = "<group>"; };
 		1C3C0B972AEB237E00FFAA75 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		1C3C0B9A2AEB23E200FFAA75 /* PhotosPickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPickerHelper.swift; sourceTree = "<group>"; };
+		1C3C0B9C2AEB244900FFAA75 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 		1C3C0B962AEB236000FFAA75 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				1C3C0B9C2AEB244900FFAA75 /* ChatService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -968,6 +971,7 @@
 				1CDEE2A22AD8B15300F1A2D6 /* ProfileView.swift in Sources */,
 				1CDEE2B52AD8F9AF00F1A2D6 /* CompleteSignUpView.swift in Sources */,
 				1C2FFA862AE2487E009CDA2D /* NotificationsCellViewModel.swift in Sources */,
+				1C3C0B9D2AEB244900FFAA75 /* ChatService.swift in Sources */,
 				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
