@@ -42,9 +42,8 @@ struct ChatMessageCell: View {
                         .frame(maxWidth: UIScreen.main.bounds.width / 1.5, alignment: .trailing)
                         .padding(.horizontal)
                 case .link(let urlString):
-//                    LinkPreview(urlString: urlString)
-//                        .padding(.horizontal)
-                  Text("LINK")
+                    LinkPreview(urlString: urlString)
+                        .padding(.horizontal)
                 }
             } else {
                 HStack(alignment: .bottom, spacing: 8) {
@@ -68,8 +67,7 @@ struct ChatMessageCell: View {
                             .padding(.leading, shouldShowChatPartnerImage ? 0 : 32)
 
                     case .link(let urlString):
-//                        LinkPreview(urlString: urlString)
-                      Text("LINK")
+                        LinkPreview(urlString: urlString)
                     }
                 }
                 .padding(.horizontal)
