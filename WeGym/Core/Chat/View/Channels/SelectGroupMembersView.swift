@@ -10,6 +10,7 @@ import SwiftUI
 struct SelectGroupMembersView: View {
   @State private var searchText = ""
   @State private var isEditing = false
+  @Binding var show: Bool
   @ObservedObject var viewModel = SelectGroupMembersViewModel()
   @Environment(\.presentationMode) var mode
   
@@ -40,7 +41,8 @@ struct SelectGroupMembersView: View {
           }
         }
       }
-      .navigationBarItems(leading: cancelButton, trailing: nextButton )
+      .navigationBarItems(leading: cancelButton, 
+                          trailing: nextButton)
       .navigationTitle("New Group")
       .navigationBarTitleDisplayMode(.inline)
     }
@@ -48,7 +50,7 @@ struct SelectGroupMembersView: View {
   
   var nextButton: some View {
     NavigationLink(
-      destination: CreateChannelView(),
+      destination: CreateChannelView(viewModel.selectedUsers, show: $show),
       label: { Text("Next").bold() })
   }
   
@@ -59,8 +61,4 @@ struct SelectGroupMembersView: View {
       Text("Cancel")
     }
   }
-}
-
-#Preview {
-  SelectGroupMembersView()
 }
