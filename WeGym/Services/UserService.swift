@@ -27,6 +27,16 @@ class UserService {
     let user = try snapshot.data(as: User.self)
     return user
   }
+
+  static func fetchUser(withUid uid: String, completion: @escaping(User) -> Void) {
+      FirestoreConstants.UserCollection.document(uid).getDocument { snapshot, _ in
+          guard let user = try? snapshot?.data(as: User.self) else {
+              print("DEBUG: Failed to map user")
+              return
+          }
+          completion(user)
+      }
+  }
 }
 
 // MARK: - Following
