@@ -8,11 +8,45 @@
 import SwiftUI
 
 struct ChannelsView: View {
-    var body: some View {
-        Text("Channels View")
+  @State private var showCreateGroupView = false
+
+  var body: some View {
+    ZStack(alignment: .bottom) {
+      ScrollView {
+        VStack {
+          ForEach((0...10), id: \.self) { _ in
+            ChannelCell()
+          }
+        }
+      }
+      FloatingButton(show: $showCreateGroupView)
+        .sheet(isPresented: $showCreateGroupView, content: {
+          Text("Create group view..")
+        })
     }
+  }
 }
 
 #Preview {
-    ChannelsView()
+  ChannelsView()
+}
+
+struct FloatingButton: View {
+  @Binding var show: Bool
+
+  var body: some View {
+    Button {
+      show.toggle()
+    } label: {
+      Image(systemName: "square.and.pencil")
+        .resizable()
+        .scaledToFit()
+        .frame(width: 24, height:  24)
+        .padding()
+    }
+    .background(Color(.systemBlue))
+    .foregroundColor(.white)
+    .clipShape(Circle())
+    .padding()
+  }
 }

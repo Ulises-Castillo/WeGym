@@ -32,23 +32,10 @@ struct ConversationsView: View {
         }
       }
 
-      // floating button
-      Button{
-        showNewMessageView.toggle()
-      } label: {
-        Image(systemName: "square.and.pencil")
-          .resizable()
-          .scaledToFit()
-          .frame(width: 24, height:  24)
-          .padding()
-      }
-      .background(Color(.systemBlue))
-      .foregroundColor(.white)
-      .clipShape(Circle())
-      .padding()
-      .sheet(isPresented: $showNewMessageView, content: {
-        NewMessageView(showChatView: $showChatView, user: $selectedUser)
-      })
+      FloatingButton(show: $showNewMessageView)
+        .sheet(isPresented: $showNewMessageView, content: {
+          NewMessageView(showChatView: $showChatView, user: $selectedUser)
+        })
     }
   }
 }
