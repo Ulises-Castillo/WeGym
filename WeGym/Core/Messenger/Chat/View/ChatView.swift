@@ -21,39 +21,39 @@ struct ChatView: View {
 
     var body: some View {
         VStack {
-//            ScrollViewReader { proxy in
-//                ScrollView {
-//                    LazyVStack {
-//                        VStack {
-//                            CircularProfileImageView(user: user, size: .xLarge)
-//
-//                            VStack(spacing: 4) {
-//                                Text(user.fullname)
-//                                    .font(.title3)
-//                                    .fontWeight(.semibold)
-//
-//                                Text("Messenger")
-//                                    .font(.footnote)
-//                                    .foregroundColor(.gray)
-//                            }
-//                        }
-//
-//                        ForEach(viewModel.messages.indices, id: \.self) { index in
-//                            ChatMessageCell(message: viewModel.messages[index],
-//                                            nextMessage: viewModel.nextMessage(forIndex: index))
-//                                .id(viewModel.messages[index].id)
-//                        }
-//                    }
-//                    .padding(.vertical)
-//                }
-//                .onChange(of: viewModel.messages) { newValue in
-//                    guard  let lastMessage = newValue.last else { return }
-//
-//                    withAnimation(.spring()) {
-//                        proxy.scrollTo(lastMessage.id)
-//                    }
-//                }
-//            }
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack {
+                        VStack {
+                            CircularProfileImageView(user: user, size: .xLarge)
+
+                            VStack(spacing: 4) {
+                              Text(user.fullName ?? user.username)
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+
+                                Text("Messenger")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+
+                        ForEach(viewModel.messages.indices, id: \.self) { index in
+                            ChatMessageCell(message: viewModel.messages[index],
+                                            nextMessage: viewModel.nextMessage(forIndex: index))
+                                .id(viewModel.messages[index].id)
+                        }
+                    }
+                    .padding(.vertical)
+                }
+                .onChange(of: viewModel.messages) { newValue in
+                    guard  let lastMessage = newValue.last else { return }
+
+                    withAnimation(.spring()) {
+                        proxy.scrollTo(lastMessage.id)
+                    }
+                }
+            }
 
             Spacer()
 
