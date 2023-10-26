@@ -33,7 +33,7 @@ struct CreateChannelView: View {
               .frame(width: 64, height: 64)
               .clipShape(Circle())
         })
-        .sheet(isPresented: $imagePickerPresented, onDismiss: loadImage, content: {
+        .sheet(isPresented: $imagePickerPresented, onDismiss: loadImage, content: { //TODO: use same image picker from edit profile
 //          ImagePicker(image: $selectedImage)
         })
         .padding(.leading)

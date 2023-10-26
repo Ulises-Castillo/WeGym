@@ -7,6 +7,7 @@
 
 import Firebase
 
+@MainActor
 class ChannelChatViewModel: ObservableObject {
   let channel: Channel
   @Published var messages = [Message]()
@@ -16,8 +17,29 @@ class ChannelChatViewModel: ObservableObject {
     fetchChannelMessages()
   }
 
-  func fetchChannelMessages() {
-    
+  func fetchChannelMessages() { //TODO: use async await across the app
+    guard let currentUid = UserService.shared.currentUser?.id else { return }
+    guard let channelId = channel.id else { return }
+
+    let query = FirestoreConstants
+      .ChannelsCollection
+      .document(channelId)
+      .collection("messages")
+      .order(by: "timestamp", descending: false)
+
+    query.addSnapshotListener { snapshot, _ in
+
+      guard let changes = snapshot?.documentChanges.filter({ $0.type == .added }) else { return }
+
+      let tmpMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
+
+      for (index, message) in tmpMessages.enumerated() where message.fromId != currentUid {
+        self.fetchUser(withUid: message.fromId) { user in
+          self.messages[index].user = user
+        }
+      }
+      self.messages.append(contentsOf: tmpMessages)
+    }
   }
 
   func sendChannelMessage(messageText: String) {
@@ -38,5 +60,13 @@ class ChannelChatViewModel: ObservableObject {
 
     FirestoreConstants.ChannelsCollection.document(channelId)
       .updateData(["lastMessage": "\(currentUser.username): \(messageText)"])
+  }
+
+  private func fetchUser(withUid uid: String, completion: @escaping(User) -> Void) { //TODO: user UserService
+    FirestoreConstants.UserCollection.document(uid).getDocument { snapshot, _ in
+      guard let user = try? snapshot?.data(as: User.self) else { return }
+      print("DEBUG: User is \(user.username)")
+      completion(user)
+    }
   }
 }
