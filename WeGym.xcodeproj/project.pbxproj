@@ -35,6 +35,10 @@
 		1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */; };
 		1C3C0B542AEA4C5000FFAA75 /* CreateChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */; };
 		1C3C0B562AEA589F00FFAA75 /* CreateChannelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B552AEA589F00FFAA75 /* CreateChannelViewModel.swift */; };
+		1C3C0B582AEA632000FFAA75 /* ChannelsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B572AEA632000FFAA75 /* ChannelsViewModel.swift */; };
+		1C3C0B5A2AEA636D00FFAA75 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B592AEA636D00FFAA75 /* Channel.swift */; };
+		1C3C0B5C2AEA66AA00FFAA75 /* ChannelChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B5B2AEA66AA00FFAA75 /* ChannelChatView.swift */; };
+		1C3C0B5E2AEA66C200FFAA75 /* ChannelChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B5D2AEA66C200FFAA75 /* ChannelChatViewModel.swift */; };
 		1C6BBBA72AE83BA000EA80CB /* ChatTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */; };
 		1C6BBBAC2AE83F0800EA80CB /* ChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */; };
 		1C6BBBAF2AE83F4500EA80CB /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */; };
@@ -167,6 +171,10 @@
 		1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerConstants.swift; sourceTree = "<group>"; };
 		1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChannelView.swift; sourceTree = "<group>"; };
 		1C3C0B552AEA589F00FFAA75 /* CreateChannelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChannelViewModel.swift; sourceTree = "<group>"; };
+		1C3C0B572AEA632000FFAA75 /* ChannelsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsViewModel.swift; sourceTree = "<group>"; };
+		1C3C0B592AEA636D00FFAA75 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		1C3C0B5B2AEA66AA00FFAA75 /* ChannelChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelChatView.swift; sourceTree = "<group>"; };
+		1C3C0B5D2AEA66C200FFAA75 /* ChannelChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelChatViewModel.swift; sourceTree = "<group>"; };
 		1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabView.swift; sourceTree = "<group>"; };
 		1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsView.swift; sourceTree = "<group>"; };
 		1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
@@ -440,6 +448,7 @@
 		1C6BBBA42AE838E700EA80CB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1C3C0B592AEA636D00FFAA75 /* Channel.swift */,
 				1C6BBBC82AE8B1BE00EA80CB /* Message.swift */,
 				1CD59F2C2AE9F52F0098FE44 /* SelectableUser.swift */,
 			);
@@ -484,6 +493,7 @@
 				1CD59F282AE9F1160098FE44 /* SelectedGroupMembersView.swift */,
 				1CD59F2A2AE9F4780098FE44 /* SelectableUserCell.swift */,
 				1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */,
+				1C3C0B5B2AEA66AA00FFAA75 /* ChannelChatView.swift */,
 			);
 			path = Channels;
 			sourceTree = "<group>";
@@ -504,6 +514,8 @@
 			children = (
 				1CD59F2F2AE9FE4E0098FE44 /* SelectGroupMembersViewModel.swift */,
 				1C3C0B552AEA589F00FFAA75 /* CreateChannelViewModel.swift */,
+				1C3C0B572AEA632000FFAA75 /* ChannelsViewModel.swift */,
+				1C3C0B5D2AEA66C200FFAA75 /* ChannelChatViewModel.swift */,
 			);
 			path = Channels;
 			sourceTree = "<group>";
@@ -976,7 +988,9 @@
 				1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */,
 				1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */,
 				1CDEE31A2ADA745600F1A2D6 /* FeedCell.swift in Sources */,
+				1C3C0B582AEA632000FFAA75 /* ChannelsViewModel.swift in Sources */,
 				1C6BBBCB2AE8B3B900EA80CB /* ChatViewModel.swift in Sources */,
+				1C3C0B5C2AEA66AA00FFAA75 /* ChannelChatView.swift in Sources */,
 				1C6BBBC52AE8A7EE00EA80CB /* MessageView.swift in Sources */,
 				1CD59F212AE9A2CB0098FE44 /* ConversationsViewModel.swift in Sources */,
 				1C6BBBBB2AE8972B00EA80CB /* NewMessageView.swift in Sources */,
@@ -986,6 +1000,7 @@
 				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */,
 				1C2FFA7E2AE2479F009CDA2D /* NotificationType.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
+				1C3C0B5E2AEA66C200FFAA75 /* ChannelChatViewModel.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
 				1C2FFA712AE23E7A009CDA2D /* SearchViewModel.swift in Sources */,
 				1CD59F2D2AE9F52F0098FE44 /* SelectableUser.swift in Sources */,
@@ -1002,6 +1017,7 @@
 				1CD59F252AE9E9F90098FE44 /* ChannelCell.swift in Sources */,
 				1CDEE31E2ADA816200F1A2D6 /* ProfileHeaderView.swift in Sources */,
 				1C6BBBB92AE85B3E00EA80CB /* ConversationCell.swift in Sources */,
+				1C3C0B5A2AEA636D00FFAA75 /* Channel.swift in Sources */,
 				1C3C0B562AEA589F00FFAA75 /* CreateChannelViewModel.swift in Sources */,
 				1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */,
 				1C2FFA4E2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift in Sources */,

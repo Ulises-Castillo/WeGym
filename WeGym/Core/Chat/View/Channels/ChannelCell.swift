@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ChannelCell: View {
+  let channel: Channel
+
   var body: some View {
-    NavigationLink(destination: Text("Channel chat view")) {
+    NavigationLink(destination: ChannelChatView(channel)) {
       VStack {
         HStack {
           // image
@@ -18,10 +20,10 @@ struct ChannelCell: View {
           // message info
           VStack(alignment: .leading, spacing: 4) {
 
-            Text("Gotham City")
+            Text(channel.name)
               .font(.system(size: 14, weight: .semibold))
 
-            Text("Bruce Wayne: I'm here to save Gotham")
+            Text(channel.lastMessage)
               .font(.system(size: 15))
           }.foregroundColor(.black)
           Spacer()
@@ -33,8 +35,4 @@ struct ChannelCell: View {
       .padding(.top)
     }
   }
-}
-
-#Preview {
-  ChannelCell()
 }
