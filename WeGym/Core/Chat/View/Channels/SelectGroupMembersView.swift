@@ -18,11 +18,12 @@ struct SelectGroupMembersView: View {
         SearchBar(text: $searchText, isEditing: .constant(false))
           .padding()
 
+        SelectedGroupMembersView()
 
         ScrollView {
           VStack {
             ForEach((0...10), id: \.self) { _ in
-              UserCell(user: User.MOCK_USERS_2[0])
+              SelectableUserCell(selectableUser: SelectableUser(user: User.MOCK_USERS_2[0]))
             }
           }
         }

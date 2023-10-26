@@ -62,6 +62,9 @@
 		1CD59F232AE9B2F90098FE44 /* ConversationCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F222AE9B2F90098FE44 /* ConversationCellViewModel.swift */; };
 		1CD59F252AE9E9F90098FE44 /* ChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F242AE9E9F90098FE44 /* ChannelCell.swift */; };
 		1CD59F272AE9EDA50098FE44 /* SelectGroupMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F262AE9EDA50098FE44 /* SelectGroupMembersView.swift */; };
+		1CD59F292AE9F1160098FE44 /* SelectedGroupMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F282AE9F1160098FE44 /* SelectedGroupMembersView.swift */; };
+		1CD59F2B2AE9F4780098FE44 /* SelectableUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F2A2AE9F4780098FE44 /* SelectableUserCell.swift */; };
+		1CD59F2D2AE9F52F0098FE44 /* SelectableUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F2C2AE9F52F0098FE44 /* SelectableUser.swift */; };
 		1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */; };
 		1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2852AD6621900F1A2D6 /* ContentView.swift */; };
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
@@ -188,6 +191,9 @@
 		1CD59F222AE9B2F90098FE44 /* ConversationCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellViewModel.swift; sourceTree = "<group>"; };
 		1CD59F242AE9E9F90098FE44 /* ChannelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelCell.swift; sourceTree = "<group>"; };
 		1CD59F262AE9EDA50098FE44 /* SelectGroupMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGroupMembersView.swift; sourceTree = "<group>"; };
+		1CD59F282AE9F1160098FE44 /* SelectedGroupMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedGroupMembersView.swift; sourceTree = "<group>"; };
+		1CD59F2A2AE9F4780098FE44 /* SelectableUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableUserCell.swift; sourceTree = "<group>"; };
+		1CD59F2C2AE9F52F0098FE44 /* SelectableUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableUser.swift; sourceTree = "<group>"; };
 		1CDEE2802AD6621900F1A2D6 /* WeGym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeGym.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeGymApp.swift; sourceTree = "<group>"; };
 		1CDEE2852AD6621900F1A2D6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -428,6 +434,7 @@
 			isa = PBXGroup;
 			children = (
 				1C6BBBC82AE8B1BE00EA80CB /* Message.swift */,
+				1CD59F2C2AE9F52F0098FE44 /* SelectableUser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -467,6 +474,8 @@
 				1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */,
 				1CD59F242AE9E9F90098FE44 /* ChannelCell.swift */,
 				1CD59F262AE9EDA50098FE44 /* SelectGroupMembersView.swift */,
+				1CD59F282AE9F1160098FE44 /* SelectedGroupMembersView.swift */,
+				1CD59F2A2AE9F4780098FE44 /* SelectableUserCell.swift */,
 			);
 			path = Channels;
 			sourceTree = "<group>";
@@ -961,6 +970,7 @@
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,
 				1CDEE3182ADA744800F1A2D6 /* FeedView.swift in Sources */,
 				1C2FFA712AE23E7A009CDA2D /* SearchViewModel.swift in Sources */,
+				1CD59F2D2AE9F52F0098FE44 /* SelectableUser.swift in Sources */,
 				1C2FFA6F2AE23E45009CDA2D /* UserListView.swift in Sources */,
 				1CDEE3282ADB101700F1A2D6 /* FeedViewModel.swift in Sources */,
 				1C05E5D32AE75A9700D53AE6 /* FeedCellViewModel.swift in Sources */,
@@ -998,9 +1008,11 @@
 				1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */,
 				1C2FFA842AE24853009CDA2D /* NotificationViewModel.swift in Sources */,
 				1C2FFA682AE23B05009CDA2D /* ProfileViewModel.swift in Sources */,
+				1CD59F292AE9F1160098FE44 /* SelectedGroupMembersView.swift in Sources */,
 				1C2FFA7C2AE2476A009CDA2D /* NotificationService.swift in Sources */,
 				1C6BBBB52AE8453A00EA80CB /* SettingsCell.swift in Sources */,
 				1C2FFA8A2AE248FF009CDA2D /* NotificationCell.swift in Sources */,
+				1CD59F2B2AE9F4780098FE44 /* SelectableUserCell.swift in Sources */,
 				1CDEE2F62AD9D97A00F1A2D6 /* AuthService.swift in Sources */,
 				1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */,
 				1CDEE3392ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift in Sources */,
