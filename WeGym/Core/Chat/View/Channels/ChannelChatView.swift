@@ -33,7 +33,7 @@ struct ChannelChatView: View {
   }
 
   func sendMessage() {
-    viewModel.sendChannelMessage()
+    viewModel.sendChannelMessage(messageText: messageText)
     messageText = ""
   }
 }
