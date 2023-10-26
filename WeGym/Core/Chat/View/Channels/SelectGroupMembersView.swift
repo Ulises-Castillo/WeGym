@@ -9,14 +9,17 @@ import SwiftUI
 
 struct SelectGroupMembersView: View {
   @State private var searchText = ""
+  @State private var isEditing = false
   @ObservedObject var viewModel = SelectGroupMembersViewModel()
+  @Environment(\.presentationMode) var mode
 
 
   var body: some View {
     NavigationView {
       VStack {
 
-        SearchBar(text: $searchText, isEditing: .constant(false))
+        SearchBar(text: $searchText, isEditing: $isEditing)
+          .onTapGesture { isEditing.toggle() }
           .padding()
 
         if !viewModel.selectableUsers.isEmpty {
@@ -25,7 +28,9 @@ struct SelectGroupMembersView: View {
 
         ScrollView {
           VStack {
-            ForEach(viewModel.selectableUsers) { selectableUser in
+            ForEach(
+              searchText.isEmpty ? viewModel.selectableUsers : viewModel.filteredUsers(searchText)
+            ) { selectableUser in
               Button {
                 viewModel.selectUser(selectableUser, isSelected: !selectableUser.isSelected)
               } label: {
@@ -47,7 +52,7 @@ struct SelectGroupMembersView: View {
 
   var cancelButton: some View {
     Button {
-      print("dismiss view..")
+      mode.wrappedValue.dismiss()
     } label: {
       Text("Cancel")
     }

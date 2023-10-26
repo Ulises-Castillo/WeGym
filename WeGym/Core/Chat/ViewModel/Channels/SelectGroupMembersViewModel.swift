@@ -40,5 +40,12 @@ class SelectGroupMembersViewModel: ObservableObject {
   }
 
   // filter users for search
+  func filteredUsers(_ query: String) -> [SelectableUser] {
+    let lowercaseQuery = query.lowercased()
 
+    return selectableUsers.filter({
+      $0.user.fullName?.lowercased().contains(lowercaseQuery) ?? false ||
+      $0.user.username.contains(lowercaseQuery)
+    })
+  }
 }
