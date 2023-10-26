@@ -13,7 +13,7 @@ struct InboxView: View {
   @State private var selectedUser: User?
   @State private var showChat = false
   @State private var showProfile = false
-  
+
   var body: some View {
     NavigationStack {
       List {
@@ -22,13 +22,13 @@ struct InboxView: View {
           .listRowInsets(EdgeInsets())
           .padding(.bottom)
           .padding(.horizontal, 8)
-        
+
         ForEach(viewModel.filteredMessages) { recentMessage in
           ZStack {
             NavigationLink(value: recentMessage) {
               EmptyView()
             }.opacity(0.0)
-            
+
             InboxRowView(message: recentMessage, viewModel: viewModel)
               .onAppear {
                 if recentMessage == viewModel.recentMessages.last {
@@ -88,7 +88,7 @@ struct InboxView: View {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
             .frame(width: 28, height: 28)
-//            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5)) //TODO: theme
+          //            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5)) //TODO: theme
             .foregroundStyle(.primary, Color(.systemGray5))
             .onTapGesture {
               showNewMessageView.toggle()
