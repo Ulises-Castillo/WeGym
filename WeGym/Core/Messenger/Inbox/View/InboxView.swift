@@ -65,25 +65,26 @@ struct InboxView: View {
           ProfileView(user: user)
         }
       })
-//      .navigationDestination(for: Route.self, destination: { route in
-//        switch route {
-//        case .profile(let user):
-//          ProfileView(user: user)
-//        case .chatView(let user):
+      .navigationDestination(for: Route.self, destination: { route in
+        switch route {
+        case .profile(let user):
+          ProfileView(user: user)
+        case .chatView(let user):
+          Text("Chat View")
 //          ChatView(user: user)
-//        }
-//      })
+        }
+      })
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
       .navigationTitle("Chats")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
-////        ToolbarItem(placement: .navigationBarLeading) {
-////          if let user = viewModel.user {
-////            CircularProfileImageView(user: user, size: .xSmall)
-////              .onTapGesture { showProfile.toggle() }
-////          }
-////        }
-//        
+        ToolbarItem(placement: .navigationBarLeading) {
+          if let user = viewModel.user {
+            CircularProfileImageView(user: user, size: .xSmall)
+              .onTapGesture { showProfile.toggle() }
+          }
+        }
+        //        
         ToolbarItem(placement: .navigationBarTrailing) {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
