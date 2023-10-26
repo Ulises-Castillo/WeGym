@@ -46,9 +46,8 @@ class ChatService {
         case .text(let messageText), .link(let messageText):
             uploadMessage(messageText)
         case .image(let uIImage):
-//            let imageUrl = try await ImageUploader.uploadImage(image: uIImage, type: .message)
-//            uploadMessage("Attachment: Image", imageUrl: imageUrl)
-          break
+            let imageUrl = try await ImageUploader2.uploadImage(image: uIImage, type: .message)
+            uploadMessage("Attachment: Image", imageUrl: imageUrl)
         }
     }
 
