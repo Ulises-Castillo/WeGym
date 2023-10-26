@@ -19,7 +19,9 @@ struct SelectGroupMembersView: View {
         SearchBar(text: $searchText, isEditing: .constant(false))
           .padding()
 
-        SelectedGroupMembersView()
+        if !viewModel.selectableUsers.isEmpty {
+          SelectedGroupMembersView(viewModel: viewModel)
+        }
 
         ScrollView {
           VStack {

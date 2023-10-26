@@ -8,22 +8,24 @@
 import SwiftUI
 
 struct SelectedGroupMembersView: View {
+  @ObservedObject var viewModel: SelectGroupMembersViewModel
+
   var body: some View {
     ScrollView(.horizontal) {
       HStack {
-        ForEach((0...10), id: \.self) { _ in
+        ForEach(viewModel.selectedUsers) { selectableUser in
           ZStack(alignment: .topTrailing) {
             VStack {
 
-              CircularProfileImageView(user: User.MOCK_USERS_2[0], size: .medium)
+              CircularProfileImageView(user: selectableUser.user, size: .medium)
 
-              Text("Eddie Brock")
+              Text(selectableUser.user.fullName ?? selectableUser.user.username)
                 .font(.system(size: 11, weight: .semibold))
                 .multilineTextAlignment(.center)
             }.frame(width: 64)
 
             Button {
-              print("Deselect user...")
+              viewModel.selectUser(selectableUser, isSelected: false)
             } label: {
               Image(systemName: "xmark")
                 .resizable()
@@ -41,8 +43,4 @@ struct SelectedGroupMembersView: View {
     .animation(.spring())
     .padding()
   }
-}
-
-#Preview {
-  SelectedGroupMembersView()
 }
