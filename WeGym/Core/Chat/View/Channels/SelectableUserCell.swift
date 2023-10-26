@@ -10,24 +10,25 @@ import SwiftUI
 struct SelectableUserCell: View {
   let selectableUser: SelectableUser
   
+
   var body: some View {
     VStack {
       HStack(spacing: 12) {
         CircularProfileImageView(user: selectableUser.user, size: .small)
-        
+
         VStack(alignment: .leading) {
           Text(selectableUser.user.username)
             .font(.system(size: 14, weight: .semibold))
-          
+
           if let fullname = selectableUser.user.fullName {
             Text(fullname)
               .font(.system(size: 14))
           }
         }
         .foregroundColor(.primary)
-        
+
         Spacer()
-        
+
         Image(systemName: selectableUser.isSelected ? "checkmark.circle.fill" : "circle")
           .resizable()
           .scaledToFit()

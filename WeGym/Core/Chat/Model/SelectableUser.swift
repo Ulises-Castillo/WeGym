@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct SelectableUser: Identifiable {
+struct SelectableUser: Identifiable, Decodable {
   let user: User
-  var isSelected: Bool = true
+  var isSelected: Bool = false
 
   var id: String {
     return user.id
