@@ -35,7 +35,7 @@ struct NewMessageView: View {
                 Text(user.fullName ?? user.username)
                   .font(.subheadline)
                   .fontWeight(.semibold)
-                
+
                 Spacer()
               }
               .onTapGesture {
@@ -57,8 +57,8 @@ struct NewMessageView: View {
           Button("Cancel") {
             dismiss()
           }
-          //                    .foregroundColor(Color.theme.primaryText) //TODO: theme
-          .foregroundColor(.primary)
+          .foregroundColor(Color.theme.primaryText)
+
         }
       }
     }

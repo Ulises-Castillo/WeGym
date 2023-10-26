@@ -79,3 +79,13 @@ extension UIApplication {
     sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
   }
 }
+
+extension Color {
+    static var theme = Theme()
+}
+
+struct Theme {
+    let primaryText = Color("PrimaryTextColor")
+    let background = Color("BackgroundColor")
+    let secondaryBackground = Color("SecondaryBackground")
+}

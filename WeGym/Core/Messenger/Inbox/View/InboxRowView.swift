@@ -29,8 +29,7 @@ struct InboxRowView: View {
           Text(user.fullName ?? user.username)
             .font(.subheadline)
             .fontWeight(.semibold)
-//            .foregroundColor(Color.theme.primaryText) //TODO: add color theme
-            .foregroundColor(.primary)
+            .foregroundColor(Color.theme.primaryText)
         }
 
         Text("\(message.isFromCurrentUser ? "You: \(message.text)" : message.text)")

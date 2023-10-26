@@ -55,8 +55,7 @@ struct MessageInputView: View {
             .padding(12)
             .padding(.leading, 4)
             .padding(.trailing, 48)
-          //                        .background(Color.theme.secondaryBackground)
-            .background(.secondary)
+            .background(Color.theme.secondaryBackground)
             .clipShape(Capsule())
             .font(.subheadline)
         }

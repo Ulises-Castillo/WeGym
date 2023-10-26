@@ -23,8 +23,7 @@ struct ActiveNowView: View {
                 
                 ZStack {
                   Circle()
-                  //                                        .fill(Color.theme.background) //TODO: theme
-                    .fill(Color(.systemBlue))
+                    .fill(Color.theme.background)
                     .frame(width: 16, height: 16)
                   
                   Circle()
