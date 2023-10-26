@@ -12,20 +12,20 @@ struct SelectGroupMembersView: View {
   @State private var isEditing = false
   @ObservedObject var viewModel = SelectGroupMembersViewModel()
   @Environment(\.presentationMode) var mode
-
-
+  
+  
   var body: some View {
     NavigationView {
       VStack {
-
+        
         SearchBar(text: $searchText, isEditing: $isEditing)
           .onTapGesture { isEditing.toggle() }
           .padding()
-
+        
         if !viewModel.selectableUsers.isEmpty {
           SelectedGroupMembersView(viewModel: viewModel)
         }
-
+        
         ScrollView {
           VStack {
             ForEach(
@@ -45,11 +45,13 @@ struct SelectGroupMembersView: View {
       .navigationBarTitleDisplayMode(.inline)
     }
   }
-
+  
   var nextButton: some View {
-    NavigationLink(destination: Text("Destination"), label: { Text("Next").bold() })
+    NavigationLink(
+      destination: CreateChannelView(),
+      label: { Text("Next").bold() })
   }
-
+  
   var cancelButton: some View {
     Button {
       mode.wrappedValue.dismiss()

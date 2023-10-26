@@ -33,6 +33,7 @@
 		1C2FFA8C2AE24931009CDA2D /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA8B2AE24931009CDA2D /* Notification.swift */; };
 		1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */; };
 		1C2FFA942AE5047D009CDA2D /* SchedulerConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */; };
+		1C3C0B542AEA4C5000FFAA75 /* CreateChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */; };
 		1C6BBBA72AE83BA000EA80CB /* ChatTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */; };
 		1C6BBBAC2AE83F0800EA80CB /* ChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */; };
 		1C6BBBAF2AE83F4500EA80CB /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */; };
@@ -163,6 +164,7 @@
 		1C2FFA8E2AE3B707009CDA2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1C2FFA912AE3BA6E009CDA2D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1C2FFA932AE5047D009CDA2D /* SchedulerConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerConstants.swift; sourceTree = "<group>"; };
+		1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChannelView.swift; sourceTree = "<group>"; };
 		1C6BBBA62AE83BA000EA80CB /* ChatTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabView.swift; sourceTree = "<group>"; };
 		1C6BBBAB2AE83F0800EA80CB /* ChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsView.swift; sourceTree = "<group>"; };
 		1C6BBBAE2AE83F4500EA80CB /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 				1CD59F262AE9EDA50098FE44 /* SelectGroupMembersView.swift */,
 				1CD59F282AE9F1160098FE44 /* SelectedGroupMembersView.swift */,
 				1CD59F2A2AE9F4780098FE44 /* SelectableUserCell.swift */,
+				1C3C0B532AEA4C5000FFAA75 /* CreateChannelView.swift */,
 			);
 			path = Channels;
 			sourceTree = "<group>";
@@ -1032,6 +1035,7 @@
 				1C6BBBCD2AE8CC4200EA80CB /* NewMessageViewModel.swift in Sources */,
 				1C05E5E02AE7976300D53AE6 /* CommentService.swift in Sources */,
 				1C6BBBC32AE8A6CD00EA80CB /* ChatBubble.swift in Sources */,
+				1C3C0B542AEA4C5000FFAA75 /* CreateChannelView.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1C6BBBB12AE83F9400EA80CB /* SettingsView.swift in Sources */,
 				1CD59F272AE9EDA50098FE44 /* SelectGroupMembersView.swift in Sources */,
