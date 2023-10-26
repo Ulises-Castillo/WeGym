@@ -8,33 +8,34 @@
 import SwiftUI
 
 struct ConversationCell: View {
-  @ObservedObject var viewModel: MessageViewModel
+  @ObservedObject var viewModel: ConversationCellViewModel
 
   var body: some View {
-    VStack {
-      HStack {
-        // image
-        CircularProfileImageView(user: viewModel.user, size: .xSmall) //TODO: replace all KF images with this
+    if let user = viewModel.message.user {
+      NavigationLink(destination: ChatView(user: user)) {
+        VStack {
+          HStack {
+            // image
+            CircularProfileImageView(user: viewModel.message.user, size: .xSmall) //TODO: replace all KF images with this
 
-        // message info
-        VStack(alignment: .leading, spacing: 4) {
-          if let user = viewModel.user {
-            Text(user.fullName ?? user.username)
-              .font(.system(size: 14, weight: .semibold))
+            // message info
+            VStack(alignment: .leading, spacing: 4) {
+              if let user = viewModel.message.user {
+                Text(user.fullName ?? user.username)
+                  .font(.system(size: 14, weight: .semibold))
+              }
+
+              Text(viewModel.message.text)
+                .font(.system(size: 14))
+            }.foregroundColor(.black)
+            Spacer()
           }
+          .padding(.horizontal)
 
-          Text(viewModel.message.text)
-            .font(.system(size: 14))
-        }.foregroundColor(.black)
-        Spacer()
+          Divider()
+        }
+        .padding(.top)
       }
-      .padding(.horizontal)
-
-      Divider()
-    }
-    .padding(.top)
-    .onAppear {
-      Task { try await viewModel.fetchUser() }
     }
   }
 }

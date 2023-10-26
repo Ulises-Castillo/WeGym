@@ -27,8 +27,7 @@ struct ConversationsView: View {
         VStack(alignment: .leading) {
           HStack { Spacer() }
           ForEach(viewModel.recentMessages) { messsage in
-            NavigationLink(destination: ChatView(user: User.MOCK_USERS_2[0]),
-                           label: { ConversationCell(viewModel: MessageViewModel(messsage)) })
+            ConversationCell(viewModel: ConversationCellViewModel(messsage))
           }
         }
       }

@@ -1,18 +1,19 @@
 //
-//  MessageViewModel.swift
+//  ConversationCellViewModel.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/25/23.
 //
 
-import Foundation
+import SwiftUI
 
-class MessageViewModel: ObservableObject {
-  @Published var user: User?
-  let message: Message
+class ConversationCellViewModel: ObservableObject {
+  @Published var message: Message
+
 
   init(_ message: Message) {
     self.message = message
+    Task { try await fetchUser() }
   }
 
   var currentUid: String {
@@ -34,6 +35,6 @@ class MessageViewModel: ObservableObject {
 
   @MainActor
   func fetchUser() async throws {
-    user = try await UserService.fetchUser(withUid: chatPartnerId)
+    message.user = try await UserService.fetchUser(withUid: chatPartnerId)
   }
 }

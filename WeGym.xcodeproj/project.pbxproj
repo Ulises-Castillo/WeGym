@@ -59,6 +59,7 @@
 		1CD4CDD62ADE7D9500B2BB0D /* TrainingSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD52ADE7D9500B2BB0D /* TrainingSessionViewModel.swift */; };
 		1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDD72ADEF01A00B2BB0D /* RestDayCell.swift */; };
 		1CD59F212AE9A2CB0098FE44 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */; };
+		1CD59F232AE9B2F90098FE44 /* ConversationCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD59F222AE9B2F90098FE44 /* ConversationCellViewModel.swift */; };
 		1CDEE2842AD6621900F1A2D6 /* WeGymApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */; };
 		1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE2852AD6621900F1A2D6 /* ContentView.swift */; };
 		1CDEE2882AD6621A00F1A2D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE2872AD6621A00F1A2D6 /* Assets.xcassets */; };
@@ -182,6 +183,7 @@
 		1CD4CDD52ADE7D9500B2BB0D /* TrainingSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionViewModel.swift; sourceTree = "<group>"; };
 		1CD4CDD72ADEF01A00B2BB0D /* RestDayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDayCell.swift; sourceTree = "<group>"; };
 		1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
+		1CD59F222AE9B2F90098FE44 /* ConversationCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellViewModel.swift; sourceTree = "<group>"; };
 		1CDEE2802AD6621900F1A2D6 /* WeGym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeGym.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDEE2832AD6621900F1A2D6 /* WeGymApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeGymApp.swift; sourceTree = "<group>"; };
 		1CDEE2852AD6621900F1A2D6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -401,6 +403,7 @@
 				1C6BBBCC2AE8CC4200EA80CB /* NewMessageViewModel.swift */,
 				1C6BBBCE2AE8F8A600EA80CB /* MessageViewModel.swift */,
 				1CD59F202AE9A2CB0098FE44 /* ConversationsViewModel.swift */,
+				1CD59F222AE9B2F90098FE44 /* ConversationCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -976,6 +979,7 @@
 				1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */,
 				1CDEE30F2ADA4C5100F1A2D6 /* ImageUploader.swift in Sources */,
 				1C6BBBC92AE8B1BE00EA80CB /* Message.swift in Sources */,
+				1CD59F232AE9B2F90098FE44 /* ConversationCellViewModel.swift in Sources */,
 				1CDEE2FA2AD9DAD200F1A2D6 /* ContentViewModel.swift in Sources */,
 				1CDEE2AF2AD8F37900F1A2D6 /* WGTextFieldModifier.swift in Sources */,
 				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
