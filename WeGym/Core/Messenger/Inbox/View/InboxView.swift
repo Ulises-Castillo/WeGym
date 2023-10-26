@@ -48,7 +48,7 @@ struct InboxView: View {
         showChat = newValue != nil
       })
       .fullScreenCover(isPresented: $showNewMessageView, content: {
-//        NewMessageView(selectedUser: $selectedUser)
+        NewMessageView(selectedUser: $selectedUser)
       })
       .navigationDestination(for: Message.self, destination: { message in
         if let user = message.user {
@@ -76,7 +76,7 @@ struct InboxView: View {
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
       .navigationTitle("Chats")
       .navigationBarTitleDisplayMode(.inline)
-//      .toolbar {
+      .toolbar {
 ////        ToolbarItem(placement: .navigationBarLeading) {
 ////          if let user = viewModel.user {
 ////            CircularProfileImageView(user: user, size: .xSmall)
@@ -84,17 +84,17 @@ struct InboxView: View {
 ////          }
 ////        }
 //        
-//        ToolbarItem(placement: .navigationBarTrailing) {
-//          Image(systemName: "square.and.pencil.circle.fill")
-//            .resizable()
-//            .frame(width: 28, height: 28)
-//            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5))
-//            .onTapGesture {
-//              showNewMessageView.toggle()
-//              selectedUser = nil
-//            }
-//        }
-//      }
+        ToolbarItem(placement: .navigationBarTrailing) {
+          Image(systemName: "square.and.pencil.circle.fill")
+            .resizable()
+            .frame(width: 28, height: 28)
+//            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5)) //TODO: theme
+            .onTapGesture {
+              showNewMessageView.toggle()
+              selectedUser = nil
+            }
+        }
+      }
     }
   }
 }
