@@ -84,12 +84,13 @@ struct InboxView: View {
               .onTapGesture { showProfile.toggle() }
           }
         }
-        //        
+
         ToolbarItem(placement: .navigationBarTrailing) {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
             .frame(width: 28, height: 28)
 //            .foregroundStyle(Color.theme.primaryText, Color(.systemGray5)) //TODO: theme
+            .foregroundStyle(.primary, Color(.systemGray5))
             .onTapGesture {
               showNewMessageView.toggle()
               selectedUser = nil
