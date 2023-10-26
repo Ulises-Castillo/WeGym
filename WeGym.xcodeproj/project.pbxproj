@@ -38,6 +38,8 @@
 		1C3C0B682AEAE12A00FFAA75 /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B672AEAE12A00FFAA75 /* InboxViewModel.swift */; };
 		1C3C0B6A2AEAE1D500FFAA75 /* InboxService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B692AEAE1D500FFAA75 /* InboxService.swift */; };
 		1C3C0B6E2AEAE29700FFAA75 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B6D2AEAE29700FFAA75 /* Message.swift */; };
+		1C3C0B722AEAEA6500FFAA75 /* ActiveNowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B712AEAEA6500FFAA75 /* ActiveNowView.swift */; };
+		1C3C0B742AEAEA8A00FFAA75 /* ActiveNowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C0B732AEAEA8A00FFAA75 /* ActiveNowViewModel.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
@@ -147,6 +149,8 @@
 		1C3C0B672AEAE12A00FFAA75 /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		1C3C0B692AEAE1D500FFAA75 /* InboxService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxService.swift; sourceTree = "<group>"; };
 		1C3C0B6D2AEAE29700FFAA75 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		1C3C0B712AEAEA6500FFAA75 /* ActiveNowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveNowView.swift; sourceTree = "<group>"; };
+		1C3C0B732AEAEA8A00FFAA75 /* ActiveNowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveNowViewModel.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -350,6 +354,8 @@
 		1C3C0B5F2AEADFF800FFAA75 /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
+				1C3C0B702AEAEA5600FFAA75 /* View */,
+				1C3C0B6F2AEAEA4C00FFAA75 /* ViewModel */,
 				1C3C0B6B2AEAE22000FFAA75 /* Inbox */,
 				1C3C0B6C2AEAE24D00FFAA75 /* Model */,
 			);
@@ -397,6 +403,22 @@
 				1C3C0B6D2AEAE29700FFAA75 /* Message.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		1C3C0B6F2AEAEA4C00FFAA75 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1C3C0B732AEAEA8A00FFAA75 /* ActiveNowViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1C3C0B702AEAEA5600FFAA75 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1C3C0B712AEAEA6500FFAA75 /* ActiveNowView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		1CDEE2772AD6621900F1A2D6 = {
@@ -878,6 +900,7 @@
 				1C05E5D32AE75A9700D53AE6 /* FeedCellViewModel.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE32A2ADB18D900F1A2D6 /* PostService.swift in Sources */,
+				1C3C0B722AEAEA6500FFAA75 /* ActiveNowView.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,
 				1CDEE32E2ADB1BEA00F1A2D6 /* PostGridViewModel.swift in Sources */,
 				1CD4CDD62ADE7D9500B2BB0D /* TrainingSessionViewModel.swift in Sources */,
@@ -889,6 +912,7 @@
 				1CD4CDD82ADEF01A00B2BB0D /* RestDayCell.swift in Sources */,
 				1C3C0B662AEAE0E500FFAA75 /* InboxRowView.swift in Sources */,
 				1CDEE3142ADA681000F1A2D6 /* CircularProfileImageView.swift in Sources */,
+				1C3C0B742AEAEA8A00FFAA75 /* ActiveNowViewModel.swift in Sources */,
 				1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */,
 				1C2FFA882AE248B5009CDA2D /* NotificationsView.swift in Sources */,
 				1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */,

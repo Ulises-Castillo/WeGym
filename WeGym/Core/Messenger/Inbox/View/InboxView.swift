@@ -17,11 +17,11 @@ struct InboxView: View {
   var body: some View {
     NavigationStack {
       List {
-//        ActiveNowView()
-//          .listRowSeparator(.hidden)
-//          .listRowInsets(EdgeInsets())
-//          .padding(.bottom)
-//          .padding(.horizontal, 8)
+        ActiveNowView()
+          .listRowSeparator(.hidden)
+          .listRowInsets(EdgeInsets())
+          .padding(.bottom)
+          .padding(.horizontal, 8)
         
         ForEach(viewModel.filteredMessages) { recentMessage in
           ZStack {

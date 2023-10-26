@@ -37,6 +37,25 @@ class UserService {
           completion(user)
       }
   }
+
+  static func fetchUsers(limit: Int? = nil) async throws -> [User] {
+      guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
+      let query = FirestoreConstants.UserCollection
+
+      if let limit {
+          let snapshot = try await query.limit(to: limit).getDocuments()
+          return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
+      }
+
+      let snapshot = try await query.getDocuments()
+      return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
+  }
+
+  private static func mapUsers(fromSnapshot snapshot: QuerySnapshot, currentUid: String) -> [User] {
+      return snapshot.documents
+          .compactMap({ try? $0.data(as: User.self) })
+          .filter({ $0.id !=  currentUid })
+  }
 }
 
 // MARK: - Following
