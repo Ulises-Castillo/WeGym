@@ -113,8 +113,9 @@ struct TrainingSessionSchedulerView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-            Task {
+            guard !schedulerViewModel.selectedWorkoutFocuses.isEmpty else { return }
 
+            Task {
               if let prevSession = viewModel.currentUserTrainingSesssion {
 
                 let newSession = TrainingSession(id: prevSession.id,
@@ -164,8 +165,9 @@ struct TrainingSessionSchedulerView: View {
             dismiss()
           } label: {
             Image(systemName: "checkmark")
+
           }
-          .foregroundColor(.green)
+          .foregroundColor(schedulerViewModel.selectedWorkoutFocuses.isEmpty ? .gray : .green)
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
