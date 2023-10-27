@@ -10,6 +10,7 @@ import SwiftUI
 struct InboxRowView: View {
   let message: Message
   @ObservedObject var viewModel: InboxViewModel
+  @StateObject var currentUser = CurrentUser.shared
 
   var body: some View {
     HStack(alignment: .top, spacing: 12) {
@@ -21,7 +22,7 @@ struct InboxRowView: View {
             .frame(width: 6, height: 6, alignment: .leading)
         }
 
-        CircularProfileImageView(user: message.user, size: .small)
+        CircularProfileImageView(user: (message.user?.isCurrentUser ?? false) ? CurrentUser.shared.user! : message.user, size: .small)
       }
 
       VStack(alignment: .leading, spacing: 4) {
