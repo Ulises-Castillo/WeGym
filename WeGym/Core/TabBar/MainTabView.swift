@@ -12,7 +12,7 @@ struct MainTabView: View {
   @State var shouldShowNotificationBadge = false
 
   init(user: User) {
-    CurrentUser.shared.user = user
+//    UserService.shared.currentUser = user
     UITabBarItem.appearance().badgeColor = .systemBlue
   }
 

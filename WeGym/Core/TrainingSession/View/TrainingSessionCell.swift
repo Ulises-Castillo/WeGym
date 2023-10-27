@@ -26,7 +26,7 @@ struct TrainingSessionCell: View {
   }
 
   let shouldShowTime: Bool
-  @StateObject var currentUser = CurrentUser.shared
+  @StateObject var userService = UserService.shared
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
@@ -36,7 +36,7 @@ struct TrainingSessionCell: View {
     VStack(alignment: .leading, spacing: 9) {
 
       HStack {
-        if let user = trainingSession.user?.isCurrentUser ?? false ? CurrentUser.shared.user : trainingSession.user {
+        if let user = trainingSession.user?.isCurrentUser ?? false ? userService.currentUser : trainingSession.user {
           // user profile image
           CircularProfileImageView(user: user, size: .xSmall)
           // username

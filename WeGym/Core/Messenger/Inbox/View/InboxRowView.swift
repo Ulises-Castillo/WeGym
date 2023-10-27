@@ -10,7 +10,7 @@ import SwiftUI
 struct InboxRowView: View {
   let message: Message
   @ObservedObject var viewModel: InboxViewModel
-  @StateObject var currentUser = CurrentUser.shared
+  @StateObject var userService = UserService.shared
 
   var body: some View {
     HStack(alignment: .top, spacing: 12) {
@@ -22,11 +22,12 @@ struct InboxRowView: View {
             .frame(width: 6, height: 6, alignment: .leading)
         }
 
-        CircularProfileImageView(user: (message.user?.isCurrentUser ?? false) ? currentUser.user : message.user, size: .small)
+        let user = (message.user?.isCurrentUser ?? false) ? userService.currentUser : message.user
+        CircularProfileImageView(user: user, size: .small)
       }
 
       VStack(alignment: .leading, spacing: 4) {
-        if let user = message.user {
+        if let user = (message.user?.isCurrentUser ?? false) ? userService.currentUser : message.user {
           Text(user.fullName ?? user.username)
             .font(.subheadline)
             .fontWeight(.semibold)

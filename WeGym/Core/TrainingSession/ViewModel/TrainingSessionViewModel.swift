@@ -121,9 +121,9 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
-    guard let user = CurrentUser.shared.user else { return }
+    guard let user = UserService.shared.currentUser else { return }
     var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
-    currentUserTrainingSession?.user = CurrentUser.shared.user
+    currentUserTrainingSession?.user = user
 
     let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
 

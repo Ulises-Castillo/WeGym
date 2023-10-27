@@ -8,11 +8,11 @@
 import Firebase
 import Foundation
 
-class UserService {
-
-  @Published var currentUser: User?
+class UserService: ObservableObject {
 
   static let shared = UserService()
+  @Published var currentUser: User?
+
 
   @MainActor
   func fetchCurrentUser() async throws {
