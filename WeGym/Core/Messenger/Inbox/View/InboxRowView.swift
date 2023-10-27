@@ -21,7 +21,7 @@ struct InboxRowView: View {
             .frame(width: 6, height: 6, alignment: .leading)
         }
 
-        CircularProfileImageView(user: message.user, size: .medium)
+        CircularProfileImageView(user: message.user, size: .small)
       }
 
       VStack(alignment: .leading, spacing: 4) {
@@ -29,7 +29,7 @@ struct InboxRowView: View {
           Text(user.fullName ?? user.username)
             .font(.subheadline)
             .fontWeight(.semibold)
-            .foregroundColor(Color.theme.primaryText)
+            .foregroundColor(.primary)
         }
 
         Text("\(message.isFromCurrentUser ? "You: \(message.text)" : message.text)")

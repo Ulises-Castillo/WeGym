@@ -20,12 +20,6 @@ struct NewMessageView: View {
           .padding(.leading)
           .background(Color(.systemGroupedBackground))
 
-        Text("CONTACTS")
-          .foregroundColor(.gray)
-          .font(.footnote)
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .padding()
-
         LazyVStack {
           ForEach(viewModel.filteredUsers) { user in
             VStack {

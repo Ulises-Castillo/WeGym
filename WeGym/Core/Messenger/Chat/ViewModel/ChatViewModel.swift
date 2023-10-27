@@ -40,6 +40,7 @@ class ChatViewModel: ObservableObject {
     if let image = uiImage {
       try await service.sendMessage(type: .image(image))
       messageImage = nil
+      uiImage = nil
     } else {
       try await service.sendMessage(type: .text(messageText))
     }

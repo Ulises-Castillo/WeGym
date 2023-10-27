@@ -69,7 +69,7 @@ struct TrainingSessionView: View {
       })
       .foregroundColor(.black)
       .navigationTitle(viewModel.relaiveDay())
-      .navigationBarTitleDisplayMode(.inline)
+//      .navigationBarTitleDisplayMode(.inline)
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -77,8 +77,8 @@ struct TrainingSessionView: View {
             viewModel.day = viewModel.day.addingTimeInterval(86400)
             selectedDate = selectedDate.addingTimeInterval(86400)
           } label: {
-            Image(systemName: "arrowtriangle.forward")
-              .foregroundColor(.primary)
+            Image(systemName: "arrow.forward.square")
+              .foregroundColor(Color(.systemBlue))
               .padding(.horizontal, 9)
           }
         }
@@ -87,7 +87,7 @@ struct TrainingSessionView: View {
             showingDateSheet.toggle()
           } label: {
             Image(systemName: "calendar")
-              .foregroundColor(.primary)
+              .foregroundColor(Color(.systemBlue))
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)

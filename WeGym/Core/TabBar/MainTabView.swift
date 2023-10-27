@@ -32,25 +32,31 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "bubble.left")
         }.tag(1)
-
-      SearchView(isNewNotification: $shouldShowNotificationBadge)
+      NotificationsView()
         .onAppear {
           selectedIndex = 2
         }
         .tabItem {
+          Image(systemName: "bell")
+        }.tag(2)
+      SearchView()
+        .onAppear {
+          selectedIndex = 3
+        }
+        .tabItem {
           Image(systemName: "magnifyingglass")        //TODO: Consider replacing this with WeGym logo (arms)
-        }.tag(2)                                      // actually makes sense considering you add gym bros here
+        }.tag(3)                                      // actually makes sense considering you add gym bros here
         .badge(shouldShowNotificationBadge ? "" : nil)// (arms clutching each other) + notifications there
         .decreaseBadgeProminence()
       CurrentUserProfileView()                        // so its not just a search tab. Would also be cool to
         .onAppear {                                   // have the logo centered at the bottom, always visible.
-          selectedIndex = 3
+          selectedIndex = 4
         }
         .tabItem {
           Image(systemName: "person")
-        }.tag(3)
+        }.tag(4)
     }
-    .accentColor(.primary)
+    .accentColor(Color(.systemBlue))
     .onNotification { notification in
       shouldShowNotificationBadge = true
     }

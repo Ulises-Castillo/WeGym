@@ -17,12 +17,6 @@ struct InboxView: View {
   var body: some View {
     NavigationStack {
       List {
-        ActiveNowView()
-          .listRowSeparator(.hidden)
-          .listRowInsets(EdgeInsets())
-          .padding(.bottom)
-          .padding(.horizontal, 8)
-        
         ForEach(viewModel.filteredMessages) { recentMessage in
           ZStack {
             NavigationLink(value: recentMessage) {
@@ -74,21 +68,14 @@ struct InboxView: View {
         }
       })
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
-      .navigationTitle("Chats")
-      .navigationBarTitleDisplayMode(.inline)
+      .navigationTitle("Messages")
+//      .navigationBarTitleDisplayMode(.inline)
       .toolbar {
-        ToolbarItem(placement: .navigationBarLeading) {
-          if let user = viewModel.user {
-            CircularProfileImageView(user: user, size: .xxSmall32)
-              .onTapGesture { showProfile.toggle() }
-          }
-        }
-        
         ToolbarItem(placement: .navigationBarTrailing) {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
-            .frame(width: 33, height: 33)
-            .foregroundStyle(.primary, Color(.systemGray5))
+            .frame(width: 39, height: 39)
+            .foregroundStyle(Color(.systemBlue), .black) //TODO: account for Light Mode
             .onTapGesture {
               showNewMessageView.toggle()
               selectedUser = nil
@@ -99,8 +86,8 @@ struct InboxView: View {
   }
 }
 
-//struct InboxView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    InboxView()
-//  }
-//}
+struct InboxView_Previews: PreviewProvider {
+  static var previews: some View {
+    InboxView()
+  }
+}

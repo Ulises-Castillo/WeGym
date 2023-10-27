@@ -13,7 +13,10 @@ struct ChatView: View {
   @StateObject var viewModel: ChatViewModel
   private let user: User
   private var thread: Thread?
-  
+//  @State var value: CGFloat = 0
+  @State private var proxy: ScrollViewProxy?
+  @FocusState private var inputFocused: Bool
+
   init(user: User) {
     self.user = user
     self._viewModel = StateObject(wrappedValue: ChatViewModel(user: user))
@@ -32,9 +35,11 @@ struct ChatView: View {
                   .font(.title3)
                   .fontWeight(.semibold)
                 
-                Text("Messenger")
-                  .font(.footnote)
-                  .foregroundColor(.gray)
+                if user.fullName != nil {
+                  Text(user.username)
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                }
               }
             }
             
@@ -45,20 +50,55 @@ struct ChatView: View {
             }
           }
           .padding(.vertical)
+          Spacer().id("thwartKeyboard")
         }
+        .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.messages) { newValue in
           guard  let lastMessage = newValue.last else { return }
-          
+          self.proxy = proxy
+
           withAnimation(.spring()) {
-            proxy.scrollTo(lastMessage.id)
+            proxy.scrollTo("thwartKeyboard")
+          }
+
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.spring()) {
+              proxy.scrollTo("thwartKeyboard")
+            }
           }
         }
+        MessageInputView(messageText: $messageText, viewModel: viewModel)
+          .focused($inputFocused)
+          .onTapGesture {
+            inputFocused = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+              withAnimation(.spring()) {
+                proxy.scrollTo("thwartKeyboard")
+              }
+            }
+          }
       }
-      
-      Spacer()
-      
-      MessageInputView(messageText: $messageText, viewModel: viewModel)
+
     }
+//    .onAppear {
+//      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
+//        let value = notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+//        let height = value.height
+//
+////        self.value = height
+//        viewModel.messages = viewModel.messages
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+//          self.proxy?.scrollTo("thwartKeyboard")
+//        }
+//      }
+//
+//      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { notification in
+////        let value = notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+////        let height = value.height
+//
+////        self.value = 0
+//      }
+//    }
     .onDisappear {
       viewModel.removeChatListener()
     }

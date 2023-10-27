@@ -24,7 +24,7 @@ enum SearchViewModelConfig: Hashable {
         case .likes:
             return "Likes"
         case .search:
-            return "Add Gym Bros"
+            return "Search"
         case .newMessage:
             return "NewMessage"
         }

@@ -13,7 +13,7 @@ import PhotosUI
 struct MessageInputView: View {
   @Binding var messageText: String
   @ObservedObject var viewModel: ChatViewModel
-  
+
   var body: some View {
     ZStack(alignment: .trailing) {
       HStack {
@@ -25,7 +25,7 @@ struct MessageInputView: View {
               .clipped()
               .frame(width: 80, height: 140)
               .cornerRadius(10)
-            
+
             Button(action: {
               viewModel.messageImage = nil
             }, label: {
@@ -40,7 +40,7 @@ struct MessageInputView: View {
             .clipShape(Circle())
           }
           .padding(8)
-          
+
           Spacer()
         } else {
           if messageText.isEmpty {
@@ -56,7 +56,7 @@ struct MessageInputView: View {
             .padding(.leading, 4)
             .padding(.trailing, 48)
           //            .background(Color.theme.secondaryBackground)
-//            .clipShape(Capsule())
+          //            .clipShape(Capsule())
             .font(.subheadline)
             .background(
               Capsule()
@@ -68,17 +68,21 @@ struct MessageInputView: View {
         }
       }
 
-      Button {
-        Task {
-          try await viewModel.sendMessage(messageText)
+      if !messageText.isEmpty || viewModel.messageImage != nil {
+        Button {
+          let msgCopy = messageText
           messageText = ""
+          Task {
+            try await viewModel.sendMessage(msgCopy)
+          }
+        } label: {
+          Image(systemName: "arrow.up.circle.fill")
+            .resizable()
+            .frame(width: 27, height: 27)
         }
-      } label: {
-        Text("Send")
-          .fontWeight(.semibold)
+        .padding(.horizontal)
       }
-      .padding(.horizontal)
-      
+
     }
     .overlay {
       if viewModel.messageImage != nil {
