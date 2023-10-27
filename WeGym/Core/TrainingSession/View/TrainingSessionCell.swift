@@ -73,7 +73,8 @@ struct TrainingSessionCell: View {
       HStack {
         if shouldShowTime {
           // TrainingSession time
-          Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
+          let date = trainingSession.date.dateValue()
+          Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
             .fontWeight(.semibold)
         }
         // TrainingSession location / gym
