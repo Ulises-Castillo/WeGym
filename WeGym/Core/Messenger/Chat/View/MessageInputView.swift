@@ -50,17 +50,24 @@ struct MessageInputView: View {
                 .foregroundColor(.gray)
             }
           }
-          
+
           TextField("Message..", text: $messageText, axis: .vertical)
             .padding(12)
             .padding(.leading, 4)
             .padding(.trailing, 48)
-            .background(Color.theme.secondaryBackground)
-            .clipShape(Capsule())
+          //            .background(Color.theme.secondaryBackground)
+//            .clipShape(Capsule())
             .font(.subheadline)
+            .background(
+              Capsule()
+                .strokeBorder(Color.gray,lineWidth: 0.8)
+                .background(Color.theme.secondaryBackground)
+                .clipped()
+            )
+            .clipShape(Capsule())
         }
       }
-      
+
       Button {
         Task {
           try await viewModel.sendMessage(messageText)
