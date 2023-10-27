@@ -22,7 +22,7 @@ struct InboxRowView: View {
             .frame(width: 6, height: 6, alignment: .leading)
         }
 
-        CircularProfileImageView(user: (message.user?.isCurrentUser ?? false) ? CurrentUser.shared.user! : message.user, size: .small)
+        CircularProfileImageView(user: (message.user?.isCurrentUser ?? false) ? currentUser.user : message.user, size: .small)
       }
 
       VStack(alignment: .leading, spacing: 4) {

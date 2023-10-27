@@ -71,12 +71,9 @@ struct EditProfileView: View {
               try await viewModel.updateUserData()
 
               if let url = viewModel.updatedImageURL {
-//                viewModel.user.profileImageUrl = url
                 CurrentUser.shared.user?.profileImageUrl = url
               }
-//              viewModel.user.fullName = viewModel.fullName
               CurrentUser.shared.user?.fullName = viewModel.fullName
-//              viewModel.user.bio = viewModel.bio
               CurrentUser.shared.user?.bio = viewModel.bio
               dismiss()
             }
