@@ -26,7 +26,7 @@ struct TrainingSessionView: View {
   var body: some View {
 
     NavigationStack {
-      Divider()
+//      Divider()
       ScrollView(.vertical, showsIndicators: false) {
 
         Button {
@@ -37,7 +37,7 @@ struct TrainingSessionView: View {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
           } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
-            RestDayCell(user: CurrentUser.shared.user!)
+            RestDayCell(user: UserService.shared.currentUser!)
           } else {
             ProgressView()
               .scaleEffect(1, anchor: .center)
@@ -49,7 +49,7 @@ struct TrainingSessionView: View {
         .padding(.top, 12)
         .padding(.bottom, 15)
         .sheet(isPresented: $showingEditSheet) {
-          TrainingSessionSchedulerView(user: CurrentUser.shared.user!)
+          TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
         }
 
         ForEach(viewModel.trainingSessions) { session in

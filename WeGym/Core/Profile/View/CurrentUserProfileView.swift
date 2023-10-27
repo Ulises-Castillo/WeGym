@@ -15,7 +15,7 @@ struct CurrentUserProfileView: View {
   @State private var showDetail = false
 
   init() {
-    self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: CurrentUser.shared.user!))
+    self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: UserService.shared.currentUser!))
   }
 
   var body: some View {
@@ -24,10 +24,10 @@ struct CurrentUserProfileView: View {
         VStack(spacing: 24) {
           ProfileHeaderView(viewModel: viewModel)
 
-          PostGridView(config: .profile(CurrentUser.shared.user!))
+          PostGridView(config: .profile(UserService.shared.currentUser!))
         }
       }
-      .navigationTitle(CurrentUser.shared.user!.username)
+      .navigationTitle(UserService.shared.currentUser!.username)
       .navigationBarTitleDisplayMode(.inline)
       .navigationDestination(isPresented: $showDetail, destination: {
         //                Text(selectedSettingsOption?.title ?? "")

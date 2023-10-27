@@ -10,15 +10,17 @@ import Kingfisher
 import PhotosUI
 
 struct EditProfileView: View {
-  @State private var username = ""
+//  @State private var username = ""
 
-  @StateObject private var viewModel: EditProfileViewModel
+  @StateObject private var viewModel = EditProfileViewModel()
   @Environment(\.dismiss) var dismiss
+  @ObservedObject var current = UserService.shared
 
-  init() {
-    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: CurrentUser.shared.user!))
-    self._username = State(initialValue: CurrentUser.shared.user!.username)
-  }
+//  init() {
+//    self._current = StateObject(wrappedValue: UserService.shared)
+//    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: current.currentUser!))
+//    self._username = State(initialValue: current.currentUser!.username)
+//  }
 
   var body: some View {
     NavigationStack {
@@ -36,7 +38,7 @@ struct EditProfileView: View {
                   .clipShape(Circle())
                   .foregroundColor(Color(.systemGray4))
               } else {
-                CircularProfileImageView(user: CurrentUser.shared.user!, size: .large)
+                CircularProfileImageView(user: current.currentUser, size: .large)
               }
               Text("Edit profile picture")
                 .font(.footnote)
@@ -72,12 +74,14 @@ struct EditProfileView: View {
 
               if let url = viewModel.updatedImageURL {
 //                viewModel.user.profileImageUrl = url
-                CurrentUser.shared.user?.profileImageUrl = url
+                current.currentUser?.profileImageUrl = url
               }
 //              viewModel.user.fullName = viewModel.fullName
-              CurrentUser.shared.user?.fullName = viewModel.fullName
+//              UserService.shared.currentUser?.fullName = viewModel.fullName
+              current.currentUser?.fullName = viewModel.fullName
 //              viewModel.user.bio = viewModel.bio
-              CurrentUser.shared.user?.bio = viewModel.bio
+//              UserService.shared.currentUser?.bio = viewModel.bio
+              current.currentUser?.bio = viewModel.bio
               dismiss()
             }
           }
@@ -85,9 +89,9 @@ struct EditProfileView: View {
           .fontWeight(.semibold)
         }
       }
-      .onReceive(viewModel.$user, perform: { user in
-        CurrentUser.shared.user = user
-      })
+//      .onReceive(viewModel.$user, perform: { user in //TODO: check this
+//        current.currentUser = user
+//      })
       .navigationTitle("Edit Profile")
       .navigationBarTitleDisplayMode(.inline)
     }

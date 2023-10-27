@@ -8,7 +8,7 @@
 import Firebase
 import Foundation
 
-class UserService {
+class UserService: ObservableObject {
 
   @Published var currentUser: User?
 

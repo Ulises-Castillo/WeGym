@@ -11,8 +11,8 @@ import Firebase
 
 @MainActor
 class EditProfileViewModel: ObservableObject {
-  @Published var user: User
-  
+  @ObservedObject var current = UserService.shared
+
   @Published var selectedImage: PhotosPickerItem? {
     didSet { Task { await loadImage(fromItem: selectedImage) } }
   }
@@ -26,14 +26,12 @@ class EditProfileViewModel: ObservableObject {
 
   private var uiImage: UIImage?
   
-  init(user: User) {
-    self.user = user
-    
-    if let fullName = user.fullName {
+  init() {
+    if let fullName = current.currentUser?.fullName {
       self.fullName = fullName
     }
     
-    if let bio = user.bio {
+    if let bio = current.currentUser?.bio {
       self.bio = bio
     }
   }
@@ -58,17 +56,17 @@ class EditProfileViewModel: ObservableObject {
     }
     
     // update name if changed
-    if !fullName.isEmpty && user.fullName != fullName {
+    if !fullName.isEmpty && current.currentUser?.fullName != fullName {
       data["fullName"] = fullName // fullName ?
     }
     
     // update bio if changed
-    if !bio.isEmpty && user.bio != bio {
+    if !bio.isEmpty && current.currentUser?.bio != bio {
       data["bio"] = bio
     }
     
     if !data.isEmpty {
-      try await Firestore.firestore().collection("users").document(user.id).updateData(data)
+      try await Firestore.firestore().collection("users").document(current.currentUser!.id).updateData(data)
     }
   }
 }
