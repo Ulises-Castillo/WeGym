@@ -39,11 +39,13 @@ struct User: Identifiable, Hashable, Codable {
   }
 }
 
-extension User: Equatable {
-  static func == (lhs: Self, rhs: Self) -> Bool {
-    return lhs.id == rhs.id
-  }
-}
+
+//MARK: Bug – conforming to Equatable will cause the Current User Singleton to break–No idea why
+//extension User: Equatable {
+//  static func == (lhs: Self, rhs: Self) -> Bool {
+//    return lhs.id == rhs.id
+//  }
+//}
 
 
 
