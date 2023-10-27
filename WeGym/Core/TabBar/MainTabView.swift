@@ -13,7 +13,7 @@ struct MainTabView: View {
 
   init(user: User) {
     CurrentUser.shared.user = user
-    UITabBarItem.appearance().badgeColor = UIColor(Color(.systemBlue))
+    UITabBarItem.appearance().badgeColor = .systemBlue
   }
 
   var body: some View {
@@ -32,13 +32,15 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "envelope")
         }.tag(1)
-      NotificationsView()
+      NotificationsView($shouldShowNotificationBadge)
         .onAppear {
           selectedIndex = 2
         }
         .tabItem {
           Image(systemName: "bell")
         }.tag(2)
+        .badge(shouldShowNotificationBadge ? "" : nil)
+        .decreaseBadgeProminence()
       SearchView()
         .onAppear {
           selectedIndex = 3
@@ -46,8 +48,7 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "magnifyingglass")        //TODO: Consider replacing this with WeGym logo (arms)
         }.tag(3)                                      // actually makes sense considering you add gym bros here
-        .badge(shouldShowNotificationBadge ? "" : nil)// (arms clutching each other) + notifications there
-        .decreaseBadgeProminence()
+                                                      // (arms clutching each other) + notifications there
       CurrentUserProfileView()                        // so its not just a search tab. Would also be cool to
         .onAppear {                                   // have the logo centered at the bottom, always visible.
           selectedIndex = 4
