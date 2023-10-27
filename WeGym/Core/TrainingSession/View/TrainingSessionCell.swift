@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   @ObservedObject var cellViewModel: TrainingSessionCellViewModel
+  @State private var showChat = false
+  @State private var selectedUser: User?
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
@@ -100,7 +102,8 @@ struct TrainingSessionCell: View {
         }
 
         Button {
-          print("Send Direct Message")
+          selectedUser = trainingSession.user
+          showChat.toggle()
         } label: {
           Image(systemName: "envelope")
             .imageScale(.medium)
@@ -128,6 +131,16 @@ struct TrainingSessionCell: View {
       CommentsView(trainingSession: trainingSession)
         .presentationDragIndicator(.visible)
     }
+    .navigationDestination(for: TrainingSession.self, destination: { trainingSession in
+      if let user = trainingSession.user {
+        ChatView(user: user)
+      }
+    })
+    .navigationDestination(isPresented: $showChat, destination: {
+      if let user = selectedUser {
+        ChatView(user: user)
+      }
+    })
   }
 
   private func handleLikeTapped() {

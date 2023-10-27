@@ -13,7 +13,9 @@ struct TrainingSessionView: View {
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
-  
+  @State private var selectedUser: User?
+  @State private var showProfile = false
+
 
   @StateObject var viewModel: TrainingSessionViewModel
 
@@ -52,13 +54,19 @@ struct TrainingSessionView: View {
 
         ForEach(viewModel.trainingSessions) { session in
           Button {
-            print("Join bro's session")
+            selectedUser = session.user
+            showProfile.toggle()
           } label: {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }
         }
       }
+      .navigationDestination(isPresented: $showProfile, destination: {
+        if let user = selectedUser {
+          ProfileView(user: user)
+        }
+      })
       .foregroundColor(.black)
       .navigationTitle(viewModel.relaiveDay())
       .navigationBarTitleDisplayMode(.inline)
