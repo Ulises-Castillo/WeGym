@@ -186,6 +186,7 @@ struct TrainingSessionSchedulerView: View {
         viewModel.shouldShowTime = false
         workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
       }
+      UIDatePicker.appearance().minuteInterval = 15
     }
     .onTapGesture {
       self.endTextEditing()
