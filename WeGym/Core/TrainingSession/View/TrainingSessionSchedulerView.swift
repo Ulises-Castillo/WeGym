@@ -104,6 +104,7 @@ struct TrainingSessionSchedulerView: View {
           .padding()
         }
       }
+      .scrollDismissesKeyboard(.interactively)
       .keyboardAvoiding()
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
@@ -184,7 +185,11 @@ struct TrainingSessionSchedulerView: View {
         schedulerViewModel.selectedGym.append(location)
       } else {
         viewModel.shouldShowTime = false
-        workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
+        if Calendar.current.isDateInToday(viewModel.day) {
+          workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
+        } else {
+          workoutTime = viewModel.day.noon
+        }
       }
       UIDatePicker.appearance().minuteInterval = 15
     }

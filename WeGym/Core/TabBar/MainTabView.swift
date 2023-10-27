@@ -30,7 +30,7 @@ struct MainTabView: View {
           selectedIndex = 1
         }
         .tabItem {
-          Image(systemName: "bubble.left")
+          Image(systemName: "envelope")
         }.tag(1)
       NotificationsView()
         .onAppear {
