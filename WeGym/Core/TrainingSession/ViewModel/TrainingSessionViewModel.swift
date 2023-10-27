@@ -94,10 +94,14 @@ class TrainingSessionViewModel: ObservableObject {
       return relativeDate
     } else if diff <= 6 && diff >= -6 {
       let calendar = Calendar.current
-      if calendar.component(.weekOfYear, from: day) == calendar.component(.weekOfYear, from: Date()) {
+      if dayOfWeek == "Sunday" && diff > 0 {
+        return "Past Sunday"
+      } else if calendar.component(.weekOfYear, from: day) == calendar.component(.weekOfYear, from: Date()) {
         return dayOfWeek
       } else if diff > 0 {
         return "Past " + dayOfWeek
+      } else if diff >= -6 && dayOfWeek == "Sunday" {
+        return dayOfWeek
       } else {
         return "Next " + dayOfWeek
       }
