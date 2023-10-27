@@ -15,7 +15,6 @@ class CurrentUser: ObservableObject {
 
 struct User: Identifiable, Hashable, Codable {
   let id: String
-  var userId: String? //TODO: remove
   let email: String
   var username: String // might make sense to be constant // q: does IG allow users to change username ?
   var fullName: String?
@@ -23,22 +22,11 @@ struct User: Identifiable, Hashable, Codable {
   var bio: String?
   var isFollowed: Bool? = false
 
-  //  var isCurrentUser: Bool {
-  //    guard let currentUid = Auth.auth().currentUser?.uid else { return false }
-  //    return currentUid == id
-  //  }
-
-  var firstName: String {
-    let components = fullName?.components(separatedBy: " ")
-    return components?.first ?? fullName ?? username
-  }
-
-  var isCurrentUser: Bool { //FIXME: should user id above; for Testing only
-    guard let currentEmail = Auth.auth().currentUser?.email else { return false }
-    return currentEmail == email
+  var isCurrentUser: Bool {
+    guard let currentUid = Auth.auth().currentUser?.uid else { return false }
+    return currentUid == id
   }
 }
-
 
 //MARK: Bug – conforming to Equatable will cause the Current User Singleton to break–No idea why
 //extension User: Equatable {
@@ -46,7 +34,6 @@ struct User: Identifiable, Hashable, Codable {
 //    return lhs.id == rhs.id
 //  }
 //}
-
 
 
 extension User {
