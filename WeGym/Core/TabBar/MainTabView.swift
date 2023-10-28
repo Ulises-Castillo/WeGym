@@ -48,8 +48,12 @@ struct MainTabView: View {
         }.tag(Tab.CurrentUserProfile)
     }
     .accentColor(Color(.systemBlue))
-    .onNotification { notification in
-      shouldShowNotificationBadge = true
+    .onNotification { response in                                           //TODO: pass in userId to open correct chat
+      if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
+        selectedTab = .Messages
+      } else {
+        selectedTab = .Notifications
+      }
     }
   }
 }
