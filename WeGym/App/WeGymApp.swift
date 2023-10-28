@@ -43,15 +43,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse) async {
 
+    print("*** user tapped notification from outside the app: \(response.notification.request.content.userInfo)")
     NotificationHandler.shared.handle(notification: response)
     
-    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
-      print("DEEP: BOOM !")
-    }
+
+//    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
+//      print("*** DEEP: BOOM !")
+//    }
   }
 
   func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
-    //    print("Recieved Remote notification")
+    print("*** didReceiveRemoteNotification: \(userInfo)")
     return UIBackgroundFetchResult(rawValue: 8)!
   }
 
