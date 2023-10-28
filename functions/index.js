@@ -76,9 +76,21 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
             const message = {
                 notification: {
                     title: "WeGym",
-                    body: `${fromName}: ${messageText}`
+                    body: `${messageText}`,
                 },
                 data: {
+
+                },
+                // Apple specific settings
+                apns: {
+                    headers: {
+                        'apns-priority': '10',
+                    },
+                    payload: {
+                        aps: {
+                            sound: 'default',
+                        }
+                    },
                 },
                 token: token
             };
