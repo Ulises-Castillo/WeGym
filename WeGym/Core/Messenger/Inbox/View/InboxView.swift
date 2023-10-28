@@ -13,7 +13,8 @@ struct InboxView: View {
   @State private var selectedUser: User?
   @State private var showChat = false
   @State private var showProfile = false
-  
+  @Environment(\.colorScheme) var colorScheme
+
   var body: some View {
     NavigationStack {
       List {
@@ -37,6 +38,8 @@ struct InboxView: View {
         .padding(.leading, 20)
       }
       .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search")
+      .disableAutocorrection(true)
+      .autocapitalization(.none)
       .listStyle(PlainListStyle())
       .onChange(of: selectedUser, perform: { newValue in
         showChat = newValue != nil
@@ -75,7 +78,7 @@ struct InboxView: View {
           Image(systemName: "square.and.pencil.circle.fill")
             .resizable()
             .frame(width: 39, height: 39)
-            .foregroundStyle(Color(.systemBlue), .black) //TODO: account for Light Mode
+            .foregroundStyle(Color(.systemBlue), colorScheme == .light ? .white : .black)
             .onTapGesture {
               showNewMessageView.toggle()
               selectedUser = nil

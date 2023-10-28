@@ -19,16 +19,27 @@ struct NewMessageView: View {
           .frame(height: 44)
           .padding(.leading)
           .background(Color(.systemGroupedBackground))
+          .autocorrectionDisabled(true)
+          .autocapitalization(.none)
 
         LazyVStack {
           ForEach(viewModel.filteredUsers) { user in
             VStack {
-              HStack {
+              HStack(spacing: 15) {
                 CircularProfileImageView(user: user, size: .small)
 
-                Text(user.fullName ?? user.username)
-                  .font(.subheadline)
-                  .fontWeight(.semibold)
+                VStack(alignment: .leading) {
+                  Text(user.fullName ?? user.username)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+
+                  if user.fullName != nil {
+                    Text(user.username)
+                      .font(.footnote)
+                      .fontWeight(.regular)
+                      .foregroundColor(.secondary)
+                  }
+                }
 
                 Spacer()
               }
