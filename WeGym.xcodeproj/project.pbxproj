@@ -126,7 +126,7 @@
 		1CDEE32A2ADB18D900F1A2D6 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3292ADB18D900F1A2D6 /* PostService.swift */; };
 		1CDEE32E2ADB1BEA00F1A2D6 /* PostGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE32D2ADB1BEA00F1A2D6 /* PostGridViewModel.swift */; };
 		1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */; };
-		1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */; };
+		1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */; };
 		1CDEE3392ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */; };
 /* End PBXBuildFile section */
 
@@ -224,7 +224,7 @@
 		1CDEE3292ADB18D900F1A2D6 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		1CDEE32D2ADB1BEA00F1A2D6 /* PostGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostGridViewModel.swift; sourceTree = "<group>"; };
 		1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionCell.swift; sourceTree = "<group>"; };
-		1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionView.swift; sourceTree = "<group>"; };
+		1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionsView.swift; sourceTree = "<group>"; };
 		1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionSchedulerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -883,7 +883,7 @@
 			children = (
 				1CD4CDD72ADEF01A00B2BB0D /* RestDayCell.swift */,
 				1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */,
-				1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionView.swift */,
+				1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */,
 				1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */,
 			);
 			path = View;
@@ -1023,7 +1023,7 @@
 				1C3C0B6E2AEAE29700FFAA75 /* Message.swift in Sources */,
 				1C05E5E22AE7978000D53AE6 /* CommentsViewModel.swift in Sources */,
 				1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */,
-				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionView.swift in Sources */,
+				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionsView.swift in Sources */,
 				1C3C0BA22AEB260000FFAA75 /* ChatBubble.swift in Sources */,
 				1C2FFA7E2AE2479F009CDA2D /* NotificationType.swift in Sources */,
 				1CDEE3162ADA703A00F1A2D6 /* Post.swift in Sources */,

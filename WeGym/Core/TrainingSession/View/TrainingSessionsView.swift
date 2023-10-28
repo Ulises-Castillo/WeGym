@@ -1,5 +1,5 @@
 //
-//  TrainingSessionView.swift
+//  TrainingSessionsView.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/14/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TrainingSessionView: View {
+struct TrainingSessionsView: View {
 
   @Environment(\.scenePhase) var scenePhase
   @State private var selectedDate: Date = .now
@@ -26,7 +26,7 @@ struct TrainingSessionView: View {
   var body: some View {
 
     NavigationStack {
-      Divider()
+
       ScrollView(.vertical, showsIndicators: false) {
 
         Button {
@@ -131,6 +131,6 @@ struct TrainingSessionView: View {
 }
 
 #Preview {
-  TrainingSessionView()
+  TrainingSessionsView()
 }
 
