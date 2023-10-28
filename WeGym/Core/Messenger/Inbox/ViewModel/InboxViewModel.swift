@@ -17,12 +17,17 @@ class InboxViewModel: ObservableObject {
   @Published var searchText = ""
 
   var filteredMessages: [Message] {
-    if searchText.isEmpty {
-      return recentMessages
-    } else {
-      return recentMessages.filter { message in
-        guard let user = message.user else { return false }
-        return user.fullName?.lowercased().contains(searchText.lowercased()) ?? false //TODO: check
+    guard let currentUser = user else { return [] }
+
+    return recentMessages.filter { message in
+      guard let user = message.user, currentUser != user else { return false }
+      
+      if searchText.isEmpty {
+        return true
+      } else {
+        let searchText = searchText.lowercased()
+        return user.fullName?.lowercased().contains(searchText) ?? false ||
+        user.username.contains(searchText)
       }
     }
   }
