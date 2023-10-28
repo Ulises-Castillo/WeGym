@@ -8,54 +8,44 @@
 import SwiftUI
 
 struct MainTabView: View {
-  @State private var selectedIndex = 0
+  enum Tab {
+    case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
+  }
+
+  @State private var selectedTab: Tab = .TrainingSessions
   @State var shouldShowNotificationBadge = false
 
+  @StateObject private var routerManager = NavigationRouter()
+
   init(user: User) {
-//    UserService.shared.currentUser = user
     UITabBarItem.appearance().badgeColor = .systemBlue
   }
 
   var body: some View {
-    TabView(selection: $selectedIndex) {
-      TrainingSessionView()
-        .onAppear {
-          selectedIndex = 0
-        }
+    TabView(selection: $selectedTab) {
+      TrainingSessionsView()
         .tabItem {
           Image(systemName: "dumbbell")
-        }.tag(0)
+        }.tag(Tab.TrainingSessions)
       MessagesView()
-        .onAppear {
-          selectedIndex = 1
-        }
         .tabItem {
           Image(systemName: "envelope")
-        }.tag(1)
+        }.tag(Tab.Messages)
       NotificationsView($shouldShowNotificationBadge)
-        .onAppear {
-          selectedIndex = 2
-        }
         .tabItem {
           Image(systemName: "bell")
-        }.tag(2)
+        }.tag(Tab.Notifications)
         .badge(shouldShowNotificationBadge ? "" : nil)
         .decreaseBadgeProminence()
       SearchView()
-        .onAppear {
-          selectedIndex = 3
-        }
         .tabItem {
-          Image(systemName: "magnifyingglass")        //TODO: Consider replacing this with WeGym logo (arms)
-        }.tag(3)                                      // actually makes sense considering you add gym bros here
-                                                      // (arms clutching each other) + notifications there
-      CurrentUserProfileView()                        // so its not just a search tab. Would also be cool to
-        .onAppear {                                   // have the logo centered at the bottom, always visible.
-          selectedIndex = 4
-        }
+          Image(systemName: "magnifyingglass")
+        }.tag(Tab.Search)
+      CurrentUserProfileView()
+
         .tabItem {
           Image(systemName: "person")
-        }.tag(4)
+        }.tag(Tab.CurrentUserProfile)
     }
     .accentColor(Color(.systemBlue))
     .onNotification { notification in
@@ -64,6 +54,27 @@ struct MainTabView: View {
   }
 }
 
+//extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current tapped
+//
+//  private func tabSelection() -> Binding<Tab> {
+//    Binding { //this is the get block
+//      self.selectedTab
+//    } set: { tappedTab in
+//      if tappedTab == self.selectedTab {
+//        //User tapped on the currently active tab icon => Pop to root/Scroll to top
+//      }
+//      //Set the tab to the tabbed tab
+//      self.selectedTab = tappedTab
+//    }
+//  }
+//}
+
 #Preview {
   MainTabView(user: User.MOCK_USERS_2[0])
 }
+
+//TODO: Consider replacing "bell" image with WeGym logo (arms)
+// actually makes sense considering you add gym bros here
+// (arms clutching each other) + notifications there
+// so its not just a search tab. Would also be cool to
+// have the logo centered at the bottom, always visible.
