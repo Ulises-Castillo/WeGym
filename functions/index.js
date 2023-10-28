@@ -67,7 +67,7 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
 
     getFirestore().collection("fcmTokens").doc(toId).get().then((doc) => {
 
-        const token = doc.data().token; //prevent dup notifications
+        const token = doc.data().token;
 
         getFirestore().collection("users").doc(fromId).get().then((doc) => {
             
