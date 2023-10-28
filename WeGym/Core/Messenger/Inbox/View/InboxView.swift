@@ -11,8 +11,6 @@ struct InboxView: View {
   @State private var showNewMessageView = false
   @StateObject var viewModel = InboxViewModel()
   @State private var selectedUser: User?
-  @State private var showChat = false
-  @State private var showProfile = false
   @Environment(\.colorScheme) var colorScheme
 
   var body: some View {
@@ -41,9 +39,6 @@ struct InboxView: View {
       .disableAutocorrection(true)
       .autocapitalization(.none)
       .listStyle(PlainListStyle())
-      .onChange(of: selectedUser, perform: { newValue in
-        showChat = newValue != nil
-      })
       .fullScreenCover(isPresented: $showNewMessageView, content: {
         NewMessageView(selectedUser: $selectedUser)
       })
@@ -52,27 +47,8 @@ struct InboxView: View {
           ChatView(user: user)
         }
       })
-      .navigationDestination(isPresented: $showChat, destination: {
-        if let user = selectedUser {
-          ChatView(user: user)
-        }
-      })
-      .navigationDestination(isPresented: $showProfile, destination: {
-        if let user = viewModel.user {
-          ProfileView(user: user)
-        }
-      })
-      .navigationDestination(for: Route.self, destination: { route in
-        switch route {
-        case .profile(let user):
-          ProfileView(user: user)
-        case .chatView(let user):
-          ChatView(user: user)
-        }
-      })
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
       .navigationTitle("Messages")
-//      .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Image(systemName: "square.and.pencil.circle.fill")
