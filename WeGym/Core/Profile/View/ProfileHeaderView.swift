@@ -11,12 +11,12 @@ import Kingfisher
 struct ProfileHeaderView: View {
     @ObservedObject var viewModel: ProfileViewModel
     @State var updatedProfileImageUrl: String?
-    @StateObject var currentUser = CurrentUser.shared
+    @StateObject var userService = UserService.shared
 
     var body: some View {
         VStack {
             HStack {
-              CircularProfileImageView(user: viewModel.user.isCurrentUser ? CurrentUser.shared.user! : viewModel.user, size: .large)
+              CircularProfileImageView(user: viewModel.user.isCurrentUser ? userService.currentUser : viewModel.user, size: .large)
                     .padding(.leading)
 
                 Spacer()
@@ -38,7 +38,7 @@ struct ProfileHeaderView: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                if let fullname = viewModel.user.isCurrentUser ? CurrentUser.shared.user?.fullName : viewModel.user.fullName {
+              if let fullname = viewModel.user.isCurrentUser ? userService.currentUser?.fullName : viewModel.user.fullName {
                     Text(fullname)
                         .font(.footnote)
                         .fontWeight(.semibold)
@@ -46,7 +46,7 @@ struct ProfileHeaderView: View {
                 }
 
 
-                if let bio = viewModel.user.isCurrentUser ? CurrentUser.shared.user?.bio : viewModel.user.bio {
+                if let bio = viewModel.user.isCurrentUser ? userService.currentUser?.bio : viewModel.user.bio {
                     Text(bio)
                         .font(.footnote)
                         .padding(.leading)

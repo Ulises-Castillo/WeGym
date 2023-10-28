@@ -8,11 +8,6 @@
 import Foundation
 import Firebase
 
-class CurrentUser: ObservableObject {
-  static let shared = CurrentUser()
-  @Published var user: User?
-}
-
 struct User: Identifiable, Hashable, Codable {
   let id: String
   let email: String
@@ -22,16 +17,18 @@ struct User: Identifiable, Hashable, Codable {
   var bio: String?
   var isFollowed: Bool? = false
 
-//  var isCurrentUser: Bool {
-//    guard let currentUid = Auth.auth().currentUser?.uid else { return false }
-//    return currentUid == id
-//  }
-  
-  var isCurrentUser: Bool { //FIXME: should user id above; for Testing only
-    guard let currentEmail = Auth.auth().currentUser?.email else { return false }
-    return currentEmail == email
+  var isCurrentUser: Bool {
+    guard let currentUid = Auth.auth().currentUser?.uid else { return false }
+    return currentUid == id
   }
 }
+
+//MARK: Bug – conforming to Equatable will cause the Current User Singleton to break–No idea why
+//extension User: Equatable {
+//  static func == (lhs: Self, rhs: Self) -> Bool {
+//    return lhs.id == rhs.id
+//  }
+//}
 
 
 extension User {
@@ -45,7 +42,7 @@ extension User {
     .init(id: NSUUID().uuidString, email: "arnold@gym.com", username: "arnold_s", fullName: "Arnold Schwarzenegger", profileImageUrl: nil, bio: "Have a vision"),
     .init(id: NSUUID().uuidString, email: "manny@boxing.com", username: "pacman", fullName: "Manny Pacquiao", profileImageUrl: nil, bio: "Boxing is my life"),
   ]
-  
+
   static var MOCK_USERS: [User] = [
     .init(id: NSUUID().uuidString, email: "uacastillo@ucdavis.edu", username: "master_ulysses", fullName: "Ulysses", profileImageUrl: "uly", bio: "Amat Victoria Curam 💪"),
     .init(id: NSUUID().uuidString, email: "andrew@tate.com", username: "cobra_tate", fullName: "Andrew", profileImageUrl: "andrew", bio: "Escape the matrix"),

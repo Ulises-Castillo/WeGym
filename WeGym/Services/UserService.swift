@@ -8,11 +8,11 @@
 import Firebase
 import Foundation
 
-class UserService {
-
-  @Published var currentUser: User?
+class UserService: ObservableObject {
 
   static let shared = UserService()
+  @Published var currentUser: User?
+
 
   @MainActor
   func fetchCurrentUser() async throws {
@@ -26,6 +26,35 @@ class UserService {
     let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument()
     let user = try snapshot.data(as: User.self)
     return user
+  }
+
+  static func fetchUser(withUid uid: String, completion: @escaping(User) -> Void) {
+      FirestoreConstants.UserCollection.document(uid).getDocument { snapshot, _ in
+          guard let user = try? snapshot?.data(as: User.self) else {
+              print("DEBUG: Failed to map user")
+              return
+          }
+          completion(user)
+      }
+  }
+
+  static func fetchUsers(limit: Int? = nil) async throws -> [User] {
+      guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
+      let query = FirestoreConstants.UserCollection
+
+      if let limit {
+          let snapshot = try await query.limit(to: limit).getDocuments()
+          return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
+      }
+
+      let snapshot = try await query.getDocuments()
+      return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
+  }
+
+  private static func mapUsers(fromSnapshot snapshot: QuerySnapshot, currentUid: String) -> [User] {
+      return snapshot.documents
+          .compactMap({ try? $0.data(as: User.self) })
+          .filter({ $0.id !=  currentUid })
   }
 }
 

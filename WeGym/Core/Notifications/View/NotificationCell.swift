@@ -74,6 +74,7 @@ struct NotificationCell: View {
             }
 
         }
+        .accentColor(.primary)
         .padding(.horizontal)
     }
 }

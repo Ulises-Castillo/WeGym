@@ -16,8 +16,8 @@ struct EditProfileView: View {
   @Environment(\.dismiss) var dismiss
 
   init() {
-    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: CurrentUser.shared.user!))
-    self._username = State(initialValue: CurrentUser.shared.user!.username)
+    self._viewModel = StateObject(wrappedValue: EditProfileViewModel(user: UserService.shared.currentUser!))
+    self._username = State(initialValue: UserService.shared.currentUser!.username)
   }
 
   var body: some View {
@@ -36,7 +36,7 @@ struct EditProfileView: View {
                   .clipShape(Circle())
                   .foregroundColor(Color(.systemGray4))
               } else {
-                CircularProfileImageView(user: CurrentUser.shared.user!, size: .large)
+                CircularProfileImageView(user: UserService.shared.currentUser!, size: .large)
               }
               Text("Edit profile picture")
                 .font(.footnote)
@@ -71,13 +71,10 @@ struct EditProfileView: View {
               try await viewModel.updateUserData()
 
               if let url = viewModel.updatedImageURL {
-//                viewModel.user.profileImageUrl = url
-                CurrentUser.shared.user?.profileImageUrl = url
+                UserService.shared.currentUser?.profileImageUrl = url
               }
-//              viewModel.user.fullName = viewModel.fullName
-              CurrentUser.shared.user?.fullName = viewModel.fullName
-//              viewModel.user.bio = viewModel.bio
-              CurrentUser.shared.user?.bio = viewModel.bio
+              UserService.shared.currentUser?.fullName = viewModel.fullName
+              UserService.shared.currentUser?.bio = viewModel.bio
               dismiss()
             }
           }
@@ -86,7 +83,7 @@ struct EditProfileView: View {
         }
       }
       .onReceive(viewModel.$user, perform: { user in
-        CurrentUser.shared.user = user
+        UserService.shared.currentUser = user
       })
       .navigationTitle("Edit Profile")
       .navigationBarTitleDisplayMode(.inline)

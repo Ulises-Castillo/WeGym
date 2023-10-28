@@ -1,5 +1,5 @@
 //
-//  TrainingSessionView.swift
+//  TrainingSessionsView.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/14/23.
@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-struct TrainingSessionView: View {
+struct TrainingSessionsView: View {
 
   @Environment(\.scenePhase) var scenePhase
   @State private var selectedDate: Date = .now
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
-  
+  @State private var selectedUser: User?
+  @State private var showProfile = false
+
 
   @StateObject var viewModel: TrainingSessionViewModel
 
@@ -24,7 +26,7 @@ struct TrainingSessionView: View {
   var body: some View {
 
     NavigationStack {
-      Divider()
+
       ScrollView(.vertical, showsIndicators: false) {
 
         Button {
@@ -35,7 +37,7 @@ struct TrainingSessionView: View {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
           } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
-            RestDayCell(user: CurrentUser.shared.user!)
+            RestDayCell(user: UserService.shared.currentUser!)
           } else {
             ProgressView()
               .scaleEffect(1, anchor: .center)
@@ -47,21 +49,26 @@ struct TrainingSessionView: View {
         .padding(.top, 12)
         .padding(.bottom, 15)
         .sheet(isPresented: $showingEditSheet) {
-          TrainingSessionSchedulerView(user: CurrentUser.shared.user!)
+          TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
         }
 
         ForEach(viewModel.trainingSessions) { session in
           Button {
-            print("Join bro's session")
+            selectedUser = session.user
+            showProfile.toggle()
           } label: {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }
         }
       }
+      .navigationDestination(isPresented: $showProfile, destination: {
+        if let user = selectedUser {
+          ProfileView(user: user)
+        }
+      })
       .foregroundColor(.black)
       .navigationTitle(viewModel.relaiveDay())
-      .navigationBarTitleDisplayMode(.inline)
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -69,8 +76,8 @@ struct TrainingSessionView: View {
             viewModel.day = viewModel.day.addingTimeInterval(86400)
             selectedDate = selectedDate.addingTimeInterval(86400)
           } label: {
-            Image(systemName: "arrowtriangle.forward")
-              .foregroundColor(.primary)
+            Image(systemName: "arrow.forward.square")
+              .foregroundColor(Color(.systemBlue))
               .padding(.horizontal, 9)
           }
         }
@@ -79,7 +86,7 @@ struct TrainingSessionView: View {
             showingDateSheet.toggle()
           } label: {
             Image(systemName: "calendar")
-              .foregroundColor(.primary)
+              .foregroundColor(Color(.systemBlue))
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
@@ -124,6 +131,6 @@ struct TrainingSessionView: View {
 }
 
 #Preview {
-  TrainingSessionView()
+  TrainingSessionsView()
 }
 

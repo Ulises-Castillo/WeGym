@@ -48,3 +48,71 @@ exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-f
     });
   });
   
+
+exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/{messageId}", (event) => {
+
+    const snapshot = event.data;
+    const data = snapshot.data();
+
+    const toId = data.toId;
+    const fromId = data.fromId;
+    const messageText = data.text;
+
+    // prevent dup notifications
+    // two message documents created
+    // one in each of the user's message list
+    if (toId == event.params.uid2) {
+        return;
+    }
+
+    getFirestore().collection("fcmTokens").doc(toId).get().then((doc) => {
+
+        const token = doc.data().token;
+
+        getFirestore().collection("users").doc(fromId).get().then((doc) => {
+            
+            const fromName = doc.data().username; //TODO: should this be fullName instead? (optional)
+
+            const message = {
+                notification: {
+                    title: "WeGym",
+                    body: `${messageText}`,
+                },
+                data: {
+
+                },
+                // Apple specific settings
+                apns: {
+                    headers: {
+                        'apns-priority': '10',
+                    },
+                    payload: {
+                        aps: {
+                            "content-available": 1,
+                            sound: 'default',
+                            alert : {
+                                "title" : "WeGym",
+                                "subtitle" : `${fromName}`,
+                                "body" : `${messageText}`
+                            }
+                        },
+                        notificationType: "new_direct_message"
+                    }
+                },
+                token: token
+            };
+        
+            getMessaging().send(message)
+            .then((response) => {
+                console.log("Successfully sent message:", response);
+                console.log("data: ", token)
+            })
+            .catch((error) => {
+                console.log("Error sending message:", error);
+            });
+        
+        });
+
+    });
+
+});

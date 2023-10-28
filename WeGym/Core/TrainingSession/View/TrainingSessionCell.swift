@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   @ObservedObject var cellViewModel: TrainingSessionCellViewModel
+  @State private var showChat = false
+  @State private var selectedUser: User?
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
@@ -24,7 +26,7 @@ struct TrainingSessionCell: View {
   }
 
   let shouldShowTime: Bool
-  @StateObject var currentUser = CurrentUser.shared
+  @StateObject var userService = UserService.shared
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
@@ -34,7 +36,7 @@ struct TrainingSessionCell: View {
     VStack(alignment: .leading, spacing: 9) {
 
       HStack {
-        if let user = trainingSession.user?.isCurrentUser ?? false ? CurrentUser.shared.user : trainingSession.user {
+        if let user = trainingSession.user?.isCurrentUser ?? false ? userService.currentUser : trainingSession.user {
           // user profile image
           CircularProfileImageView(user: user, size: .xSmall)
           // username
@@ -71,7 +73,8 @@ struct TrainingSessionCell: View {
       HStack {
         if shouldShowTime {
           // TrainingSession time
-          Text(trainingSession.date.dateValue(), format: .dateTime.hour().minute())
+          let date = trainingSession.date.dateValue()
+          Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
             .fontWeight(.semibold)
         }
         // TrainingSession location / gym
@@ -100,7 +103,8 @@ struct TrainingSessionCell: View {
         }
 
         Button {
-          print("Send Direct Message")
+          selectedUser = trainingSession.user
+          showChat.toggle()
         } label: {
           Image(systemName: "envelope")
             .imageScale(.medium)
@@ -128,6 +132,16 @@ struct TrainingSessionCell: View {
       CommentsView(trainingSession: trainingSession)
         .presentationDragIndicator(.visible)
     }
+    .navigationDestination(for: TrainingSession.self, destination: { trainingSession in
+      if let user = trainingSession.user {
+        ChatView(user: user)
+      }
+    })
+    .navigationDestination(isPresented: $showChat, destination: {
+      if let user = selectedUser {
+        ChatView(user: user)
+      }
+    })
   }
 
   private func handleLikeTapped() {

@@ -104,6 +104,7 @@ struct TrainingSessionSchedulerView: View {
           .padding()
         }
       }
+      .scrollDismissesKeyboard(.interactively)
       .keyboardAvoiding()
       .foregroundColor(.primary)
       .navigationTitle(viewModel.currentUserTrainingSesssion == nil ? "Add Workout" : "Edit Workout")
@@ -112,8 +113,9 @@ struct TrainingSessionSchedulerView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-            Task {
+            guard !schedulerViewModel.selectedWorkoutFocuses.isEmpty else { return }
 
+            Task {
               if let prevSession = viewModel.currentUserTrainingSesssion {
 
                 let newSession = TrainingSession(id: prevSession.id,
@@ -163,8 +165,9 @@ struct TrainingSessionSchedulerView: View {
             dismiss()
           } label: {
             Image(systemName: "checkmark")
+
           }
-          .foregroundColor(.green)
+          .foregroundColor(schedulerViewModel.selectedWorkoutFocuses.isEmpty ? .gray : .green)
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
@@ -184,8 +187,13 @@ struct TrainingSessionSchedulerView: View {
         schedulerViewModel.selectedGym.append(location)
       } else {
         viewModel.shouldShowTime = false
-        workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
+        if Calendar.current.isDateInToday(viewModel.day) {
+          workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
+        } else {
+          workoutTime = viewModel.day.noon
+        }
       }
+      UIDatePicker.appearance().minuteInterval = 15
     }
     .onTapGesture {
       self.endTextEditing()

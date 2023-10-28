@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct NotificationsView: View {
-  @StateObject var viewModel = NotificationsViewModel()
+  @StateObject var viewModel: NotificationsViewModel
+  @Binding var shouldShowNotificationBadge: Bool
+
+  init(_ shouldShowNotificationBadge: Binding<Bool>) {
+    self._shouldShowNotificationBadge = shouldShowNotificationBadge
+    self._viewModel = StateObject(wrappedValue: NotificationsViewModel())
+  }
 
   var body: some View {
     NavigationStack {
@@ -25,7 +31,9 @@ struct NotificationsView: View {
           }
         }
         .navigationTitle("Notifications")
-        .navigationBarTitleDisplayMode(.inline)
+      }
+      .onAppear {
+        shouldShowNotificationBadge = false
       }
       .overlay {
         if viewModel.isLoading {
