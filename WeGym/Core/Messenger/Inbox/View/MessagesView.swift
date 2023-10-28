@@ -1,5 +1,5 @@
 //
-//  InboxView.swift
+//  MessagesView.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/26/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InboxView: View {
+struct MessagesView: View {
   @State private var showNewMessageView = false
   @StateObject var viewModel = InboxViewModel()
   @State private var selectedUser: User?
@@ -22,7 +22,7 @@ struct InboxView: View {
               EmptyView()
             }.opacity(0.0)
             
-            InboxRowView(message: recentMessage, viewModel: viewModel)
+            MessageRowView(message: recentMessage, viewModel: viewModel)
               .onAppear {
                 if recentMessage == viewModel.recentMessages.last {
                   print("DEBUG: Paginate here..")
@@ -67,6 +67,6 @@ struct InboxView: View {
 
 struct InboxView_Previews: PreviewProvider {
   static var previews: some View {
-    InboxView()
+    MessagesView()
   }
 }

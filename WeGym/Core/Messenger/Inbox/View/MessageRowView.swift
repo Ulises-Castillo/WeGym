@@ -1,5 +1,5 @@
 //
-//  InboxRowView.swift
+//  MessageRowView.swift
 //  WeGym
 //
 //  Created by Ulises Castillo on 10/26/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InboxRowView: View {
+struct MessageRowView: View {
   let message: Message
   @ObservedObject var viewModel: InboxViewModel
   @StateObject var userService = UserService.shared

@@ -25,7 +25,7 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(0)
-      InboxView()
+      MessagesView()
         .onAppear {
           selectedIndex = 1
         }
