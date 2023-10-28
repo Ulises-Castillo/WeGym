@@ -89,8 +89,13 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                     payload: {
                         aps: {
                             sound: 'default',
-                        }
-                    },
+                            alert : {
+                                "title" : "WeGym",
+                                "subtitle" : `${fromName}`,
+                                "body" : `${messageText}`
+                            }
+                        },
+                    }
                 },
                 token: token
             };
