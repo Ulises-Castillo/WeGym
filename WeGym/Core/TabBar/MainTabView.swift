@@ -32,9 +32,11 @@ struct MainTabView: View {
   @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
   @State private var messagesNavigationStack = [MessagesNavigation]()
 
+  @State private var showToday = false
+
   var body: some View {
     TabView(selection: tabSelection()) {
-      TrainingSessionsView(path: $trainingSessionsNavigationStack)
+      TrainingSessionsView(path: $trainingSessionsNavigationStack, showToday: $showToday)
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(Tab.TrainingSessions)
@@ -82,7 +84,11 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
         switch tappedTab {
         case .TrainingSessions:
           if trainingSessionsNavigationStack.isEmpty {
-            // scroll to the top
+            // scroll to the top //TODO: implement for all tabs
+
+            // if already at the top
+            // show today's training sessions
+            showToday = true
           } else {
             // pop to root
             trainingSessionsNavigationStack = []

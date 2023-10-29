@@ -15,11 +15,13 @@ struct TrainingSessionsView: View {
   @State private var showingEditSheet = false
   @State private var selectedUser: User?
   @Binding var path: [TrainingSessionsNavigation]
+  @Binding var showToday: Bool
 
 
   @StateObject var viewModel: TrainingSessionViewModel
 
-  init(path: Binding<[TrainingSessionsNavigation]>) {
+  init(path: Binding<[TrainingSessionsNavigation]>, showToday: Binding<Bool>) {
+    self._showToday = showToday
     self._path = path
     self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
@@ -123,6 +125,13 @@ struct TrainingSessionsView: View {
         viewModel.day = selectedDate
       }
     }
+    .onChange(of: showToday) { newValue in
+      if showToday {
+        showToday = false
+        selectedDate = Date()         //TODO: reduce dup (see below)
+        viewModel.day = selectedDate
+      }
+    }
     .onAppear{
       selectedDate = Date()
       viewModel.day = selectedDate
@@ -132,6 +141,6 @@ struct TrainingSessionsView: View {
 }
 
 #Preview {
-  TrainingSessionsView(path: .constant([TrainingSessionsNavigation]()))
+  TrainingSessionsView(path: .constant([TrainingSessionsNavigation]()), showToday: .constant(false))
 }
 
