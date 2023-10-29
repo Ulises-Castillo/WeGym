@@ -16,6 +16,7 @@ struct ChatView: View {
 //  @State var value: CGFloat = 0
   @State private var proxy: ScrollViewProxy?
   @FocusState private var inputFocused: Bool
+  @State private var isFirstLoad = true
 
   init(user: User) {
     self.user = user
@@ -45,7 +46,7 @@ struct ChatView: View {
             
             ForEach(viewModel.messages.indices, id: \.self) { index in
               ChatMessageCell(message: viewModel.messages[index],
-                              nextMessage: viewModel.nextMessage(forIndex: index))
+                              nextMessage: viewModel.nextMessage(forIndex: index)) //TODO: implement pagination such that when user scrolls to the top of chat next older messages are loaded; look at MessagesView loop .onAppear()
               .id(viewModel.messages[index].id)
             }
           }
@@ -56,6 +57,12 @@ struct ChatView: View {
         .onChange(of: viewModel.messages) { newValue in
           guard  let lastMessage = newValue.last else { return }
           self.proxy = proxy
+
+          if isFirstLoad {
+            isFirstLoad = false
+            proxy.scrollTo("thwartKeyboard")
+            return
+          }
 
           withAnimation(.spring()) {
             proxy.scrollTo("thwartKeyboard")
