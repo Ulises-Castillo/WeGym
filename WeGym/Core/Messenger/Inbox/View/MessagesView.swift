@@ -40,9 +40,13 @@ struct MessagesView: View {
       .disableAutocorrection(true)
       .autocapitalization(.none)
       .listStyle(PlainListStyle())
-      .fullScreenCover(isPresented: $showNewMessageView, content: {
-        NewMessageView(selectedUser: $selectedUser)
+      .onChange(of: selectedUser, perform: { newValue in
+        guard let user = newValue else { return }
+        path.append(.chat(user))
       })
+      .sheet(isPresented: $showNewMessageView) {
+        NewMessageView(selectedUser: $selectedUser)
+      }
       .navigationDestination(for: MessagesNavigation.self) { screen in
         switch screen {
         case .chat(let user):
@@ -58,8 +62,8 @@ struct MessagesView: View {
             .frame(width: 39, height: 39)
             .foregroundStyle(Color(.systemBlue), colorScheme == .light ? .white : .black)
             .onTapGesture {
-              showNewMessageView.toggle()
               selectedUser = nil
+              showNewMessageView.toggle()
             }
         }
       }

@@ -24,34 +24,34 @@ struct NewMessageView: View {
 
         LazyVStack {
           ForEach(viewModel.filteredUsers) { user in
-            VStack {
-              HStack(spacing: 15) {
-                CircularProfileImageView(user: user, size: .small)
+            Button {
+              dismiss()
+              selectedUser = user
+            } label: {
+              VStack {
+                HStack(spacing: 15) {
+                  CircularProfileImageView(user: user, size: .small)
 
-                VStack(alignment: .leading) {
-                  Text(user.fullName ?? user.username)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                  VStack(alignment: .leading) {
+                    Text(user.fullName ?? user.username)
+                      .font(.subheadline)
+                      .fontWeight(.semibold)
 
-                  if user.fullName != nil {
-                    Text(user.username)
-                      .font(.footnote)
-                      .fontWeight(.regular)
-                      .foregroundColor(.secondary)
+                    if user.fullName != nil {
+                      Text(user.username)
+                        .font(.footnote)
+                        .fontWeight(.regular)
+                        .foregroundColor(.secondary)
+                    }
                   }
+                  Spacer()
                 }
-
-                Spacer()
+                Divider()
+                  .padding(.leading, 40)
               }
-              .onTapGesture {
-                dismiss()
-                selectedUser = user
-              }
-
-              Divider()
-                .padding(.leading, 40)
+              .padding(.leading)
             }
-            .padding(.leading)
+            .foregroundColor(.primary)
           }
         }
       }
