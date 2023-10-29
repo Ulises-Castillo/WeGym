@@ -12,16 +12,17 @@ struct MessagesView: View {
   @StateObject var viewModel = InboxViewModel()
   @State private var selectedUser: User?
   @Environment(\.colorScheme) var colorScheme
+  @Binding var path: [MessagesNavigation]
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       List {
         ForEach(viewModel.filteredMessages) { recentMessage in
           ZStack {
-            NavigationLink(value: recentMessage) {
+            NavigationLink(value: MessagesNavigation.chat(recentMessage.user!)) {
               EmptyView()
-            }.opacity(0.0)
-            
+            }.opacity(0.0).disabled(recentMessage.user == nil)
+
             MessageRowView(message: recentMessage, viewModel: viewModel)
               .onAppear {
                 if recentMessage == viewModel.recentMessages.last {
@@ -42,11 +43,12 @@ struct MessagesView: View {
       .fullScreenCover(isPresented: $showNewMessageView, content: {
         NewMessageView(selectedUser: $selectedUser)
       })
-      .navigationDestination(for: Message.self, destination: { message in
-        if let user = message.user {
+      .navigationDestination(for: MessagesNavigation.self) { screen in
+        switch screen {
+        case .chat(let user):
           ChatView(user: user)
         }
-      })
+      }
       .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
       .navigationTitle("Messages")
       .toolbar {
@@ -67,6 +69,6 @@ struct MessagesView: View {
 
 struct InboxView_Previews: PreviewProvider {
   static var previews: some View {
-    MessagesView()
+    MessagesView(path: .constant([MessagesNavigation]()))
   }
 }
