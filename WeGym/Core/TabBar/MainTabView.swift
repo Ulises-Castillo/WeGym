@@ -16,6 +16,10 @@ enum MessagesNavigation: Hashable {
   case chat(User)
 }
 
+enum NotificationsNavigation: Hashable {
+  case profile(User)
+}
+
 
 struct MainTabView: View {
   enum Tab {
@@ -31,6 +35,7 @@ struct MainTabView: View {
 
   @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
   @State private var messagesNavigationStack = [MessagesNavigation]()
+  @State private var notificationsNavigationStack = [NotificationsNavigation]()
 
   @State private var showToday = false
 
@@ -44,7 +49,7 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "envelope")
         }.tag(Tab.Messages)
-      NotificationsView($shouldShowNotificationBadge)
+      NotificationsView(path: $notificationsNavigationStack, $shouldShowNotificationBadge)
         .tabItem {
           Image(systemName: "bell")
         }.tag(Tab.Notifications)
@@ -101,7 +106,10 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
             messagesNavigationStack = []
           }
         case .Notifications:
-          break
+          if notificationsNavigationStack.isEmpty {
+          } else {
+            notificationsNavigationStack = []
+          }
         case .Search:
           break
         case .CurrentUserProfile:
