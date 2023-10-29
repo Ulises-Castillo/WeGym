@@ -12,6 +12,7 @@ class UserService: ObservableObject {
 
   static let shared = UserService()
   @Published var currentUser: User?
+  @Published var profileImage: UIImage?
 
 
   @MainActor

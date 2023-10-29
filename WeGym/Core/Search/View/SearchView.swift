@@ -10,12 +10,16 @@ import SwiftUI
 struct SearchView: View {
   @State var searchText = ""
   @State var inSearchMode = false
+  @Binding var path: [SearchNavigation]
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       UserListView(config: .search)
-        .navigationDestination(for: User.self) { user in
-          ProfileView(user: user)
+        .navigationDestination(for: SearchNavigation.self) { screen in
+          switch screen {
+          case .profile(let user):
+            ProfileView(user: user)
+          }
         }
     }
   }

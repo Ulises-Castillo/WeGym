@@ -7,6 +7,23 @@
 
 import SwiftUI
 
+enum TrainingSessionsNavigation: Hashable {
+  case profile(User)
+  case chat(User)
+}
+
+enum MessagesNavigation: Hashable {
+  case chat(User)
+}
+
+enum NotificationsNavigation: Hashable {
+  case profile(User)
+}
+
+enum SearchNavigation: Hashable {
+  case profile(User)
+}
+
 struct MainTabView: View {
   enum Tab {
     case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
@@ -15,29 +32,34 @@ struct MainTabView: View {
   @State private var selectedTab: Tab = .TrainingSessions
   @State var shouldShowNotificationBadge = false
 
-  @StateObject private var routerManager = NavigationRouter()
-
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
   }
 
+  @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
+  @State private var messagesNavigationStack = [MessagesNavigation]()
+  @State private var notificationsNavigationStack = [NotificationsNavigation]()
+  @State private var searchNavigationStack = [SearchNavigation]()
+
+  @State private var showToday = false
+
   var body: some View {
-    TabView(selection: $selectedTab) {
-      TrainingSessionsView()
+    TabView(selection: tabSelection()) {
+      TrainingSessionsView(path: $trainingSessionsNavigationStack, showToday: $showToday)
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(Tab.TrainingSessions)
-      MessagesView()
+      MessagesView(path: $messagesNavigationStack)
         .tabItem {
           Image(systemName: "envelope")
         }.tag(Tab.Messages)
-      NotificationsView($shouldShowNotificationBadge)
+      NotificationsView(path: $notificationsNavigationStack, $shouldShowNotificationBadge)
         .tabItem {
           Image(systemName: "bell")
         }.tag(Tab.Notifications)
         .badge(shouldShowNotificationBadge ? "" : nil)
         .decreaseBadgeProminence()
-      SearchView()
+      SearchView(path: $searchNavigationStack)
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(Tab.Search)
@@ -58,20 +80,54 @@ struct MainTabView: View {
   }
 }
 
-//extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current tapped
-//
-//  private func tabSelection() -> Binding<Tab> {
-//    Binding { //this is the get block
-//      self.selectedTab
-//    } set: { tappedTab in
-//      if tappedTab == self.selectedTab {
-//        //User tapped on the currently active tab icon => Pop to root/Scroll to top
-//      }
-//      //Set the tab to the tabbed tab
-//      self.selectedTab = tappedTab
-//    }
-//  }
-//}
+extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current tapped
+
+  private func tabSelection() -> Binding<Tab> {
+    Binding { //this is the get block
+      self.selectedTab
+    } set: { tappedTab in
+      print("*** selectedTab: \(selectedTab)")
+      print("*** selectedTab: \(tappedTab)")
+      if tappedTab == self.selectedTab {
+        //User tapped on the currently active tab icon => Pop to root/Scroll to top
+        switch tappedTab {
+        case .TrainingSessions:
+          if trainingSessionsNavigationStack.isEmpty {
+            // scroll to the top //TODO: implement for all tabs
+
+            // if already at the top
+            // show today's training sessions
+            showToday = true
+          } else {
+            // pop to root
+            trainingSessionsNavigationStack = []
+          }
+        case .Messages:
+          if messagesNavigationStack.isEmpty {
+            // scroll to the top
+          } else {
+            // pop to root
+            messagesNavigationStack = []
+          }
+        case .Notifications:
+          if notificationsNavigationStack.isEmpty {
+          } else {
+            notificationsNavigationStack = []
+          }
+        case .Search:
+          if searchNavigationStack.isEmpty {
+          } else {
+            searchNavigationStack = []
+          }
+        case .CurrentUserProfile:
+          break
+        }
+      }
+      //Set the tab to the user selected tab
+      self.selectedTab = tappedTab
+    }
+  }
+}
 
 #Preview {
   MainTabView(user: User.MOCK_USERS_2[0])

@@ -5,4 +5,12 @@
 //  Created by Ulises Castillo on 10/28/23.
 //
 
-import Foundation
+import SwiftUI
+
+final class NavigationRouter: ObservableObject {
+
+  @Published var routes = NavigationPath()
+
+}
+
+

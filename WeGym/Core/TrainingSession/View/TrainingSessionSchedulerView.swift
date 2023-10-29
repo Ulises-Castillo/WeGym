@@ -73,7 +73,7 @@ struct TrainingSessionSchedulerView: View {
         TextField("Add caption:", text: $workoutCaption, axis: .vertical)
           .padding()
           .padding(.bottom, 90)
-          .font(.title3)
+          .font(.system(size: 18, weight: Font.Weight.medium, design: Font.Design.rounded))
           .lineLimit(2)
           .disableAutocorrection(true)
           .onReceive(Just(workoutCaption)) { _ in limitText(captionLengthLimit) }
@@ -164,7 +164,7 @@ struct TrainingSessionSchedulerView: View {
             }
             dismiss()
           } label: {
-            Image(systemName: "checkmark")
+            Image(systemName: "checkmark.square.fill")
 
           }
           .foregroundColor(schedulerViewModel.selectedWorkoutFocuses.isEmpty ? .gray : .green)
@@ -173,7 +173,7 @@ struct TrainingSessionSchedulerView: View {
           Button {
             dismiss()
           } label: {
-            Image(systemName: "xmark")
+            Image(systemName: "x.square.fill")
           }
           .foregroundColor(.red)
         }

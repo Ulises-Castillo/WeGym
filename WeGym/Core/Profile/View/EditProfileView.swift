@@ -11,6 +11,7 @@ import PhotosUI
 
 struct EditProfileView: View {
   @State private var username = ""
+  @State private var isUploading = false
 
   @StateObject private var viewModel: EditProfileViewModel
   @Environment(\.dismiss) var dismiss
@@ -67,15 +68,18 @@ struct EditProfileView: View {
 
         ToolbarItem(placement: .navigationBarTrailing) {
           Button("Done") {
+            isUploading = true
             Task {
-              try await viewModel.updateUserData()
-
-              if let url = viewModel.updatedImageURL {
-                UserService.shared.currentUser?.profileImageUrl = url
-              }
               UserService.shared.currentUser?.fullName = viewModel.fullName
               UserService.shared.currentUser?.bio = viewModel.bio
+              UserService.shared.currentUser?.profileImageUrl = nil
+
               dismiss()
+
+              try await viewModel.updateUserData()
+              if let url = viewModel.updatedImageURL { //TODO: the image is local, set it instantly, until we have the updated URL, perhaps just always use stored local image // KFImage prob handles UIImages automatically
+                UserService.shared.currentUser?.profileImageUrl = url
+              }
             }
           }
           .font(.subheadline)
@@ -87,7 +91,16 @@ struct EditProfileView: View {
       })
       .navigationTitle("Edit Profile")
       .navigationBarTitleDisplayMode(.inline)
-    }
+      .overlay(Group {
+        if isUploading {
+          ProgressView()
+            .scaleEffect(1, anchor: .center)
+            .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+            .padding(.top, 15)
+            .frame(width: 50)
+        }
+      })
+    }.disabled(isUploading)
 
   }
 }
