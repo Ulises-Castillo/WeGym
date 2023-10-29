@@ -50,8 +50,7 @@ struct ChatView: View {
               .id(viewModel.messages[index].id)
             }
           }
-          .padding(.vertical)
-          Spacer().id("thwartKeyboard")
+          .padding(.vertical).id("thwartKeyboard")
         }
         .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.messages) { newValue in
@@ -60,17 +59,17 @@ struct ChatView: View {
 
           if isFirstLoad {
             isFirstLoad = false
-            proxy.scrollTo("thwartKeyboard")
+            proxy.scrollTo("thwartKeyboard", anchor: .bottom)
             return
           }
 
           withAnimation(.spring()) {
-            proxy.scrollTo("thwartKeyboard")
+            proxy.scrollTo("thwartKeyboard", anchor: .bottom)
           }
 
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { //TODO: remove hacky code
             withAnimation(.spring()) {
-              proxy.scrollTo("thwartKeyboard")
+              proxy.scrollTo("thwartKeyboard", anchor: .bottom)
             }
           }
         }
@@ -80,10 +79,17 @@ struct ChatView: View {
             inputFocused = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
               withAnimation(.spring()) {
-                proxy.scrollTo("thwartKeyboard")
+                proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+              }
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+              withAnimation(.spring()) {
+                proxy.scrollTo("thwartKeyboard", anchor: .bottom)
               }
             }
           }
+        Spacer()
       }
 
     }
