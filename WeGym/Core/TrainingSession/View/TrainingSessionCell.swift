@@ -9,8 +9,6 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   @ObservedObject var cellViewModel: TrainingSessionCellViewModel
-  @State private var showChat = false
-  @State private var selectedUser: User?
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
@@ -102,13 +100,10 @@ struct TrainingSessionCell: View {
             .imageScale(.medium)
         }
 
-        Button {
-          selectedUser = trainingSession.user
-          showChat.toggle()
-        } label: {
+        NavigationLink(value: TrainingSessionsNavigation.chat(trainingSession.user!)) {
           Image(systemName: "envelope")
             .imageScale(.medium)
-        }
+        }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
         Spacer()
       }
       .padding(.leading, 8)
@@ -116,7 +111,7 @@ struct TrainingSessionCell: View {
       .foregroundColor(.blue)
 
       // likes label
-      if trainingSession.likes > 0 {
+      if trainingSession.likes > 0 { //TODO: show list of ppl who liked
         Text("\(trainingSession.likes) like".appending(trainingSession.likes > 1 || trainingSession.likes == 0 ? "s" : ""))
           .font(.footnote)
           .fontWeight(.semibold)
@@ -132,16 +127,6 @@ struct TrainingSessionCell: View {
       CommentsView(trainingSession: trainingSession)
         .presentationDragIndicator(.visible)
     }
-    .navigationDestination(for: TrainingSession.self, destination: { trainingSession in
-      if let user = trainingSession.user {
-        ChatView(user: user)
-      }
-    })
-    .navigationDestination(isPresented: $showChat, destination: {
-      if let user = selectedUser {
-        ChatView(user: user)
-      }
-    })
   }
 
   private func handleLikeTapped() {

@@ -14,18 +14,19 @@ struct TrainingSessionsView: View {
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
   @State private var selectedUser: User?
-  @State private var showProfile = false
+  @Binding var path: [TrainingSessionsNavigation]
 
 
   @StateObject var viewModel: TrainingSessionViewModel
 
-  init() {
+  init(path: Binding<[TrainingSessionsNavigation]>) {
+    self._path = path
     self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
 
   var body: some View {
 
-    NavigationStack {
+    NavigationStack(path: $path) {
 
       ScrollView(.vertical, showsIndicators: false) {
 
@@ -53,20 +54,20 @@ struct TrainingSessionsView: View {
         }
 
         ForEach(viewModel.trainingSessions) { session in
-          Button {
-            selectedUser = session.user
-            showProfile.toggle()
-          } label: {
+          NavigationLink(value: TrainingSessionsNavigation.profile(session.user!)) {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
-          }
+          }.disabled(session.user == nil)
         }
       }
-      .navigationDestination(isPresented: $showProfile, destination: {
-        if let user = selectedUser {
+      .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
+        switch screen {
+        case .chat(let user):
+          ChatView(user: user)
+        case .profile(let user):
           ProfileView(user: user)
         }
-      })
+      }
       .foregroundColor(.black)
       .navigationTitle(viewModel.relaiveDay())
 
@@ -131,6 +132,6 @@ struct TrainingSessionsView: View {
 }
 
 #Preview {
-  TrainingSessionsView()
+  TrainingSessionsView(path: .constant([TrainingSessionsNavigation]()))
 }
 

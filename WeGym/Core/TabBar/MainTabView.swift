@@ -7,9 +7,15 @@
 
 import SwiftUI
 
+enum TrainingSessionsNavigation: Hashable {
+  case profile(User)
+  case chat(User)
+}
+
 enum MessagesNavigation: Hashable {
   case chat(User)
 }
+
 
 struct MainTabView: View {
   enum Tab {
@@ -23,11 +29,12 @@ struct MainTabView: View {
     UITabBarItem.appearance().badgeColor = .systemBlue
   }
 
+  @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
   @State private var messagesNavigationStack = [MessagesNavigation]()
 
   var body: some View {
     TabView(selection: tabSelection()) {
-      TrainingSessionsView()
+      TrainingSessionsView(path: $trainingSessionsNavigationStack)
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(Tab.TrainingSessions)
@@ -74,7 +81,12 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
         //User tapped on the currently active tab icon => Pop to root/Scroll to top
         switch tappedTab {
         case .TrainingSessions:
-          break
+          if trainingSessionsNavigationStack.isEmpty {
+            // scroll to the top
+          } else {
+            // pop to root
+            trainingSessionsNavigationStack = []
+          }
         case .Messages:
           if messagesNavigationStack.isEmpty {
             // scroll to the top
