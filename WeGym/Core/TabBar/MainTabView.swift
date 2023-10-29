@@ -20,6 +20,9 @@ enum NotificationsNavigation: Hashable {
   case profile(User)
 }
 
+enum SearchNavigation: Hashable {
+  case profile(User)
+}
 
 struct MainTabView: View {
   enum Tab {
@@ -36,6 +39,7 @@ struct MainTabView: View {
   @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
   @State private var messagesNavigationStack = [MessagesNavigation]()
   @State private var notificationsNavigationStack = [NotificationsNavigation]()
+  @State private var searchNavigationStack = [SearchNavigation]()
 
   @State private var showToday = false
 
@@ -55,7 +59,7 @@ struct MainTabView: View {
         }.tag(Tab.Notifications)
         .badge(shouldShowNotificationBadge ? "" : nil)
         .decreaseBadgeProminence()
-      SearchView()
+      SearchView(path: $searchNavigationStack)
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(Tab.Search)
@@ -111,7 +115,10 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
             notificationsNavigationStack = []
           }
         case .Search:
-          break
+          if searchNavigationStack.isEmpty {
+          } else {
+            searchNavigationStack = []
+          }
         case .CurrentUserProfile:
           break
         }
