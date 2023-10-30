@@ -96,7 +96,8 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                                 "body" : `${messageText}`
                             }
                         },
-                        notificationType: "new_direct_message"
+                        notificationType: "new_direct_message",
+                        "fromId": `${fromId}`
                     }
                 },
                 token: token
