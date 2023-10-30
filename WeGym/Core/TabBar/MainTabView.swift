@@ -88,6 +88,9 @@ struct MainTabView: View {
             appNav.messagesNavigationStack.append(.chat(user))
           }
         }
+      } else if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_training_session_like" {
+        appNav.selectedTab = .TrainingSessions
+        appNav.trainingSessionsNavigationStack.removeAll()
       } else {
         appNav.selectedTab = .Notifications
       }
