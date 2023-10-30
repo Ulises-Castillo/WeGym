@@ -129,3 +129,86 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
     // 4. send multi-cast notification to all commenters
 
 // });
+
+exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_sessions/{training_session_uid}/training_session-likes/{liker_uid}", (event) => {
+
+    // Algo:
+    // 1. get liker_uid
+    // 2. get training_session ownerUid
+    // 3. if liker_uid == ownerUid, return
+    // 4. otherwise, use ownerUid to get FCM token
+    // 5. get liker username
+    // 6. send message to owner FCM token "{username} liked your [Chest][Back] workout"
+
+    // edge case: do not send notification when user likes his own session
+
+    getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
+
+        const data = doc.data();
+        const ownerUid = data.ownerUid;
+        const workoutFocus = data.focus.join(' ');
+        const timestamp = data.date;
+
+        if (ownerUid == event.params.liker_uid) {
+            return;
+        }
+
+        getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
+
+            const token = doc.data().token;
+
+            getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
+                
+                const data = doc.data()
+                const likerName = data.fullName;
+                const likerUsername = data.username;
+
+                const liker = likerName == null ? likerUsername : likerName;
+
+                const message = {
+                    notification: {
+                        title: "WeGym",
+                        body: "",
+                    },
+                    data: {
+    
+                    },
+                    // Apple specific settings
+                    apns: {
+                        headers: {
+                            'apns-priority': '10',
+                        },
+                        payload: {
+                            aps: {
+                                "content-available": 1,
+                                sound: 'default',
+                                alert : {
+                                    "title" : `${liker}`,
+                                    // "subtitle" : `${li}`,
+                                    "body" : `liked your ${workoutFocus} workout`
+                                }
+                            },
+                            notificationType: "new_training_session_like",
+                            fromId: `${event.params.liker_uid}`,
+                            timestamp: `${timestamp}`
+                        }
+                    },
+                    token: token
+                };
+            
+                getMessaging().send(message)
+                .then((response) => {
+                    console.log("Successfully sent message:", response);
+                    console.log("data: ", token)
+                })
+                .catch((error) => {
+                    console.log("Error sending message:", error);
+                });
+
+            });
+
+        });
+
+    });
+
+});
