@@ -60,6 +60,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   // handle push nottifications recieved in the foreground
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+
+    if (notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
+      let fromId = notification.request.content.userInfo["fromId"] as? String
+      if AppNavigation.shared.selectedTab == .Messages {
+        if let screen = AppNavigation.shared.messagesNavigationStack.last {
+          switch screen {
+          case .chat(let user):
+            if user.id == fromId {
+              return []
+            }
+          }
+        }
+      }
+    } else {
+      
+    }
+
     return [.sound, .badge, .banner, .list]
   }
 }
