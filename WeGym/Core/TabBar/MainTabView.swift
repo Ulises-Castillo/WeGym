@@ -79,7 +79,7 @@ struct MainTabView: View {
     .accentColor(Color(.systemBlue))
     .onNotification { response in                                           //TODO: move verbose logic to extension + enum to handle notification types
       if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
-        AppNavigation.shared.selectedTab = .Messages
+        appNav.selectedTab = .Messages
 
         if let fromId = response.notification.request.content.userInfo["fromId"] as? String {
           Task {
@@ -89,7 +89,7 @@ struct MainTabView: View {
           }
         }
       } else {
-        AppNavigation.shared.selectedTab = .Notifications
+        appNav.selectedTab = .Notifications
       }
     }
   }
@@ -99,11 +99,11 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
 
   private func tabSelection() -> Binding<Tab> {
     Binding { //this is the get block
-      AppNavigation.shared.selectedTab
+      appNav.selectedTab
     } set: { tappedTab in
-      print("*** selectedTab: \(AppNavigation.shared.selectedTab)")
+      print("*** selectedTab: \(appNav.selectedTab)")
       print("*** selectedTab: \(tappedTab)")
-      if tappedTab == AppNavigation.shared.selectedTab {
+      if tappedTab == appNav.selectedTab {
         //User tapped on the currently active tab icon => Pop to root/Scroll to top
         switch tappedTab {
         case .TrainingSessions:
