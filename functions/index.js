@@ -14,7 +14,8 @@ const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
-const {getMessaging} = require("firebase-admin/messaging")
+const {getMessaging} = require("firebase-admin/messaging");
+const { event } = require("firebase-functions/v1/analytics");
 
 initializeApp();
 
@@ -119,16 +120,109 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
 });
 
 
-// exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
+exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
 
-    //NOTE: do not send notification if `commentOwnerUid` is equal to `trainingSessionOwnerUid` && no one else has commented on the same training sessions
+//NOTE:     do not send notification to `commentOwnerUid` (filter), send to everyone else including `trainingSessionOwnerUid` (as  long as not equal to `commentOwnerUid`)
     // Algo:
-    // 1. collect UIDs of everyone who has commented on the trainingSession
-    // 2. Edge case: if only the trainingSession Owner has commented on his own session, no notification
-    // 3. Get FCM tokens of all the commenters
-    // 4. send multi-cast notification to all commenters
+    // 1. collect UIDs of everyone who has commented on the trainingSession -> add to set (avoid dups) + trainingSessionOwnerUid, remove newComment owner
+    // 2. Get FCM tokens of all UIDs in the set
+    // 4. send multi-cast notification to all tokens
 
-// });
+    const snapshot = event.data;
+    const data = snapshot.data();
+    const timestamp = data.timestamp;
+    const commentText = data.commentText;
+
+    const newCommentOwnerUid = data.commentOwnerUid;
+    const trainingSessionOwnerUid = data.trainingSessionOwnerUid;
+
+    
+
+
+    getFirestore().collection("training_sessions").doc(event.params.training_session_uid).collection("post-comments").get().then((querySnapshot) => {
+
+        var commentUids = [];
+
+        commentUids.push(trainingSessionOwnerUid)
+
+        querySnapshot.forEach((doc) => {
+
+            const prevCommentData = doc.data();
+            const prevCommentUid = prevCommentData.commentOwnerUid;
+
+            if (prevCommentUid != trainingSessionOwnerUid) {
+                commentUids.push(prevCommentUid);
+            }
+
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+
+        
+
+        var tokens = [];
+
+        commentUids.forEach((uid) => {
+
+            getFirestore().collection("fcmTokens").doc(uid).get().then((doc) => {
+
+                const token = doc.data().token;
+
+                if (uid != newCommentOwnerUid) {
+                    tokens.push(token);
+                }
+
+            });
+
+        });
+
+        getFirestore().collection("users").doc(newCommentOwnerUid).get().then((doc) => {
+                
+            const data = doc.data()
+            const newCommenterName = data.fullName;
+            const newCommenterUsername = data.username;
+    
+            const newCommenter = newCommenterName == null ? newCommenterUsername : newCommenterName;
+        
+
+        const message = {
+            notification: {
+                title: "WeGym",
+                body: "",
+            },
+            data: {
+            },
+            // Apple specific settings
+            apns: {
+                headers: {
+                    'apns-priority': '10',
+                },
+                payload: {
+                    aps: {
+                        "content-available": 1,
+                        sound: 'default',
+                        alert : {
+                            "title" : `${newCommenter}`, //TODO: get new commenter name
+                            // "subtitle" : `${li}`,
+                            "body" : `Commented: ${commentText}` //TODO: get comment text
+                        }
+                    },
+                    notificationType: "new_training_session_comment",
+                    fromId: `${newCommentOwnerUid}`,
+                    commentId: `${event.params.comment_uid}`,
+                    date: `${timestamp.toDate()}`
+                }
+            },
+            tokens: tokens
+        };
+
+        getMessaging().sendEachForMulticast(message)
+            .then((response) => {
+                console.log(response.successCount + ' messages were sent successfully');
+            });
+        });
+    });
+});
 
 exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_sessions/{training_session_uid}/training_session-likes/{liker_uid}", (event) => {
 
