@@ -78,7 +78,7 @@ struct MainTabView: View {
     }
     .accentColor(Color(.systemBlue))
     .onNotification { response in                                           //TODO: move verbose logic to extension + enum to handle notification types
-      if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
+      if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" { //TODO: should just be passing what is needed // decode push notifications into enums / objects (make models?)
         appNav.selectedTab = .Messages
 
         if let fromId = response.notification.request.content.userInfo["fromId"] as? String {
