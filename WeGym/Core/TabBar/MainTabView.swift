@@ -77,9 +77,17 @@ struct MainTabView: View {
         }.tag(Tab.CurrentUserProfile)
     }
     .accentColor(Color(.systemBlue))
-    .onNotification { response in                                           //TODO: pass in userId to open correct chat
+    .onNotification { response in                                           //TODO: move verbose logic to extension + enum to handle notification types
       if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
         AppNavigation.shared.selectedTab = .Messages
+
+        if let fromId = response.notification.request.content.userInfo["fromId"] as? String {
+          Task {
+            let user = try await UserService.fetchUser(withUid: fromId)
+            appNav.messagesNavigationStack.removeAll()
+            appNav.messagesNavigationStack.append(.chat(user))
+          }
+        }
       } else {
         AppNavigation.shared.selectedTab = .Notifications
       }

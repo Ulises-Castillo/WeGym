@@ -32,7 +32,7 @@ class InboxService {
       self.documentChanges = changes
     }
   }
-  
+
   static func deleteMessage(_ message: Message) async throws {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let chatPartnerId = message.chatPartnerId
