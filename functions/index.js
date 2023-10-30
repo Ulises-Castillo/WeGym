@@ -190,7 +190,7 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
                             },
                             notificationType: "new_training_session_like",
                             fromId: `${event.params.liker_uid}`,
-                            timestamp: `${timestamp}`
+                            date: `${timestamp.toDate()}`
                         }
                     },
                     token: token
