@@ -40,6 +40,9 @@ struct MessagesView: View {
       .disableAutocorrection(true)
       .autocapitalization(.none)
       .listStyle(PlainListStyle())
+      .onNotification { _ in
+          showNewMessageView = false
+      }
       .onChange(of: selectedUser, perform: { newValue in
         guard let user = newValue else { return }
         path.append(.chat(user))

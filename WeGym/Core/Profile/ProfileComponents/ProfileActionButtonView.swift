@@ -60,5 +60,8 @@ struct ProfileActionButtonView: View {
       Divider()
         .padding(.top, 4)
     }
+    .onNotification { _ in
+        showEditProfile = false
+    }
   }
 }

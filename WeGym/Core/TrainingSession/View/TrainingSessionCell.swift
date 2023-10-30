@@ -127,6 +127,9 @@ struct TrainingSessionCell: View {
       CommentsView(trainingSession: trainingSession)
         .presentationDragIndicator(.visible)
     }
+    .onNotification { _ in
+        showComments = false
+    }
   }
 
   private func handleLikeTapped() {

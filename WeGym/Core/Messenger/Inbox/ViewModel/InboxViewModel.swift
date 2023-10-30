@@ -69,7 +69,7 @@ class InboxViewModel: ObservableObject {
 
       UserService.fetchUser(withUid: message.chatPartnerId) { [weak self] user in
         guard let self else { return }
-        self.recentMessages[i].user = user
+        self.recentMessages[i].user = user //FIXME: this line causes CRASH often //replicate by re-running app, not going to the messages tab (no initial load yet) then tapping new message push notification while on the training sessions tab with a comments view open // quite sure this will be fixed when we just load messages immediately on app startup
 
         if i == self.recentMessages.count - 1 {
           self.didCompleteInitialLoad = true
