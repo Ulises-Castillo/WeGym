@@ -117,3 +117,15 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
     });
 
 });
+
+
+// exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
+
+    //NOTE: do not send notification if `commentOwnerUid` is equal to `trainingSessionOwnerUid` && no one else has commented on the same training sessions
+    // Algo:
+    // 1. collect UIDs of everyone who has commented on the trainingSession
+    // 2. Edge case: if only the trainingSession Owner has commented on his own session, no notification
+    // 3. Get FCM tokens of all the commenters
+    // 4. send multi-cast notification to all commenters
+
+// });
