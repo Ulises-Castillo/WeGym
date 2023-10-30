@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct TrainingSessionsView: View {
 
@@ -14,6 +15,7 @@ struct TrainingSessionsView: View {
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
   @State private var selectedUser: User?
+  @State private var shouldSetDateOnAppear = true
   @Binding var path: [TrainingSessionsNavigation]
   @Binding var showToday: Bool
 
@@ -120,6 +122,10 @@ struct TrainingSessionsView: View {
       }
     )
     .onChange(of: scenePhase) { newPhase in
+      guard shouldSetDateOnAppear else {
+        shouldSetDateOnAppear = true
+        return
+      }
       if newPhase == .active {
         selectedDate = Date()
         viewModel.day = selectedDate
@@ -133,10 +139,22 @@ struct TrainingSessionsView: View {
       }
     }
     .onAppear{
+      guard shouldSetDateOnAppear else {
+        shouldSetDateOnAppear = true
+        return
+      }
       selectedDate = Date()
       viewModel.day = selectedDate
     }
     .environmentObject(viewModel)
+    .onNotification { userInfo in
+      if let dateString = userInfo["date"] as? String {
+        guard let date = dateString.parsedDate() else { return }
+        shouldSetDateOnAppear = false
+        selectedDate = date
+        viewModel.day = selectedDate
+      }
+    }
   }
 }
 

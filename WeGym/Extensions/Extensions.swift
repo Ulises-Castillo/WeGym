@@ -9,20 +9,20 @@ import SwiftUI
 import Firebase
 
 extension UINavigationController {
-    // Remove back button text
-    open override func viewWillLayoutSubviews() {
-        navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
+  // Remove back button text
+  open override func viewWillLayoutSubviews() {
+    navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+  }
 }
 
 extension Timestamp {
-    func timestampString() -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth]
-        formatter.maximumUnitCount = 1
-        formatter.unitsStyle = .abbreviated
-        return formatter.string(from: self.dateValue(), to: Date()) ?? ""
-    }
+  func timestampString() -> String {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth]
+    formatter.maximumUnitCount = 1
+    formatter.unitsStyle = .abbreviated
+    return formatter.string(from: self.dateValue(), to: Date()) ?? ""
+  }
 }
 
 extension Date {
@@ -55,10 +55,10 @@ extension Date {
 
 
   func dayOfWeek() -> String? {
-      let dateFormatter = DateFormatter()
-      dateFormatter.dateFormat = "EEEE"
-      return dateFormatter.string(from: self).capitalized
-      // or use capitalized(with: locale) if you want
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE"
+    return dateFormatter.string(from: self).capitalized
+    // or use capitalized(with: locale) if you want
   }
 }
 
@@ -81,11 +81,25 @@ extension UIApplication {
 }
 
 extension Color {
-    static var theme = Theme()
+  static var theme = Theme()
 }
 
 struct Theme {
-    let primaryText = Color("PrimaryTextColor")
-    let background = Color("BackgroundColor")
-    let secondaryBackground = Color("SecondaryBackground")
+  let primaryText = Color("PrimaryTextColor")
+  let background = Color("BackgroundColor")
+  let secondaryBackground = Color("SecondaryBackground")
+}
+
+extension String {
+  static private var jsDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z"
+    return formatter
+  }()
+
+  func parsedDate() -> Date? {
+    let input = self.replacingOccurrences(of: #"\(.*\)$"#, with: "", options: .regularExpression)
+    return String.jsDateFormatter.date(from: input)
+  }
+
 }

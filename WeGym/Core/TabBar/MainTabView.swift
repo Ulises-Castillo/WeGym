@@ -13,7 +13,7 @@ enum Tab {
 
 class AppNavigation: ObservableObject {
   static let shared = AppNavigation()
-  
+
   @Published var selectedTab: Tab = .TrainingSessions
 
   @Published var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
