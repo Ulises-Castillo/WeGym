@@ -160,7 +160,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
         });
 
 
-        getFirestore().collection("fcmTokens").where(getFirestore().FieldPath.documentId(), 'in', commentUids).get().then((querySnapshot) => {
+        getFirestore().collection("fcmTokens").where(getFirestore().documentId(), 'in', commentUids).get().then((querySnapshot) => {
 
             querySnapshot.forEach((doc) => {
 
