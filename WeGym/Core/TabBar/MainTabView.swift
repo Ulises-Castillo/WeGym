@@ -78,7 +78,11 @@ struct MainTabView: View {
     }
     .accentColor(Color(.systemBlue))
     .onNotification { userInfo in                                           //TODO: move verbose logic to extension + enum to handle notification types
-      if (userInfo["notificationType"] as? String) == "new_direct_message" { //TODO: should just be passing what is needed // decode push notifications into enums / objects (make models?)
+
+      guard let notificationType = userInfo["notificationType"] as? String else { return }
+
+      switch notificationType {
+      case "new_direct_message":
         appNav.selectedTab = .Messages
 
         if let fromId = userInfo["fromId"] as? String {
@@ -88,10 +92,13 @@ struct MainTabView: View {
             appNav.messagesNavigationStack.append(.chat(user))
           }
         }
-      } else if (userInfo["notificationType"] as? String) == "new_training_session_like" {
+      case "new_training_session_like":
         appNav.selectedTab = .TrainingSessions
         appNav.trainingSessionsNavigationStack.removeAll()
-      } else {
+      case "new_training_session_comment":
+        appNav.selectedTab = .TrainingSessions
+        appNav.trainingSessionsNavigationStack.removeAll()
+      default:
         appNav.selectedTab = .Notifications
       }
     }
