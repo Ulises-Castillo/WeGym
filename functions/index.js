@@ -15,7 +15,6 @@ const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
 const {getMessaging} = require("firebase-admin/messaging");
-const { event } = require("firebase-functions/v1/analytics");
 
 initializeApp();
 
@@ -130,7 +129,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
     const snapshot = event.data;
     const data = snapshot.data();
-    const timestamp = data.timestamp;
+    const timestamp = data.timestamp; //FUCK: this is comment timestamp, NOT session timestamp
     const commentText = data.commentText;
 
     const newCommentOwnerUid = data.commentOwnerUid;
@@ -143,7 +142,9 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
         var commentUids = [];
 
-        commentUids.push(trainingSessionOwnerUid)
+        if (newCommentOwnerUid != trainingSessionOwnerUid) {
+            commentUids.push(trainingSessionOwnerUid) // session owner should always be notified, unless they add the new comment themselves
+        }
 
         querySnapshot.forEach((doc) => {
 
@@ -168,7 +169,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
                 const token = doc.data().token;
 
-                if (uid != newCommentOwnerUid && !tokens.includes(token)) {
+                if (uid != newCommentOwnerUid && tokens.includes(token) == false) {
                     tokens.push(token);
                 }
 
