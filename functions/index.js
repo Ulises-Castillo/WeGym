@@ -135,18 +135,20 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
     const newCommentOwnerUid = data.commentOwnerUid;
     const trainingSessionOwnerUid = data.trainingSessionOwnerUid;
 
-    
+    var commentUids = [];
+    commentUids.push(trainingSessionOwnerUid) //TODO: test if user get notification when they comment on their own session
 
+    var tokens = [];
 
     getFirestore().collection("training_sessions").doc(event.params.training_session_uid).collection("post-comments").get().then((querySnapshot) => {
 
-        var commentUids = [];
+        
 
         // if (newCommentOwnerUid != trainingSessionOwnerUid) {
-            commentUids.push(trainingSessionOwnerUid) // session owner should always be notified, unless they add the new comment themselves (taken care of in token loop below)
+             // session owner should always be notified, unless they add the new comment themselves (taken care of in token loop below)
         // }
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc) => { //This loop is problematic here because post-comments has just been created (on first comment) [Wont loop, so moved commentUids up]
 
             const prevCommentData = doc.data();
             const prevCommentUid = prevCommentData.commentOwnerUid;
@@ -161,7 +163,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
         
 
-        var tokens = [];
+        
 
         commentUids.forEach((uid) => {
 
