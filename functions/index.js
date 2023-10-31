@@ -142,9 +142,9 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
         var commentUids = [];
 
-        if (newCommentOwnerUid != trainingSessionOwnerUid) {
-            commentUids.push(trainingSessionOwnerUid) // session owner should always be notified, unless they add the new comment themselves
-        }
+        // if (newCommentOwnerUid != trainingSessionOwnerUid) {
+            commentUids.push(trainingSessionOwnerUid) // session owner should always be notified, unless they add the new comment themselves (taken care of in token loop below)
+        // }
 
         querySnapshot.forEach((doc) => {
 
