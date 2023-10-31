@@ -8,13 +8,13 @@
  */
 
 // https://firebase.google.com/docs/functions/get-started
-const {onRequest} = require("firebase-functions/v2/https");
+const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions");
-const {onDocumentCreated} = require("firebase-functions/v2/firestore");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
-const {initializeApp} = require("firebase-admin/app");
-const {getFirestore} = require("firebase-admin/firestore");
-const {getMessaging} = require("firebase-admin/messaging")
+const { initializeApp } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
+const { getMessaging } = require("firebase-admin/messaging");
 
 initializeApp();
 
@@ -35,19 +35,19 @@ exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-f
                 },
                 token: token
             };
-        
+
             getMessaging().send(message)
-            .then((response) => {
-                console.log("Successfully sent message:", response);
-                console.log("data: ", token)
-            })
-            .catch((error) => {
-                console.log("Error sending message:", error);
-            });
+                .then((response) => {
+                    console.log("Successfully sent message:", response);
+                    console.log("data: ", token)
+                })
+                .catch((error) => {
+                    console.log("Error sending message:", error);
+                });
         });
     });
-  });
-  
+});
+
 
 exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/{messageId}", (event) => {
 
@@ -70,7 +70,7 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
         const token = doc.data().token;
 
         getFirestore().collection("users").doc(fromId).get().then((doc) => {
-            
+
             const fromName = doc.data().username; //TODO: should this be fullName instead? (optional)
 
             const message = {
@@ -90,10 +90,10 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                         aps: {
                             "content-available": 1,
                             sound: 'default',
-                            alert : {
-                                "title" : "WeGym",
-                                "subtitle" : `${fromName}`,
-                                "body" : `${messageText}`
+                            alert: {
+                                "title": "WeGym",
+                                "subtitle": `${fromName}`,
+                                "body": `${messageText}`
                             }
                         },
                         notificationType: "new_direct_message",
@@ -102,16 +102,16 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                 },
                 token: token
             };
-        
+
             getMessaging().send(message)
-            .then((response) => {
-                console.log("Successfully sent message:", response);
-                console.log("data: ", token)
-            })
-            .catch((error) => {
-                console.log("Error sending message:", error);
-            });
-        
+                .then((response) => {
+                    console.log("Successfully sent message:", response);
+                    console.log("data: ", token)
+                })
+                .catch((error) => {
+                    console.log("Error sending message:", error);
+                });
+
         });
 
     });
@@ -119,16 +119,109 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
 });
 
 
-// exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
+exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
 
-    //NOTE: do not send notification if `commentOwnerUid` is equal to `trainingSessionOwnerUid` && no one else has commented on the same training sessions
+    //NOTE:     do not send notification to `commentOwnerUid` (filter), send to everyone else including `trainingSessionOwnerUid` (as  long as not equal to `commentOwnerUid`)
     // Algo:
-    // 1. collect UIDs of everyone who has commented on the trainingSession
-    // 2. Edge case: if only the trainingSession Owner has commented on his own session, no notification
-    // 3. Get FCM tokens of all the commenters
-    // 4. send multi-cast notification to all commenters
+    // 1. collect UIDs of everyone who has commented on the trainingSession -> add to set (avoid dups) + trainingSessionOwnerUid, remove newComment owner
+    // 2. Get FCM tokens of all UIDs in the set
+    // 4. send multi-cast notification to all tokens
 
-// });
+    const snapshot = event.data;
+    const data = snapshot.data();
+    const timestamp = data.timestamp; //FUCK: this is comment timestamp, NOT session timestamp
+    const commentText = data.commentText;
+
+    const newCommentOwnerUid = data.commentOwnerUid;
+    const trainingSessionOwnerUid = data.trainingSessionOwnerUid;
+
+    var commentUids = [];
+
+    if (newCommentOwnerUid != trainingSessionOwnerUid) {
+        // session owner should always be notified, unless they add the new comment themselves (taken care of in token loop below)
+        commentUids.push(trainingSessionOwnerUid); //TODO: test if user get notification when they comment on their own session
+    }
+
+    var tokens = [];
+
+    getFirestore().collection("training_sessions").doc(event.params.training_session_uid).collection("post-comments").get().then((querySnapshot) => {
+
+        querySnapshot.forEach((doc) => { //This loop is problematic here because post-comments has just been created (on first comment) [Wont loop, so moved commentUids up]
+
+            const prevCommentData = doc.data();
+            const prevCommentUid = prevCommentData.commentOwnerUid;
+
+            if (prevCommentUid != trainingSessionOwnerUid && commentUids.includes(prevCommentUid) == false) {
+                commentUids.push(prevCommentUid);
+            }
+
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+        });
+
+
+        getFirestore().collection("fcmTokens").where('token', 'in', commentUids).get().then((querySnapshot) => {
+
+            querySnapshot.forEach((doc) => {
+
+                const token = doc.data().token;
+
+                // if (tokens.includes(token) == false) {
+                    tokens.push(token);
+                // }
+                console.log(doc.id, " => ", doc.data());
+            });
+
+            //TODO: if array is empty at this point, return (edge case where user comments on his own session w/o any other commenters)
+
+            getFirestore().collection("users").doc(newCommentOwnerUid).get().then((doc) => {
+
+                const data = doc.data();
+                const newCommenterName = data.fullName;
+                const newCommenterUsername = data.username;
+
+                const newCommenter = newCommenterName == null ? newCommenterUsername : newCommenterName;
+
+
+                const message = {
+                    notification: {
+                        title: "WeGym",
+                        body: "",
+                    },
+                    data: {
+                    },
+                    // Apple specific settings
+                    apns: {
+                        headers: {
+                            'apns-priority': '10',
+                        },
+                        payload: {
+                            aps: {
+                                "content-available": 1,
+                                sound: 'default',
+                                alert: {
+                                    "title": `${newCommenter}`,
+                                    "body": `Commented: ${commentText}`
+                                }
+                            },
+                            notificationType: "new_training_session_comment",
+                            trainingSessionUid: `${event.params.training_session_uid}`,
+                            fromId: `${newCommentOwnerUid}`,
+                            commentId: `${event.params.comment_uid}`,
+                            date: `${timestamp.toDate()}`
+                        }
+                    },
+                    tokens: tokens
+                };
+
+                getMessaging().sendEachForMulticast(message)
+                    .then((response) => {
+                        console.log(response.successCount + ' messages were sent successfully');
+                    });
+            });
+        });
+    });
+});
 
 exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_sessions/{training_session_uid}/training_session-likes/{liker_uid}", (event) => {
 
@@ -158,7 +251,7 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
             const token = doc.data().token;
 
             getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
-                
+
                 const data = doc.data()
                 const likerName = data.fullName;
                 const likerUsername = data.username;
@@ -171,7 +264,7 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
                         body: "",
                     },
                     data: {
-    
+
                     },
                     // Apple specific settings
                     apns: {
@@ -182,10 +275,10 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
                             aps: {
                                 "content-available": 1,
                                 sound: 'default',
-                                alert : {
-                                    "title" : `${liker}`,
+                                alert: {
+                                    "title": `${liker}`,
                                     // "subtitle" : `${li}`,
-                                    "body" : `liked your ${workoutFocus} workout`
+                                    "body": `liked your ${workoutFocus} workout`
                                 }
                             },
                             notificationType: "new_training_session_like",
@@ -195,15 +288,15 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
                     },
                     token: token
                 };
-            
+
                 getMessaging().send(message)
-                .then((response) => {
-                    console.log("Successfully sent message:", response);
-                    console.log("data: ", token)
-                })
-                .catch((error) => {
-                    console.log("Error sending message:", error);
-                });
+                    .then((response) => {
+                        console.log("Successfully sent message:", response);
+                        console.log("data: ", token)
+                    })
+                    .catch((error) => {
+                        console.log("Error sending message:", error);
+                    });
 
             });
 
