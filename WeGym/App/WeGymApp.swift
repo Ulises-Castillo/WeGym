@@ -43,13 +43,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse) async {
 
-    print("*** user tapped notification from outside the app: \(response.notification.request.content.userInfo)")
     NotificationHandler.shared.handle(notification: response)
-    
-
-//    if let deepLink = response.notification.request.content.userInfo["DEEP"] as? String {
-//      print("*** DEEP: BOOM !")
-//    }
   }
 
   func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
@@ -61,8 +55,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
 
-    if (notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
-      let fromId = notification.request.content.userInfo["fromId"] as? String
+    let userInfo = notification.request.content.userInfo
+    let allOptions:UNNotificationPresentationOptions = [.sound, .badge, .banner, .list]
+    guard let notificationType = userInfo["notificationType"] as? String else { return  allOptions }
+
+    let fromId = userInfo["fromId"] as? String
+
+    switch notificationType {
+    case "new_direct_message":
       if AppNavigation.shared.selectedTab == .Messages {
         if let screen = AppNavigation.shared.messagesNavigationStack.last {
           switch screen {
@@ -73,11 +73,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
           }
         }
       }
-    } else {
-      
+    case "new_training_session_like":
+      break
+    case "new_training_session_comment":
+      guard let uid = userInfo["trainingSessionUid"] as? String else { return allOptions }
+      if AppNavigation.shared.selectedTab == .TrainingSessions {
+        if AppNavigation.shared.messagesNavigationStack.isEmpty && AppNavigation.shared.showCommentsTrainingSessionID == uid {
+          return [] // Don't display push notification if corrent comments view already open
+        }
+      }
+    default:
+      break
     }
 
-    return [.sound, .badge, .banner, .list]
+    return allOptions
   }
 }
 

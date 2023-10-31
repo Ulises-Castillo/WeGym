@@ -20,6 +20,9 @@ class AppNavigation: ObservableObject {
   @Published var messagesNavigationStack = [MessagesNavigation]()
   @Published var notificationsNavigationStack = [NotificationsNavigation]()
   @Published var searchNavigationStack = [SearchNavigation]()
+
+//  @Published var showComments = false
+  @Published var showCommentsTrainingSessionID: String?
 }
 
 enum TrainingSessionsNavigation: Hashable {

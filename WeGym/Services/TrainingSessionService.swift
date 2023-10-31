@@ -81,6 +81,16 @@ extension TrainingSessionService {
     return try await snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) }).first
   }
 
+  static func fetchUserTrainingSession(uid: String) async throws -> TrainingSession? {
+
+    async let snapshot = FirestoreConstants
+      .TrainingSessionsCollection
+      .document(uid)
+      .getDocument()
+
+    return try await snapshot.data(as: TrainingSession.self)
+  }
+
   static func fetchUserFollowingTrainingSessions(uid: String, date: Date) async throws -> [TrainingSession] {
 
     let following = try await UserService.fetchUserFollowing(uid: uid)

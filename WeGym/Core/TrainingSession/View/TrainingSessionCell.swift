@@ -127,8 +127,11 @@ struct TrainingSessionCell: View {
       CommentsView(trainingSession: trainingSession)
         .presentationDragIndicator(.visible)
     }
+    .onChange(of: showComments) { newValue in
+      AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
+    }
     .onNotification { _ in
-        showComments = false
+      showComments = false
     }
   }
 

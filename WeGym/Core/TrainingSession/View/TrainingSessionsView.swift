@@ -18,6 +18,8 @@ struct TrainingSessionsView: View {
   @State private var shouldSetDateOnAppear = true
   @Binding var path: [TrainingSessionsNavigation]
   @Binding var showToday: Bool
+  @State private var showComments = false
+  @State private var trainingSession: TrainingSession?
 
 
   @StateObject var viewModel: TrainingSessionViewModel
@@ -138,6 +140,11 @@ struct TrainingSessionsView: View {
         viewModel.day = selectedDate
       }
     }
+    .onChange(of: showComments) { newValue in
+      if !newValue {
+        AppNavigation.shared.showCommentsTrainingSessionID = nil
+      }
+    }
     .onAppear{
       guard shouldSetDateOnAppear else {
         shouldSetDateOnAppear = true
@@ -147,13 +154,34 @@ struct TrainingSessionsView: View {
       viewModel.day = selectedDate
     }
     .environmentObject(viewModel)
+    .sheet(isPresented: $showComments) {
+
+      if trainingSession != nil {
+        CommentsView(trainingSession: trainingSession!)
+          .presentationDragIndicator(.visible)
+      }
+    }
     .onNotification { userInfo in
-      if let dateString = userInfo["date"] as? String {
-        guard let date = dateString.parsedDate() else { return }
-        shouldSetDateOnAppear = false
-        selectedDate = date
+      shouldSetDateOnAppear = false
+
+      guard let notificationType = userInfo["notificationType"] as? String else { return }
+
+      switch notificationType {
+      case "new_training_session_comment":
+        guard let uid = userInfo["trainingSessionUid"] as? String else { return }
+        Task {
+          trainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: uid) //TODO: cache training sessions to get instantly // This is FAILING sometimes WACK !
+          AppNavigation.shared.showCommentsTrainingSessionID = trainingSession?.id
+          selectedDate = trainingSession?.date.dateValue() ?? Date() //training session date retrieved manually
+          viewModel.day = selectedDate
+          showComments = true //TODO: should also scrollo to TrainingSession ID (scrollreader ?)
+        }
+      default:
+        guard let dateString = userInfo["date"] as? String else { return }
+        selectedDate = dateString.parsedDate() ?? Date() //training session date passed from like notification
         viewModel.day = selectedDate
       }
+
     }
   }
 }
