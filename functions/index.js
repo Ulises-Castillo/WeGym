@@ -12,6 +12,7 @@ const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
+const { admin } = require("firebase-admin");
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { getMessaging } = require("firebase-admin/messaging");
@@ -160,7 +161,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
         });
 
 
-        getFirestore().collection("fcmTokens").where('token', 'in', commentUids).get().then((querySnapshot) => {
+        getFirestore().collection("fcmTokens").where(admin.firestore.FieldPath.documentId(), 'in', commentUids).get().then((querySnapshot) => {
 
             querySnapshot.forEach((doc) => {
 
@@ -171,8 +172,6 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
                 // }
                 console.log(doc.id, " => ", doc.data());
             });
-
-            //TODO: if array is empty at this point, return (edge case where user comments on his own session w/o any other commenters)
 
             getFirestore().collection("users").doc(newCommentOwnerUid).get().then((doc) => {
 
