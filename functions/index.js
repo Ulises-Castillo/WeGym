@@ -207,9 +207,8 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
                         "content-available": 1,
                         sound: 'default',
                         alert : {
-                            "title" : `${newCommenter}`, //TODO: get new commenter name
-                            // "subtitle" : `${li}`,
-                            "body" : `Commented: ${commentText}` //TODO: get comment text
+                            "title" : `${newCommenter}`,
+                            "body" : `Commented: ${commentText}` 
                         }
                     },
                     notificationType: "new_training_session_comment",
