@@ -56,8 +56,10 @@ struct CommentsView: View {
             }
           Button {
             Task {
-              try await viewModel.uploadComment(commentText: commentText)
+              let commentTextCopy = commentText
               commentText = ""
+              try await viewModel.uploadComment(commentText: commentTextCopy)
+
             }
           } label: {
             Text("Post")
