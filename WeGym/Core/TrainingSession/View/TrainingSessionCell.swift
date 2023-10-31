@@ -130,8 +130,18 @@ struct TrainingSessionCell: View {
     .onChange(of: showComments) { newValue in
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
     }
-    .onNotification { _ in
-      showComments = false
+    .onNotification { userInfo in
+      guard let notificationType = userInfo["notificationType"] as? String else { return } //TODO: test this
+
+      switch notificationType {
+      case "new_training_session_comment":
+        guard let uid = userInfo["trainingSessionUid"] as? String else { return }
+        if trainingSession.id != uid {
+          showComments = false
+        }
+      default:
+        showComments = false
+      }
     }
   }
 
