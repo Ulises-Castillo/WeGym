@@ -8,13 +8,14 @@
  */
 
 // https://firebase.google.com/docs/functions/get-started
-const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+
 
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { getMessaging } = require("firebase-admin/messaging");
+const admin = require("firebase-admin");
 
 initializeApp();
 
@@ -160,7 +161,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
         });
 
 
-        getFirestore().collection("fcmTokens").where(getFirestore().documentId(), 'in', commentUids).get().then((querySnapshot) => {
+        getFirestore().collection("fcmTokens").where(admin.firestore.FieldPath.documentId(), 'in', commentUids).get().then((querySnapshot) => {
 
             querySnapshot.forEach((doc) => {
 
@@ -169,7 +170,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
                 // if (tokens.includes(token) == false) {
                     tokens.push(token);
                 // }
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
             });
 
             getFirestore().collection("users").doc(newCommentOwnerUid).get().then((doc) => {
