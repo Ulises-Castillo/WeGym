@@ -65,8 +65,7 @@ struct TrainingSessionCell: View {
         }
       }
       .foregroundColor(.white)
-      .fontWeight(.bold)
-      .font(.title2)
+      .font(.system(size: 21, weight: .bold, design: Font.Design.rounded))
 
       HStack {
         if shouldShowTime {
