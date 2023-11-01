@@ -10,6 +10,7 @@ import SwiftUI
 struct CommentsView: View {
   @State private var commentText = ""
   @StateObject var viewModel: CommentsViewModel
+  @FocusState var inputFocused
 
   private var currentUser: User? {
     return UserService.shared.currentUser
@@ -45,6 +46,7 @@ struct CommentsView: View {
 
         ZStack(alignment: .trailing) {
           TextField("Add a comment", text: $commentText, axis: .vertical)
+            .focused($inputFocused)
             .font(.footnote)
             .padding(12)
             .padding(.trailing, 40)
@@ -75,6 +77,9 @@ struct CommentsView: View {
 
       }
       .padding()
+    }
+    .onAppear {
+      inputFocused = true
     }
     .onDisappear {
       viewModel.removeChatListener()
