@@ -41,11 +41,11 @@ struct TrainingSessionCell: View {
           // username
           Text(user.fullName ?? user.username)
             .fontWeight(.bold)
-            .font(.system(size: 15, weight: Font.Weight.medium, design: Font.Design.rounded))
+            .font(.system(size: 14, weight: Font.Weight.bold, design: Font.Design.rounded))
 
           + Text(" ") + Text(trainingSession.caption ?? "")
             .fontWeight(.regular)
-            .font(.system(size: 15, weight: Font.Weight.medium, design: Font.Design.rounded))
+            .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
         }
         Spacer()
       }
@@ -78,7 +78,7 @@ struct TrainingSessionCell: View {
         if let location = trainingSession.location {
           Text(location)
             .foregroundColor(.secondary)
-            .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
+            .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
         }
       }
 
@@ -112,8 +112,7 @@ struct TrainingSessionCell: View {
       // likes label
       if trainingSession.likes > 0 { //TODO: show list of ppl who liked
         Text("\(trainingSession.likes) like".appending(trainingSession.likes > 1 || trainingSession.likes == 0 ? "s" : ""))
-          .font(.footnote)
-          .fontWeight(.semibold)
+          .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.leading, 10)
       }
@@ -124,10 +123,10 @@ struct TrainingSessionCell: View {
           showComments.toggle()
         } label: {
           Text("View \(cellViewModel.commentsCount) comment".appending(cellViewModel.commentsCount > 1 || cellViewModel.commentsCount == 0 ? "s" : ""))
-            .font(.footnote)
-            .fontWeight(.semibold)
+            .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 10)
+            .padding(.top, -2)
             .foregroundColor(.secondary)
         }
       }
