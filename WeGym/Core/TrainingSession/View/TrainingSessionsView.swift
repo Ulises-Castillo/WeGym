@@ -43,8 +43,8 @@ struct TrainingSessionsView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
-            RestDayCell(user: UserService.shared.currentUser!)
+          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] && UserService.shared.currentUser != nil {
+            RestDayCell(user: UserService.shared.currentUser!) //CRASH: force unwrap; FIX: added check above
           } else {
             ProgressView()
               .scaleEffect(1, anchor: .center)
