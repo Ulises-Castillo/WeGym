@@ -8,11 +8,35 @@
 import Firebase
 import Foundation
 
+
 class UserService: ObservableObject {
 
   static let shared = UserService()
   @Published var currentUser: User?
   @Published var profileImage: UIImage?
+  @Published var cache = [String : User]()
+
+  @MainActor
+  func updateCache() async {
+    guard let currentUid = Auth.auth().currentUser?.uid else { return }
+    let query = FirestoreConstants.UserCollection
+
+    do {
+      let snapshot = try await query.getDocuments()
+      let users = mapUsers(fromSnapshot: snapshot)
+
+      for user in users {
+        cache[user.id] = user
+      }
+      } catch {
+        print("*** \(error)")
+      }
+  }
+
+  private func mapUsers(fromSnapshot snapshot: QuerySnapshot) -> [User] {
+    return snapshot.documents
+      .compactMap({ try? $0.data(as: User.self) })
+  }
 
 
   @MainActor
@@ -30,32 +54,32 @@ class UserService: ObservableObject {
   }
 
   static func fetchUser(withUid uid: String, completion: @escaping(User) -> Void) {
-      FirestoreConstants.UserCollection.document(uid).getDocument { snapshot, _ in
-          guard let user = try? snapshot?.data(as: User.self) else {
-              print("DEBUG: Failed to map user")
-              return
-          }
-          completion(user)
+    FirestoreConstants.UserCollection.document(uid).getDocument { snapshot, _ in
+      guard let user = try? snapshot?.data(as: User.self) else {
+        print("DEBUG: Failed to map user")
+        return
       }
+      completion(user)
+    }
   }
 
   static func fetchUsers(limit: Int? = nil) async throws -> [User] {
-      guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
-      let query = FirestoreConstants.UserCollection
+    guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
+    let query = FirestoreConstants.UserCollection
 
-      if let limit {
-          let snapshot = try await query.limit(to: limit).getDocuments()
-          return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
-      }
-
-      let snapshot = try await query.getDocuments()
+    if let limit {
+      let snapshot = try await query.limit(to: limit).getDocuments()
       return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
+    }
+
+    let snapshot = try await query.getDocuments()
+    return mapUsers(fromSnapshot: snapshot, currentUid: currentUid)
   }
 
   private static func mapUsers(fromSnapshot snapshot: QuerySnapshot, currentUid: String) -> [User] {
-      return snapshot.documents
-          .compactMap({ try? $0.data(as: User.self) })
-          .filter({ $0.id !=  currentUid })
+    return snapshot.documents
+      .compactMap({ try? $0.data(as: User.self) })
+      .filter({ $0.id !=  currentUid })
   }
 }
 
