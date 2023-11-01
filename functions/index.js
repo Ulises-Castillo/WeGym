@@ -159,6 +159,10 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
             // console.log(doc.id, " => ", doc.data());
         });
 
+        // prevent empty array exception
+        if (commentUids.length == 0) {
+            return;
+        }
 
         getFirestore().collection("fcmTokens").where(admin.firestore.FieldPath.documentId(), 'in', commentUids).get().then((querySnapshot) => {
 
