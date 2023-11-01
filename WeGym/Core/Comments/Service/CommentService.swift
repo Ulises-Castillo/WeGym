@@ -8,12 +8,28 @@
 import Firebase
 import FirebaseFirestoreSwift
 
-struct CommentService {
+class CommentService {
 
   let trainingSessionId: String
 
-  func uploadComment(_ comment: Comment) async throws {
-    guard let commentData = try? Firestore.Encoder().encode(comment) else { return }
+  private var firestoreListener: ListenerRegistration?
+
+  init(trainingSessionId: String) {
+    self.trainingSessionId = trainingSessionId
+  }
+
+  static func commentsCount(id: String) async throws -> Int {
+    let snapshot = try await FirestoreConstants
+      .TrainingSessionsCollection
+      .document(id)
+      .collection("post-comments")
+      .getDocuments()
+    return snapshot.count
+  }
+
+  func uploadComment(_ comment: Comment) async throws { //TODO: fix bug where user cannot immediately comment on a newly created session, comment should be held until we have the session ID, then sent
+    guard let commentData = try? Firestore.Encoder().encode(comment),
+          !trainingSessionId.isEmpty else { return }
 
     try await FirestoreConstants
       .TrainingSessionsCollection
@@ -22,14 +38,25 @@ struct CommentService {
       .addDocument(data: commentData)
   }
 
-  func fetchComments() async throws -> [Comment] {
-    let snapshot = try await FirestoreConstants
-      .TrainingSessionsCollection
+
+  func observeComments(completion: @escaping([Comment]) -> Void) {
+    guard !trainingSessionId.isEmpty else { return } // prevent empty ID (locally created session) CRASH
+
+    let query = FirestoreConstants.TrainingSessionsCollection
       .document(trainingSessionId)
       .collection("post-comments")
-      .order(by: "timestamp", descending: true) //TODO: can this be used to sort training sessions?
-      .getDocuments()
+      .order(by: "timestamp", descending: true)
 
-    return snapshot.documents.compactMap({ try? $0.data(as: Comment.self) })
+    self.firestoreListener = query.addSnapshotListener { snapshot, _ in
+      guard let changes = snapshot?.documentChanges.filter({ $0.type == .added }) else { return }
+      var comments = changes.compactMap{ try? $0.document.data(as: Comment.self) }
+
+      completion(comments)
+    }
+  }
+
+  func removeListener() {
+    self.firestoreListener?.remove()
+    self.firestoreListener = nil
   }
 }

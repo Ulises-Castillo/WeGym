@@ -17,8 +17,14 @@ class CommentsViewModel: ObservableObject {
   init(trainingSession: TrainingSession) {
     self.trainingSession = trainingSession
     self.service = CommentService(trainingSessionId: trainingSession.id)
+    observeComments()
+  }
 
-    Task { try await fetchComments() }
+  func observeComments() {
+    service.observeComments { [weak self] comments in
+      guard let self = self else { return }
+      self.comments.insert(contentsOf: comments, at: 0)
+    }
   }
 
   func uploadComment(commentText: String) async throws {
@@ -32,15 +38,7 @@ class CommentsViewModel: ObservableObject {
       commentOwnerUid: uid
     )
     
-//    self.comments.insert(comment, at: 0)
     try await service.uploadComment(comment) //TODO: handle upload failure; match local data
-    try await fetchComments()
-  }
-
-
-  func fetchComments() async throws {
-    self.comments = try await service.fetchComments()
-    try await fetchUserDataForComments()
   }
 
   private func fetchUserDataForComments() async throws {
@@ -49,5 +47,9 @@ class CommentsViewModel: ObservableObject {
       let user = try await UserService.fetchUser(withUid: comment.commentOwnerUid)
       comments[i].user = user
     }
+  }
+  
+  func removeChatListener() {
+    service.removeListener()
   }
 }

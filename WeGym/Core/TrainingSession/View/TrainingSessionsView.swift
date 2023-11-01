@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct TrainingSessionsView: View {
 
@@ -14,8 +15,11 @@ struct TrainingSessionsView: View {
   @State private var showingDateSheet = false
   @State private var showingEditSheet = false
   @State private var selectedUser: User?
+  @State private var shouldSetDateOnAppear = true
   @Binding var path: [TrainingSessionsNavigation]
   @Binding var showToday: Bool
+  @State private var showComments = false
+  @State private var trainingSession: TrainingSession?
 
 
   @StateObject var viewModel: TrainingSessionViewModel
@@ -39,8 +43,8 @@ struct TrainingSessionsView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] {
-            RestDayCell(user: UserService.shared.currentUser!)
+          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] && UserService.shared.currentUser != nil {
+            RestDayCell(user: UserService.shared.currentUser!) //CRASH: force unwrap; FIX: added check above
           } else {
             ProgressView()
               .scaleEffect(1, anchor: .center)
@@ -120,6 +124,10 @@ struct TrainingSessionsView: View {
       }
     )
     .onChange(of: scenePhase) { newPhase in
+      guard shouldSetDateOnAppear else {
+        shouldSetDateOnAppear = true
+        return
+      }
       if newPhase == .active {
         selectedDate = Date()
         viewModel.day = selectedDate
@@ -132,11 +140,52 @@ struct TrainingSessionsView: View {
         viewModel.day = selectedDate
       }
     }
+    .onChange(of: showComments) { newValue in
+      if !newValue {
+        AppNavigation.shared.showCommentsTrainingSessionID = nil
+      }
+    }
     .onAppear{
+      guard shouldSetDateOnAppear else {
+        shouldSetDateOnAppear = true
+        return
+      }
       selectedDate = Date()
       viewModel.day = selectedDate
     }
     .environmentObject(viewModel)
+    .sheet(isPresented: $showComments) {
+
+      if trainingSession != nil {
+        CommentsView(trainingSession: trainingSession!)
+          .presentationDragIndicator(.visible)
+      }
+    }
+    .task { //TODO: cache traing sessions also
+      await UserService.shared.updateCache() //TODO: use userservice cache across the app
+    }
+    .onNotification { userInfo in
+      shouldSetDateOnAppear = false
+
+      guard let notificationType = userInfo["notificationType"] as? String else { return }
+
+      switch notificationType {
+      case "new_training_session_comment":
+        guard let uid = userInfo["trainingSessionUid"] as? String else { return }
+        Task {
+          trainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: uid) //TODO: cache training sessions to get instantly // This is FAILING sometimes WACK !
+          AppNavigation.shared.showCommentsTrainingSessionID = trainingSession?.id
+          selectedDate = trainingSession?.date.dateValue() ?? Date() //training session date retrieved manually
+          viewModel.day = selectedDate
+          showComments = true //TODO: should also scrollo to TrainingSession ID (scrollreader ?)
+        }
+      default:
+        guard let dateString = userInfo["date"] as? String else { return }
+        selectedDate = dateString.parsedDate() ?? Date() //training session date passed from like notification
+        viewModel.day = selectedDate
+      }
+
+    }
   }
 }
 

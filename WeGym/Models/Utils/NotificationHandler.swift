@@ -27,26 +27,27 @@ public class NotificationHandler: ObservableObject {
 }
 
 struct NotificationViewModifier: ViewModifier {
-    // MARK: - Private Properties
-    private let onNotification: (UNNotificationResponse) -> Void
+  // MARK: - Private Properties
+  private let onNotification: ([AnyHashable: Any]) -> Void
 
-    // MARK: - Initializers
-    init(onNotification: @escaping (UNNotificationResponse) -> Void, handler: NotificationHandler) {
-        self.onNotification = onNotification
-    }
+  // MARK: - Initializers
+  init(onNotification: @escaping ([AnyHashable: Any]) -> Void, handler: NotificationHandler) {
+    self.onNotification = onNotification
+  }
 
-    // MARK: - Body
-    func body(content: Content) -> some View {
-        content
-            .onReceive(NotificationHandler.shared.$latestNotification) { notification in
-                guard let notification else { return }
-                onNotification(notification)
-            }
-    }
+  // MARK: - Body
+  func body(content: Content) -> some View {
+    content
+      .onReceive(NotificationHandler.shared.$latestNotification) { notification in
+        guard let notification else { return }
+        let userInfo = notification.notification.request.content.userInfo
+        onNotification(userInfo)
+      }
+  }
 }
 
 extension View {
-    func onNotification(perform action: @escaping (UNNotificationResponse) -> Void) -> some View {
-      modifier(NotificationViewModifier(onNotification: action, handler: NotificationHandler.shared))
-    }
+  func onNotification(perform action: @escaping ([AnyHashable: Any]) -> Void) -> some View {
+    modifier(NotificationViewModifier(onNotification: action, handler: NotificationHandler.shared))
+  }
 }

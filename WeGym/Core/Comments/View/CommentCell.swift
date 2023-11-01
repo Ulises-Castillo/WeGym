@@ -10,9 +10,10 @@ import SwiftUI
 struct CommentCell: View {
 
   let comment: Comment
+  @StateObject var userService = UserService.shared
 
   private var user: User? {
-    return comment.user
+    return userService.cache[comment.commentOwnerUid]
   }
 
   var body: some View {

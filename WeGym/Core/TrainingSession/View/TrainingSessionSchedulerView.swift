@@ -188,10 +188,10 @@ struct TrainingSessionSchedulerView: View {
       } else {
         viewModel.shouldShowTime = false
         if Calendar.current.isDateInToday(viewModel.day) {
-          workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day
-        } else {
-          workoutTime = viewModel.day.noon
-        }
+          workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day //TODO: time should default to the time user last set for that day of the week (could also count frequncy of that time on that day) [store in userdefaults]
+        } else {                                                            // if no previous time for that specific day of the week, set last set time
+          workoutTime = viewModel.day.noon                                  // if none then default to noon
+        }                                                                   // also deal with workouts at / past 11pm, don't advance time one hour
       }
       UIDatePicker.appearance().minuteInterval = 15
     }

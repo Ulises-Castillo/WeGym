@@ -81,6 +81,16 @@ extension TrainingSessionService {
     return try await snapshot.documents.compactMap({ try? $0.data(as: TrainingSession.self) }).first
   }
 
+  static func fetchUserTrainingSession(uid: String) async throws -> TrainingSession? {
+
+    async let snapshot = FirestoreConstants
+      .TrainingSessionsCollection
+      .document(uid)
+      .getDocument()
+
+    return try await snapshot.data(as: TrainingSession.self)
+  }
+
   static func fetchUserFollowingTrainingSessions(uid: String, date: Date) async throws -> [TrainingSession] {
 
     let following = try await UserService.fetchUserFollowing(uid: uid)
@@ -101,7 +111,9 @@ extension TrainingSessionService {
 
 extension TrainingSessionService {
   static func likeTrainingSession(_ trainingSession: TrainingSession) async throws {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
+    guard let uid = Auth.auth().currentUser?.uid,
+          !trainingSession.id.isEmpty else { return } //FIXME: user liking his own post immediatedly after creating it will be ignored // simple solution: disable action buttons for a sec after workout creation
+
 
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).setData([:])
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes + 1])

@@ -7,6 +7,24 @@
 
 import SwiftUI
 
+enum Tab {
+  case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
+}
+
+class AppNavigation: ObservableObject {
+  static let shared = AppNavigation()
+
+  @Published var selectedTab: Tab = .TrainingSessions
+
+  @Published var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
+  @Published var messagesNavigationStack = [MessagesNavigation]()
+  @Published var notificationsNavigationStack = [NotificationsNavigation]()
+  @Published var searchNavigationStack = [SearchNavigation]()
+
+//  @Published var showComments = false
+  @Published var showCommentsTrainingSessionID: String?
+}
+
 enum TrainingSessionsNavigation: Hashable {
   case profile(User)
   case chat(User)
@@ -25,41 +43,33 @@ enum SearchNavigation: Hashable {
 }
 
 struct MainTabView: View {
-  enum Tab {
-    case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
-  }
 
-  @State private var selectedTab: Tab = .TrainingSessions
   @State var shouldShowNotificationBadge = false
 
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
   }
 
-  @State private var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
-  @State private var messagesNavigationStack = [MessagesNavigation]()
-  @State private var notificationsNavigationStack = [NotificationsNavigation]()
-  @State private var searchNavigationStack = [SearchNavigation]()
-
   @State private var showToday = false
+  @StateObject var appNav = AppNavigation.shared
 
   var body: some View {
     TabView(selection: tabSelection()) {
-      TrainingSessionsView(path: $trainingSessionsNavigationStack, showToday: $showToday)
+      TrainingSessionsView(path: $appNav.trainingSessionsNavigationStack, showToday: $showToday)
         .tabItem {
           Image(systemName: "dumbbell")
         }.tag(Tab.TrainingSessions)
-      MessagesView(path: $messagesNavigationStack)
+      MessagesView(path: $appNav.messagesNavigationStack)
         .tabItem {
           Image(systemName: "envelope")
         }.tag(Tab.Messages)
-      NotificationsView(path: $notificationsNavigationStack, $shouldShowNotificationBadge)
+      NotificationsView(path: $appNav.notificationsNavigationStack, $shouldShowNotificationBadge)
         .tabItem {
           Image(systemName: "bell")
         }.tag(Tab.Notifications)
         .badge(shouldShowNotificationBadge ? "" : nil)
         .decreaseBadgeProminence()
-      SearchView(path: $searchNavigationStack)
+      SearchView(path: $appNav.searchNavigationStack)
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(Tab.Search)
@@ -70,11 +80,29 @@ struct MainTabView: View {
         }.tag(Tab.CurrentUserProfile)
     }
     .accentColor(Color(.systemBlue))
-    .onNotification { response in                                           //TODO: pass in userId to open correct chat
-      if (response.notification.request.content.userInfo["notificationType"] as? String) == "new_direct_message" {
-        selectedTab = .Messages
-      } else {
-        selectedTab = .Notifications
+    .onNotification { userInfo in                                           //TODO: move verbose logic to extension + enum to handle notification types
+
+      guard let notificationType = userInfo["notificationType"] as? String else { return }
+
+      switch notificationType {
+      case "new_direct_message":
+        appNav.selectedTab = .Messages
+
+        if let fromId = userInfo["fromId"] as? String {
+          Task {
+            let user = try await UserService.fetchUser(withUid: fromId)
+            appNav.messagesNavigationStack.removeAll()
+            appNav.messagesNavigationStack.append(.chat(user))
+          }
+        }
+      case "new_training_session_like":
+        appNav.selectedTab = .TrainingSessions
+        appNav.trainingSessionsNavigationStack.removeAll()
+      case "new_training_session_comment":
+        appNav.selectedTab = .TrainingSessions
+        appNav.trainingSessionsNavigationStack.removeAll()
+      default:
+        appNav.selectedTab = .Notifications
       }
     }
   }
@@ -84,15 +112,15 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
 
   private func tabSelection() -> Binding<Tab> {
     Binding { //this is the get block
-      self.selectedTab
+      appNav.selectedTab
     } set: { tappedTab in
-      print("*** selectedTab: \(selectedTab)")
+      print("*** selectedTab: \(appNav.selectedTab)")
       print("*** selectedTab: \(tappedTab)")
-      if tappedTab == self.selectedTab {
+      if tappedTab == appNav.selectedTab {
         //User tapped on the currently active tab icon => Pop to root/Scroll to top
         switch tappedTab {
         case .TrainingSessions:
-          if trainingSessionsNavigationStack.isEmpty {
+          if appNav.trainingSessionsNavigationStack.isEmpty {
             // scroll to the top //TODO: implement for all tabs
 
             // if already at the top
@@ -100,31 +128,31 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
             showToday = true
           } else {
             // pop to root
-            trainingSessionsNavigationStack = []
+            appNav.trainingSessionsNavigationStack = []
           }
         case .Messages:
-          if messagesNavigationStack.isEmpty {
+          if appNav.messagesNavigationStack.isEmpty {
             // scroll to the top
           } else {
             // pop to root
-            messagesNavigationStack = []
+            appNav.messagesNavigationStack = []
           }
         case .Notifications:
-          if notificationsNavigationStack.isEmpty {
+          if appNav.notificationsNavigationStack.isEmpty {
           } else {
-            notificationsNavigationStack = []
+            appNav.notificationsNavigationStack = []
           }
         case .Search:
-          if searchNavigationStack.isEmpty {
+          if appNav.searchNavigationStack.isEmpty {
           } else {
-            searchNavigationStack = []
+            appNav.searchNavigationStack = []
           }
         case .CurrentUserProfile:
           break
         }
       }
       //Set the tab to the user selected tab
-      self.selectedTab = tappedTab
+      appNav.selectedTab = tappedTab
     }
   }
 }
