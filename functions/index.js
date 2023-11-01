@@ -147,7 +147,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
 
     getFirestore().collection("training_sessions").doc(event.params.training_session_uid).collection("post-comments").get().then((querySnapshot) => {
 
-        querySnapshot.forEach((doc) => { //This loop is problematic here because post-comments has just been created (on first comment) [Wont loop, so moved commentUids up]
+        querySnapshot.forEach((doc) => {
 
             const prevCommentData = doc.data();
             const prevCommentUid = prevCommentData.commentOwnerUid;
@@ -156,7 +156,6 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
                 commentUids.push(prevCommentUid);
             }
 
-            // doc.data() is never undefined for query doc snapshots
             // console.log(doc.id, " => ", doc.data());
         });
 
@@ -164,13 +163,8 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
         getFirestore().collection("fcmTokens").where(admin.firestore.FieldPath.documentId(), 'in', commentUids).get().then((querySnapshot) => {
 
             querySnapshot.forEach((doc) => {
-
                 const token = doc.data().token;
-
-                // if (tokens.includes(token) == false) {
-                    tokens.push(token);
-                // }
-                // console.log(doc.id, " => ", doc.data());
+                tokens.push(token);
             });
 
             getFirestore().collection("users").doc(newCommentOwnerUid).get().then((doc) => {
@@ -180,7 +174,6 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
                 const newCommenterUsername = data.username;
 
                 const newCommenter = newCommenterName == null ? newCommenterUsername : newCommenterName;
-
 
                 const message = {
                     notification: {
