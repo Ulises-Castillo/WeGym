@@ -153,6 +153,9 @@ struct TrainingSessionsView: View {
       selectedDate = Date()
       viewModel.day = selectedDate
     }
+    .onDisappear {
+      viewModel.removeTrainingSessionListener()
+    }
     .environmentObject(viewModel)
     .sheet(isPresented: $showComments) {
 

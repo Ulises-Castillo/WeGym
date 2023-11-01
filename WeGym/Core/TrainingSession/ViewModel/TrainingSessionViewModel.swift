@@ -10,26 +10,45 @@ import Foundation
 
 class TrainingSessionViewModel: ObservableObject {
 
+
+
   @Published var trainingSessions = [TrainingSession]()
+  @Published var trainingSessionsCache2 = [String: TrainingSession]() {
+    didSet {
+      guard let currentUserId = UserService.shared.currentUser?.id else { return }
+      currentUserTrainingSesssion = trainingSessionsCache2[key(currentUserId, day)]
+
+      trainingSessions.removeAll()
+      for session in trainingSessionsCache2.values.filter({ $0.ownerUid != currentUserId }) {
+        trainingSessions.append(session)
+      }
+    }
+  }
+
+  func key(_ userID: String, _ date: Date) -> String {
+    return userID + "\(date.noon)"
+  }
+
   var day = Date.now {
     didSet {
-//      print("*** DAY set: \(day.formatted())")
-      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
+      print("*** DAY set: \(day.formatted())")
+      Task { try await observeTrainingSessions() }
+      //      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
+      //      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
 
-      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
-      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
-      if trainingSessionsCache[tomorrow.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
-      }
-      let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
-      if trainingSessionsCache[dayAfterTmr.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
-      }
-      let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
-      if trainingSessionsCache[yesterday.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
-      }
+      //      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
+      //      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
+      //      if trainingSessionsCache[tomorrow.noon] == nil {
+      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
+      //      }
+      //      let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
+      //      if trainingSessionsCache[dayAfterTmr.noon] == nil {
+      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
+      //      }
+      //      let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
+      //      if trainingSessionsCache[yesterday.noon] == nil {
+      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
+      //      }
     }
   }
 
@@ -40,7 +59,25 @@ class TrainingSessionViewModel: ObservableObject {
   var isFirstFetch = [Date: Bool]()
 
   init() {
-    Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
+    //    Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
+    Task { try await observeTrainingSessions() }
+  }
+
+  func observeTrainingSessions() async throws {
+    try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] trainingSessions in
+      guard let self = self else { return }
+
+
+      for session in trainingSessions {
+        var session = session
+        session.user = UserService.shared.cache[session.ownerUid]
+        trainingSessionsCache2[key(session.ownerUid, session.date.dateValue())] = session
+      }
+    }
+  }
+
+  func removeTrainingSessionListener() {
+    TrainingSessionService.removeListener()
   }
 
   func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
@@ -112,8 +149,8 @@ class TrainingSessionViewModel: ObservableObject {
 
   @Published var trainingSessionsCache = [Date : TrainingSessionViewData]() {
     didSet {
-//      print("*** trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
-//      print("*** trainingSessionsCacheCount: \(trainingSessionsCache.count)")
+      print("*** trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
+      print("*** trainingSessionsCacheCount: \(trainingSessionsCache.count)")
       if currentUserTrainingSesssion != trainingSessionsCache[day.noon]?.currentUserTrainingSession {
         currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
       }

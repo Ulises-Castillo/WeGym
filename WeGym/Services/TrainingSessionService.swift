@@ -10,6 +10,45 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
+  static private var firestoreListener: ListenerRegistration?
+
+  static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession]) -> Void) async throws {
+    // also need to observe current user for date (consider local updates etc) can use [user+date] as ID to update actual ID when create call returns
+
+    // get user following + add current user
+    guard let currentUser = UserService.shared.currentUser else { return }
+    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: cache users
+    userFollowing.append(currentUser)
+
+    var userFollowingIds: [String] = userFollowing.map({ $0.id })
+    userFollowingIds.append(currentUser.id)
+
+    let start = Timestamp(date: date.startOfDay)
+    let end = Timestamp(date: date.endOfDay)
+
+    let query = FirestoreConstants.TrainingSessionsCollection
+      .whereField("ownerUid", in: userFollowingIds)
+      .whereField("date", isGreaterThan: start)
+      .whereField("date", isLessThan: end)
+      .order(by: "date", descending: false) //TODO: add user-selected ordering field (?)
+
+    self.firestoreListener = query.addSnapshotListener { snapshot, _ in
+      guard let changes = snapshot?.documentChanges else { return }
+      var trainingSessions = changes.compactMap { try? $0.document.data(as: TrainingSession.self) }
+
+      for i in 0..<trainingSessions.count {
+        trainingSessions[i].user = userFollowing.filter({ $0.id == trainingSessions[i].ownerUid }).first //TODO: make more efficient by making the map beforehand (should be using UserService cache anyway)
+      }
+
+      completion(trainingSessions)
+    }
+  }
+
+  static func removeListener() {
+    self.firestoreListener?.remove()
+    self.firestoreListener = nil
+  }
+
   static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] {
 
     let start = Timestamp(date: forDay.startOfDay)
