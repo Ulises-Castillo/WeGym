@@ -8,7 +8,7 @@
 import Firebase
 import FirebaseFirestoreSwift
 
-struct Comment: Identifiable, Codable {
+struct Comment: Identifiable, Codable, Hashable {
 
   @DocumentID var commentID: String?
   let trainingSessionOwnerUid: String

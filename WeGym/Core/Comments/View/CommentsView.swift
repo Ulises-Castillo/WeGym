@@ -30,53 +30,61 @@ struct CommentsView: View {
 
       Divider()
 
-      ScrollView {
-        LazyVStack(spacing: 24) {
-          ForEach(viewModel.comments) { comment in
-            CommentCell(comment: comment)
+      ScrollViewReader { proxy in
+        ScrollView {
+          Spacer(minLength: 0).id("comments_top")
+          LazyVStack(spacing: 24) {
+            ForEach(viewModel.comments) { comment in
+              CommentCell(comment: comment)
+            }
           }
         }
-      }
-      .padding(.top)
+        .padding(.top)
 
-      Divider()
+        Divider()
+        
+        HStack(spacing: 12) {
+          CircularProfileImageView(user: currentUser, size: .xSmall)
 
-      HStack(spacing: 12) {
-        CircularProfileImageView(user: currentUser, size: .xSmall)
-
-        ZStack(alignment: .trailing) {
-          TextField("Add a comment", text: $commentText, axis: .vertical)
-            .focused($inputFocused)
-            .font(.footnote)
-            .padding(12)
-            .padding(.trailing, 40)
-            .multilineTextAlignment(.leading)
-            .foregroundColor(.primary)
-            .overlay {
-              Capsule()
-                .stroke(Color(.systemGray5), lineWidth: 1)
-            }
-          if !commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            Button {
-              Task {
-                let commentTextCopy = commentText
-                commentText = ""
-                if !commentTextCopy.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                  try await viewModel.uploadComment(commentText: commentTextCopy)
-                }
+          ZStack(alignment: .trailing) {
+            TextField("Add a comment", text: $commentText, axis: .vertical)
+              .focused($inputFocused)
+              .font(.footnote)
+              .padding(12)
+              .padding(.trailing, 40)
+              .multilineTextAlignment(.leading)
+              .foregroundColor(.primary)
+              .overlay {
+                Capsule()
+                  .stroke(Color(.systemGray5), lineWidth: 1)
               }
-            } label: {
-              Text("Post")
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(Color(.systemBlue))
+            if !commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+              Button {
+                Task {
+                  let commentTextCopy = commentText
+                  commentText = ""
+                  if !commentTextCopy.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    try await viewModel.uploadComment(commentText: commentTextCopy)
+                  }
+                }
+              } label: {
+                Text("Post")
+                  .font(.subheadline)
+                  .fontWeight(.semibold)
+                  .foregroundColor(Color(.systemBlue))
+              }
+              .padding(.horizontal)
             }
-            .padding(.horizontal)
+          }
+
+        }
+        .padding()
+        .onChange(of: viewModel.comments) { newValue in
+          withAnimation(.spring()) {
+            proxy.scrollTo("comments_top", anchor: .top)
           }
         }
-
       }
-      .padding()
     }
     .onAppear {
       inputFocused = true
