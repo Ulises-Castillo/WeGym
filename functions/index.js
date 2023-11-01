@@ -152,7 +152,7 @@ exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{trai
             const prevCommentData = doc.data();
             const prevCommentUid = prevCommentData.commentOwnerUid;
 
-            if (prevCommentUid != trainingSessionOwnerUid && commentUids.includes(prevCommentUid) == false) {
+            if (prevCommentUid != trainingSessionOwnerUid && prevCommentUid != newCommentOwnerUid && commentUids.includes(prevCommentUid) == false) {
                 commentUids.push(prevCommentUid);
             }
 
