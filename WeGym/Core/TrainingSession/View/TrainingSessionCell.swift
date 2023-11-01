@@ -40,13 +40,12 @@ struct TrainingSessionCell: View {
           CircularProfileImageView(user: user, size: .xSmall)
           // username
           Text(user.fullName ?? user.username)
-            .font(.subheadline)
             .fontWeight(.bold)
+            .font(.system(size: 15, weight: Font.Weight.medium, design: Font.Design.rounded))
 
           + Text(" ") + Text(trainingSession.caption ?? "")
-            .fontWeight(.semibold)
-            .font(.subheadline)
-            .foregroundColor(.secondary)
+            .fontWeight(.regular)
+            .font(.system(size: 15, weight: Font.Weight.medium, design: Font.Design.rounded))
         }
         Spacer()
       }
@@ -74,15 +73,15 @@ struct TrainingSessionCell: View {
           // TrainingSession time
           let date = trainingSession.date.dateValue()
           Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
-            .fontWeight(.semibold)
+            .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
         }
         // TrainingSession location / gym
         if let location = trainingSession.location {
           Text(location)
             .foregroundColor(.secondary)
+            .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
         }
       }
-      .font(.subheadline)
 
       // action buttons
       HStack(spacing: 16) {

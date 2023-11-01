@@ -16,6 +16,7 @@ struct TrainingSessionSchedulerView: View {
   @State var workoutIsRecurring = false
   @State var workoutBroLimit = ""
   @State private var showingSearchSheet = false
+  @FocusState var focusCaptionField: Bool
 
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: TrainingSessionViewModel
@@ -28,80 +29,86 @@ struct TrainingSessionSchedulerView: View {
     NavigationStack { //FIXME: remove nested navigation stack
       Divider()
       ScrollView {
+        VStack {
 
-        TagField(tags: $schedulerViewModel.workoutCategories,
-                 set: $schedulerViewModel.selectedWorkoutCategory,
-                 placeholder: "", prefix: "",
-                 multiSelect: false,
-                 isSelector: true)
-        .accentColor(Color(.systemBlue))
+          TagField(tags: $schedulerViewModel.workoutCategories,
+                   set: $schedulerViewModel.selectedWorkoutCategory,
+                   placeholder: "", prefix: "",
+                   multiSelect: false,
+                   isSelector: true)
+          .accentColor(Color(.systemBlue))
 
-        // select workout / body parts
-        TagField(tags: $schedulerViewModel.workoutFocuses,
-                 set: $schedulerViewModel.selectedWorkoutFocuses,
-                 placeholder: "Other",
-                 prefix: "",
-                 multiSelect: true,
-                 isSelector: false)
-        .styled(.Modern)
-        .accentColor(Color(.systemBlue))
-        .padding()
-
-        DatePicker("",
-                   selection: $workoutTime,
-                   in: Date()...,
-                   displayedComponents: .hourAndMinute)
-        .padding()
-        .font(.headline)
-        .fontWeight(.medium)
-        .onTapGesture {
-          viewModel.shouldShowTime = true
-        }
-
-        // set gym / workout location
-        TagField(tags: $schedulerViewModel.gyms,
-                 set: $schedulerViewModel.selectedGym,
-                 placeholder: "Other",
-                 prefix: "",
-                 multiSelect: false,
-                 isSelector: false)
-        .styled(.Modern)
-        .accentColor(Color(.systemBlue))
-        .padding()
-
-        // set workout comment / theme (perhaps image in the future)
-        TextField("Add caption:", text: $workoutCaption, axis: .vertical)
+          // select workout / body parts
+          TagField(tags: $schedulerViewModel.workoutFocuses,
+                   set: $schedulerViewModel.selectedWorkoutFocuses,
+                   placeholder: "Other",
+                   prefix: "",
+                   multiSelect: true,
+                   isSelector: false)
+          .styled(.Modern)
+          .accentColor(Color(.systemBlue))
           .padding()
-          .padding(.bottom, 90)
-          .font(.system(size: 18, weight: Font.Weight.medium, design: Font.Design.rounded))
-          .lineLimit(2)
-          .disableAutocorrection(true)
-          .onReceive(Just(workoutCaption)) { _ in limitText(captionLengthLimit) }
 
-        let slideButtonStyling = SlideButtonStyling(
-          indicatorSize: 60,
-          indicatorSpacing: 5,
-          indicatorColor: .red,
-          backgroundColor: .red.opacity(0.3),
-          textColor: .secondary,
-          indicatorSystemName: "trash",
-          indicatorDisabledSystemName: "xmark",
-          textAlignment: .globalCenter,
-          textFadesOpacity: true,
-          textHiddenBehindIndicator: true,
-          textShimmers: false
-        )
+          DatePicker("",
+                     selection: $workoutTime,
+                     in: Date()...,
+                     displayedComponents: .hourAndMinute)
+          .padding()
+          .font(.headline)
+          .fontWeight(.medium)
+          .onTapGesture {
+            viewModel.shouldShowTime = true
+          }
 
-        if let session = viewModel.currentUserTrainingSesssion {
-          SlideButton("Delete", styling: slideButtonStyling, action: {
-            Task {
-              viewModel.currentUserTrainingSesssion = nil //TODO: these 3 lines should be in the viewModel
-              try await TrainingSessionService.deleteTrainingSession(withId: session.id)
-              try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
+          // set gym / workout location
+          TagField(tags: $schedulerViewModel.gyms,
+                   set: $schedulerViewModel.selectedGym,
+                   placeholder: "Other",
+                   prefix: "",
+                   multiSelect: false,
+                   isSelector: false)
+          .styled(.Modern)
+          .accentColor(Color(.systemBlue))
+          .padding()
+
+          // set workout comment / theme (perhaps image in the future)
+          TextField("", text: $workoutCaption, prompt: Text("Write a caption...").foregroundColor(.primary), axis: .vertical)
+            .padding()
+            .padding(.bottom, 90)
+            .font(.system(size: 16, weight: Font.Weight.medium, design: Font.Design.rounded))
+            .lineLimit(2)
+            .disableAutocorrection(true)
+            .onReceive(Just(workoutCaption)) { _ in limitText(captionLengthLimit) }
+            .focused($focusCaptionField)
+            .onTapGesture {
+              focusCaptionField = true
             }
-            dismiss()
-          })
-          .padding()
+
+          let slideButtonStyling = SlideButtonStyling(
+            indicatorSize: 60,
+            indicatorSpacing: 5,
+            indicatorColor: .red,
+            backgroundColor: .red.opacity(0.3),
+            textColor: .secondary,
+            indicatorSystemName: "trash",
+            indicatorDisabledSystemName: "xmark",
+            textAlignment: .globalCenter,
+            textFadesOpacity: true,
+            textHiddenBehindIndicator: true,
+            textShimmers: false
+          )
+
+          if let session = viewModel.currentUserTrainingSesssion {
+            SlideButton("Delete", styling: slideButtonStyling, action: {
+              Task {
+                viewModel.currentUserTrainingSesssion = nil //TODO: these 3 lines should be in the viewModel
+                try await TrainingSessionService.deleteTrainingSession(withId: session.id)
+                try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
+              }
+              dismiss()
+            })
+            .padding()
+          }
         }
       }
       .scrollDismissesKeyboard(.interactively)
@@ -124,7 +131,7 @@ struct TrainingSessionSchedulerView: View {
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
-                                                 user: user, 
+                                                 user: user,
                                                  likes: prevSession.likes)
 
                 let data = TrainingSessionViewData(
@@ -142,7 +149,7 @@ struct TrainingSessionSchedulerView: View {
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
-                                                 user: user, 
+                                                 user: user,
                                                  likes: 0)
 
                 let data = TrainingSessionViewData(
