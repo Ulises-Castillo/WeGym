@@ -8,9 +8,15 @@
 import Firebase
 import FirebaseFirestoreSwift
 
-struct CommentService {
+class CommentService {
 
   let trainingSessionId: String
+
+  private var firestoreListener: ListenerRegistration?
+
+  init(trainingSessionId: String) {
+    self.trainingSessionId = trainingSessionId
+  }
 
   func uploadComment(_ comment: Comment) async throws { //TODO: fix bug where user cannot immediately comment on a newly created session, comment should be held until we have the session ID, then sent
     guard let commentData = try? Firestore.Encoder().encode(comment),
@@ -23,16 +29,25 @@ struct CommentService {
       .addDocument(data: commentData)
   }
 
-  func fetchComments() async throws -> [Comment] {
-    guard !trainingSessionId.isEmpty else { return [] } //FIXED CRASH: if user created new training session and immediately taps the comment button there is no sessionID yet from backend.
 
-    let snapshot = try await FirestoreConstants
-      .TrainingSessionsCollection
+  func observeComments(completion: @escaping([Comment]) -> Void) {
+    guard !trainingSessionId.isEmpty else { return } // prevent empty ID (locally created session) CRASH
+
+    let query = FirestoreConstants.TrainingSessionsCollection
       .document(trainingSessionId)
       .collection("post-comments")
-      .order(by: "timestamp", descending: true) //TODO: can this be used to sort training sessions?
-      .getDocuments()
+      .order(by: "timestamp", descending: true)
 
-    return snapshot.documents.compactMap({ try? $0.data(as: Comment.self) })
+    self.firestoreListener = query.addSnapshotListener { snapshot, _ in
+      guard let changes = snapshot?.documentChanges.filter({ $0.type == .added }) else { return }
+      var comments = changes.compactMap{ try? $0.document.data(as: Comment.self) }
+
+      completion(comments)
+    }
+  }
+
+  func removeListener() {
+    self.firestoreListener?.remove()
+    self.firestoreListener = nil
   }
 }

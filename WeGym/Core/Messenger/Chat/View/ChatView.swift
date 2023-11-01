@@ -12,7 +12,7 @@ struct ChatView: View {
   @State private var isInitialLoad = false
   @StateObject var viewModel: ChatViewModel
   private let user: User
-  private var thread: Thread?
+  private var thread: Thread? // the fuck is this ?
 //  @State var value: CGFloat = 0
   @State private var proxy: ScrollViewProxy?
   @FocusState private var inputFocused: Bool

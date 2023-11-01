@@ -54,13 +54,14 @@ struct CommentsView: View {
               Capsule()
                 .stroke(Color(.systemGray5), lineWidth: 1)
             }
-          if !commentText.isEmpty {
+          if !commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Button {
               Task {
                 let commentTextCopy = commentText
                 commentText = ""
-                try await viewModel.uploadComment(commentText: commentTextCopy)
-
+                if !commentTextCopy.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                  try await viewModel.uploadComment(commentText: commentTextCopy)
+                }
               }
             } label: {
               Text("Post")
@@ -74,6 +75,9 @@ struct CommentsView: View {
 
       }
       .padding()
+    }
+    .onDisappear {
+      viewModel.removeChatListener()
     }
   }
 }
