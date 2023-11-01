@@ -54,20 +54,22 @@ struct CommentsView: View {
               Capsule()
                 .stroke(Color(.systemGray5), lineWidth: 1)
             }
-          Button {
-            Task {
-              let commentTextCopy = commentText
-              commentText = ""
-              try await viewModel.uploadComment(commentText: commentTextCopy)
+          if !commentText.isEmpty {
+            Button {
+              Task {
+                let commentTextCopy = commentText
+                commentText = ""
+                try await viewModel.uploadComment(commentText: commentTextCopy)
 
+              }
+            } label: {
+              Text("Post")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(Color(.systemBlue))
             }
-          } label: {
-            Text("Post")
-              .font(.subheadline)
-              .fontWeight(.semibold)
-              .foregroundColor(Color(.systemBlue))
+            .padding(.horizontal)
           }
-          .padding(.horizontal)
         }
 
       }
