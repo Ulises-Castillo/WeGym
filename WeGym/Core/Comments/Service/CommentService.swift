@@ -18,6 +18,15 @@ class CommentService {
     self.trainingSessionId = trainingSessionId
   }
 
+  static func commentsCount(id: String) async throws -> Int {
+    let snapshot = try await FirestoreConstants
+      .TrainingSessionsCollection
+      .document(id)
+      .collection("post-comments")
+      .getDocuments()
+    return snapshot.count
+  }
+
   func uploadComment(_ comment: Comment) async throws { //TODO: fix bug where user cannot immediately comment on a newly created session, comment should be held until we have the session ID, then sent
     guard let commentData = try? Firestore.Encoder().encode(comment),
           !trainingSessionId.isEmpty else { return }

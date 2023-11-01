@@ -10,10 +10,12 @@ import Foundation
 @MainActor
 class TrainingSessionCellViewModel: ObservableObject {
   @Published var trainingSession: TrainingSession
+  @Published var commentsCount = 0
 
   init(trainingSession: TrainingSession) {
     self.trainingSession = trainingSession
     Task { try await checkIfUserLikedTrainingSession() }
+    Task { commentsCount = try await CommentService.commentsCount(id:trainingSession.id) }
   }
 
   func like() async throws {

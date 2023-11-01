@@ -11,12 +11,14 @@ struct CommentsView: View {
   @State private var commentText = ""
   @StateObject var viewModel: CommentsViewModel
   @FocusState var inputFocused
+  @State var viewMode = false
 
   private var currentUser: User? {
     return UserService.shared.currentUser
   }
 
-  init(trainingSession: TrainingSession) {
+  init(trainingSession: TrainingSession, viewMode: Bool = false) {
+    self.viewMode = viewMode
     self._viewModel = StateObject(wrappedValue: CommentsViewModel(trainingSession: trainingSession))
   }
 
@@ -87,7 +89,7 @@ struct CommentsView: View {
       }
     }
     .onAppear {
-      inputFocused = true
+      inputFocused = !viewMode
     }
     .onDisappear {
       viewModel.removeChatListener()

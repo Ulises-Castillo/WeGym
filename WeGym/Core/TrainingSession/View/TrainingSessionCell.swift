@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TrainingSessionCell: View {
   @ObservedObject var cellViewModel: TrainingSessionCellViewModel
+  @State var commentsViewMode = false
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
@@ -117,18 +118,35 @@ struct TrainingSessionCell: View {
           .fontWeight(.semibold)
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.leading, 10)
-          .padding(.top, 1)
+      }
+      // comments label
+      if cellViewModel.commentsCount > 0 { //TODO: show list of ppl who liked
+        Button {
+          commentsViewMode = true
+          showComments.toggle()
+        } label: {
+          Text("View \(cellViewModel.commentsCount) comment".appending(cellViewModel.commentsCount > 1 || cellViewModel.commentsCount == 0 ? "s" : ""))
+            .font(.footnote)
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 10)
+            .foregroundColor(.secondary)
+        }
       }
     }
     .padding(.leading, 21)
     .padding(.trailing, 9)
     .foregroundColor(.primary)
     .sheet(isPresented: $showComments) {
-      CommentsView(trainingSession: trainingSession)
+      CommentsView(trainingSession: trainingSession, viewMode: commentsViewMode)
         .presentationDragIndicator(.visible)
+        .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
     .onChange(of: showComments) { newValue in
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
+      if !showComments {
+        commentsViewMode = false
+      }
     }
     .onNotification { userInfo in
       guard let notificationType = userInfo["notificationType"] as? String else { return } //TODO: test this
