@@ -33,7 +33,7 @@ struct ReorderableForEach<Content: View, Item: Identifiable & Equatable>: View {
   var body: some View {
     ForEach(items) { item in
       content(item)
-        .overlay(draggingItem == item && hasChangedLocation ? Color.white.opacity(0.8) : Color.clear)
+        .overlay(draggingItem == item && hasChangedLocation ? .secondary.opacity(0.8) : Color.clear)
         .onDrag {
           draggingItem = item
           return NSItemProvider(object: "\(item.id)" as NSString)
