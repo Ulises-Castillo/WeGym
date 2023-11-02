@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */; };
-		1C05E5D32AE75A9700D53AE6 /* FeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D22AE75A9700D53AE6 /* FeedCellViewModel.swift */; };
 		1C05E5DA2AE78D2700D53AE6 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D92AE78D2700D53AE6 /* CommentsView.swift */; };
 		1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5DB2AE78D3600D53AE6 /* CommentCell.swift */; };
 		1C05E5DE2AE7966B00D53AE6 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5DD2AE7966B00D53AE6 /* Comment.swift */; };
@@ -132,7 +131,6 @@
 
 /* Begin PBXFileReference section */
 		1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
-		1C05E5D22AE75A9700D53AE6 /* FeedCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCellViewModel.swift; sourceTree = "<group>"; };
 		1C05E5D92AE78D2700D53AE6 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		1C05E5DB2AE78D3600D53AE6 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		1C05E5DD2AE7966B00D53AE6 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
@@ -874,7 +872,6 @@
 			children = (
 				1CD4CDD52ADE7D9500B2BB0D /* TrainingSessionViewModel.swift */,
 				1C2FFA4D2AE196DD009CDA2D /* TrainingSessionSchedulerViewModel.swift */,
-				1C05E5D22AE75A9700D53AE6 /* FeedCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1034,7 +1031,6 @@
 				1CDEE3282ADB101700F1A2D6 /* FeedViewModel.swift in Sources */,
 				1C3C0BA02AEB251E00FFAA75 /* ImageUploader2.swift in Sources */,
 				1C3C0BA42AEB264E00FFAA75 /* ChatMessageCell.swift in Sources */,
-				1C05E5D32AE75A9700D53AE6 /* FeedCellViewModel.swift in Sources */,
 				1CDEE2A92AD8CF0F00F1A2D6 /* LoginView.swift in Sources */,
 				1CDEE32A2ADB18D900F1A2D6 /* PostService.swift in Sources */,
 				1CDEE2862AD6621900F1A2D6 /* ContentView.swift in Sources */,

@@ -8,21 +8,23 @@
 import SwiftUI
 
 struct TrainingSessionCell: View {
-  @ObservedObject var cellViewModel: TrainingSessionCellViewModel
   @State var commentsViewMode = false
   @Environment(\.scenePhase) var scenePhase
+  let trainingSession: TrainingSession
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
-    self.cellViewModel = TrainingSessionCellViewModel(trainingSession: trainingSession)
+    self.trainingSession = trainingSession
   }
 
-  private var trainingSession: TrainingSession {
-    return cellViewModel.trainingSession
-  }
-
+  //NOTE: this has to be separate from the main cache because the snapshot listener will always clear didLike
+  // because didLike is specific to each user, setting didLike to true in the DB makes no sense.
   private var didLike: Bool {
-    return trainingSession.didLike ?? false
+    return viewModel.didLikeCache[trainingSession.id] ?? false
+  }
+
+  private var likesCount: Int { //TODO: test this
+    return viewModel.trainingSessionsCache[viewModel.key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes ?? 0
   }
 
   private var commentsCount: Int {
@@ -115,8 +117,8 @@ struct TrainingSessionCell: View {
       .foregroundColor(.blue)
 
       // likes label
-      if trainingSession.likes > 0 { //TODO: show list of ppl who liked
-        Text("\(trainingSession.likes) like".appending(trainingSession.likes > 1 || trainingSession.likes == 0 ? "s" : ""))
+      if likesCount > 0 { //TODO: show list of ppl who liked
+        Text("\(likesCount) like".appending(likesCount > 1 || likesCount == 0 ? "s" : ""))
           .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.leading, 10)
@@ -145,17 +147,17 @@ struct TrainingSessionCell: View {
         .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
     .onAppear {
-      Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+      Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
     }
     .onChange(of: scenePhase) { newPhase in
       guard newPhase == .active else { return }
-      Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+      Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
     }
     .onChange(of: showComments) { newValue in
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
       if !showComments {
         commentsViewMode = false
-        Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+        Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
       }
     }
     .onNotification { userInfo in
@@ -176,9 +178,9 @@ struct TrainingSessionCell: View {
   private func handleLikeTapped() {
     Task {
       if didLike {
-        try await cellViewModel.unlike()
+        await viewModel.unlike(trainingSession)
       } else {
-        try await cellViewModel.like()
+        await viewModel.like(trainingSession)
       }
     }
   }

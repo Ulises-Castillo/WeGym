@@ -181,10 +181,10 @@ extension TrainingSessionService {
     async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).delete()
   }
 
-  static func checkIfUserLikedTrainingSession(_ trainingSession: TrainingSession) async throws -> Bool {
+  static func checkIfUserLikedTrainingSession(_ id: String) async throws -> Bool {
     guard let uid = Auth.auth().currentUser?.uid else { return false }
 
-    let snapshot = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).getDocument()
+    let snapshot = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(id).getDocument()
     return snapshot.exists
   }
 }

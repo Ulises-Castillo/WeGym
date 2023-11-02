@@ -35,6 +35,18 @@ class TrainingSessionViewModel: ObservableObject {
       guard session.date.dateValue().noon == day.noon else { continue }
       trainingSessions.append(session)
     }
+
+    Task {
+      for session in trainingSessionsCache.values {
+        guard didLikeCache[session.id] == nil else { continue }
+        await checkIfUserLikedTrainingSession(id: session.id)
+      }
+
+      for session in trainingSessionsCache.values {
+        guard commentsCountCache[session.id] == nil else { continue }
+        await updateCommentsCountCache(trainingSessionId: session.id)
+      }
+    }
   }
 
   @MainActor
@@ -86,12 +98,54 @@ class TrainingSessionViewModel: ObservableObject {
     TrainingSessionService.removeListener()
   }
 
+  // Makes more sense to have these separate from the main cache due to how the data is structured
   @Published var commentsCountCache = [String: Int]()
+  @Published var didLikeCache = [String: Bool]()
 
   @MainActor
-  func updateCommentsCountCache(trainingSessionId: String) async throws {
-    let count = try await CommentService.commentsCount(id: trainingSessionId)
-    commentsCountCache[trainingSessionId] = count
+  func checkIfUserLikedTrainingSession(id: String) async {
+    guard !id.isEmpty else { return } // required to prevent CRASH on new session (no id yet)
+    do {
+      didLikeCache[id] = try await TrainingSessionService.checkIfUserLikedTrainingSession(id)
+    } catch {
+      print(error)
+    }
+
+  }
+
+  @MainActor
+  func like(_ trainingSession: TrainingSession) async { // pass in from cache // across the board deal only with cached session
+    do {
+      didLikeCache[trainingSession.id] = true
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes += 1
+      try await TrainingSessionService.likeTrainingSession(trainingSession) //TODO: send the cached training session
+    } catch {
+      didLikeCache[trainingSession.id] = false
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes -= 1
+    }
+  }
+
+  @MainActor
+  func unlike(_ trainingSession: TrainingSession) async {
+    do {
+      didLikeCache[trainingSession.id] = false
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes -= 1
+      try await TrainingSessionService.unlikeTrainingSession(trainingSession)
+    } catch {
+      didLikeCache[trainingSession.id] = true
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes += 1
+    }
+  }
+
+
+  @MainActor
+  func updateCommentsCountCache(trainingSessionId: String) async {
+    do {
+      let count = try await CommentService.commentsCount(id: trainingSessionId)
+      commentsCountCache[trainingSessionId] = count
+    } catch {
+      print(error)
+    }
   }
 
   func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
