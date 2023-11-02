@@ -23,8 +23,11 @@ struct TrainingSessionService {
     var userFollowingIds: [String] = userFollowing.map({ $0.id })
     userFollowingIds.append(currentUser.id)
 
-    let start = Timestamp(date: date.startOfDay)
-    let end = Timestamp(date: date.endOfDay)
+    guard let prevWeek = Calendar.current.date(byAdding: .day, value: -7, to: date),
+          let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: date) else { return }
+
+    let start = Timestamp(date: prevWeek.startOfDay)
+    let end = Timestamp(date: nextWeek.endOfDay)
 
     let query = FirestoreConstants.TrainingSessionsCollection
       .whereField("ownerUid", in: userFollowingIds)

@@ -13,30 +13,14 @@ class TrainingSessionViewModel: ObservableObject {
   var day = Date.now {
     didSet {
       reloadTrainingSessions()
-//      print("*** DAY set: \(day.formatted())")
       Task { async let _ = observeTrainingSessions() }
-
-
-      //      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
-      //      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
-      //      if trainingSessionsCache[tomorrow.noon] == nil {
-      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
-      //      }
-      //      let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
-      //      if trainingSessionsCache[dayAfterTmr.noon] == nil {
-      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
-      //      }
-      //      let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
-      //      if trainingSessionsCache[yesterday.noon] == nil {
-      //        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
-      //      }
     }
   }
 
   @Published var trainingSessionsCache = [String: TrainingSession]() {
-    didSet { print("*** cache keys count: \(trainingSessionsCache.keys.count)"); print("*** cache keys: \(trainingSessionsCache.keys)")
-      print("*** cache values: \(trainingSessionsCache.values)")
-      reloadTrainingSessions() }
+    didSet {
+      reloadTrainingSessions()
+    }
   }
 
   @Published var currentUserTrainingSesssion: TrainingSession?
@@ -74,15 +58,9 @@ class TrainingSessionViewModel: ObservableObject {
     return userID + "\(date.noon)"
   }
 
-  //TODO: consider making this an array such that the user can have multiple training sessions scheduled in the same day (big for martial arts)
-
   @Published var shouldShowTime = true
 
-  var isFirstFetch = [Date: Bool]()
-
-  //  init() { //TODO: test if it runs faster being called on init()
-  //    Task { try await observeTrainingSessions() }
-  //  }
+  var isFirstFetch = [Date: Bool]() //TODO: improve to account for the fact this is only being set when a training session IS scheduled for a certain date. In other words, Rest day cells will still take a sec to load (show spinner) because nothing was returned for those days.
 
   @MainActor
   func observeTrainingSessions() async throws {
