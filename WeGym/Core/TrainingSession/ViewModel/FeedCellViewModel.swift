@@ -15,7 +15,7 @@ class TrainingSessionCellViewModel: ObservableObject {
   init(trainingSession: TrainingSession) {
     self.trainingSession = trainingSession
     Task { try await checkIfUserLikedTrainingSession() }
-    Task { commentsCount = try await CommentService.commentsCount(id:trainingSession.id) }
+    Task { commentsCount = try await CommentService.commentsCount(id: trainingSession.id) }
   }
 
   func like() async throws {

@@ -10,6 +10,7 @@ import SwiftUI
 struct TrainingSessionCell: View {
   @ObservedObject var cellViewModel: TrainingSessionCellViewModel
   @State var commentsViewMode = false
+  @Environment(\.scenePhase) var scenePhase
 
   init(trainingSession: TrainingSession, shouldShowTime: Bool) {
     self.shouldShowTime = shouldShowTime
@@ -22,6 +23,10 @@ struct TrainingSessionCell: View {
 
   private var didLike: Bool {
     return trainingSession.didLike ?? false
+  }
+
+  private var commentsCount: Int {
+    return viewModel.commentsCountCache[trainingSession.id, default: 0]
   }
 
   let shouldShowTime: Bool
@@ -117,12 +122,12 @@ struct TrainingSessionCell: View {
           .padding(.leading, 10)
       }
       // comments label
-      if cellViewModel.commentsCount > 0 { //TODO: show list of ppl who liked
+      if commentsCount > 0 { //TODO: show list of ppl who liked
         Button {
           commentsViewMode = true
           showComments.toggle()
         } label: {
-          Text("View \(cellViewModel.commentsCount) comment".appending(cellViewModel.commentsCount > 1 || cellViewModel.commentsCount == 0 ? "s" : ""))
+          Text("View \(commentsCount) comment".appending(commentsCount > 1 || commentsCount == 0 ? "s" : ""))
             .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 10)
@@ -139,10 +144,18 @@ struct TrainingSessionCell: View {
         .presentationDragIndicator(.visible)
         .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
+    .onAppear {
+      Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+    }
+    .onChange(of: scenePhase) { newPhase in
+      guard newPhase == .active else { return }
+      Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+    }
     .onChange(of: showComments) { newValue in
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
       if !showComments {
         commentsViewMode = false
+        Task { try await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
       }
     }
     .onNotification { userInfo in

@@ -86,6 +86,14 @@ class TrainingSessionViewModel: ObservableObject {
     TrainingSessionService.removeListener()
   }
 
+  @Published var commentsCountCache = [String: Int]()
+
+  @MainActor
+  func updateCommentsCountCache(trainingSessionId: String) async throws {
+    let count = try await CommentService.commentsCount(id: trainingSessionId)
+    commentsCountCache[trainingSessionId] = count
+  }
+
   func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
     var beautifiedFocuses = focuses
     // make set with BRO & PPL
