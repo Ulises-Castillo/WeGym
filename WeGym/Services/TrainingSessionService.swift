@@ -12,7 +12,7 @@ import FirebaseFirestoreSwift
 struct TrainingSessionService {
   static private var firestoreListener: ListenerRegistration?
 
-  static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession]) -> Void) async throws {
+  static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
     // also need to observe current user for date (consider local updates etc) can use [user+date] as ID to update actual ID when create call returns
 
     // get user following + add current user
@@ -34,13 +34,24 @@ struct TrainingSessionService {
 
     self.firestoreListener = query.addSnapshotListener { snapshot, _ in
       guard let changes = snapshot?.documentChanges else { return }
-      var trainingSessions = changes.compactMap { try? $0.document.data(as: TrainingSession.self) }
+      var trainingSessions = [TrainingSession]()
+      var removedTrainingSessions = [TrainingSession]()
+
+      for change in changes {
+        guard let trainingSession = try? change.document.data(as: TrainingSession.self) else { continue }
+
+        if change.type == .removed {
+          removedTrainingSessions.append(trainingSession)
+        } else {
+          trainingSessions.append(trainingSession)
+        }
+      }
 
       for i in 0..<trainingSessions.count {
         trainingSessions[i].user = userFollowing.filter({ $0.id == trainingSessions[i].ownerUid }).first //TODO: make more efficient by making the map beforehand (should be using UserService cache anyway)
       }
 
-      completion(trainingSessions)
+      completion(trainingSessions, removedTrainingSessions)
     }
   }
 

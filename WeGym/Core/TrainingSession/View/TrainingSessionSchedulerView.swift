@@ -101,9 +101,7 @@ struct TrainingSessionSchedulerView: View {
           if let session = viewModel.currentUserTrainingSesssion {
             SlideButton("Delete", styling: slideButtonStyling, action: {
               Task {
-                viewModel.currentUserTrainingSesssion = nil //TODO: these 3 lines should be in the viewModel
-                try await TrainingSessionService.deleteTrainingSession(withId: session.id)
-                try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
+                try await viewModel.deleteTrainingSession(session: session)
               }
               dismiss()
             })
@@ -134,13 +132,7 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: prevSession.likes)
 
-                let data = TrainingSessionViewData(
-                  currentUserTrainingSession: newSession,
-                  followingTrainingSessions: viewModel.trainingSessionsCache[viewModel.day.noon]?.followingTrainingSessions ?? []
-                )
-                viewModel.trainingSessionsCache[viewModel.day.noon] = data
-
-                try await TrainingSessionService.updateTrainingSession(trainingSession: newSession)
+                try await viewModel.updateTrainingSession(session: newSession)
 
               } else {
                 let newSession = TrainingSession(id: "",
@@ -152,22 +144,8 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: 0)
 
-                let data = TrainingSessionViewData(
-                  currentUserTrainingSession: newSession,
-                  followingTrainingSessions: viewModel.trainingSessionsCache[viewModel.day.noon]?.followingTrainingSessions ?? []
-                )
-                viewModel.trainingSessionsCache[viewModel.day.noon] = data
-
-                try await TrainingSessionService
-                  .uploadTrainingSession(date: Timestamp(date: workoutTime),
-                                         focus: schedulerViewModel.selectedWorkoutFocuses,
-                                         location: schedulerViewModel.selectedGym.first,
-                                         caption: workoutCaption,
-                                         likes: 0)
-
-
+                try await viewModel.addTrainingSession(session: newSession)
               }
-              try await viewModel.fetchTrainingSessionsUpdateCache(forDay: viewModel.day)
             }
             dismiss()
           } label: {
