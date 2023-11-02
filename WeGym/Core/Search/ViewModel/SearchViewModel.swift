@@ -67,16 +67,16 @@ class SearchViewModel: ObservableObject {
                 try await fetchFollowerUsers(forUid: uid)
             case .following(let uid):
                 try await fetchFollowingUsers(forUid: uid)
-            case .likes(let postId):
-                try await fetchPostLikesUsers(forPostId: postId)
+            case .likes(let trainingSessionId):
+              try await fetchTrainingSessionLikesUsers(forId: trainingSessionId)
             case .search, .newMessage:
                 await fetchUsers()
             }
         }
     }
 
-    private func fetchPostLikesUsers(forPostId postId: String) async throws {
-        guard let snapshot = try? await FirestoreConstants.PostsCollection.document(postId).collection("post-likes").getDocuments() else { return }
+    private func fetchTrainingSessionLikesUsers(forId trainingSessionId: String) async throws {
+        guard let snapshot = try? await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).collection("training_session-likes").getDocuments() else { return }
         try await fetchUsers(snapshot)
     }
 

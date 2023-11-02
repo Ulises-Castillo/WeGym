@@ -37,6 +37,7 @@ struct TrainingSessionCell: View {
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
   @State private var showComments = false
+  @State private var showLikes = false
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -118,10 +119,14 @@ struct TrainingSessionCell: View {
 
       // likes label
       if likesCount > 0 { //TODO: show list of ppl who liked
-        Text("\(likesCount) like".appending(likesCount > 1 || likesCount == 0 ? "s" : ""))
-          .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .padding(.leading, 10)
+        Button {
+          showLikes.toggle()
+        } label: {
+          Text("\(likesCount) like".appending(likesCount > 1 || likesCount == 0 ? "s" : ""))
+            .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 10)
+        }
       }
       // comments label
       if commentsCount > 0 { //TODO: show list of ppl who liked
@@ -146,6 +151,21 @@ struct TrainingSessionCell: View {
         .presentationDragIndicator(.visible)
         .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
+    .sheet(isPresented: $showLikes) {
+      VStack {
+        Text("Likes")
+          .font(.subheadline)
+          .fontWeight(.semibold)
+          .padding(.top, 24)
+          .foregroundColor(.primary)
+
+        Divider()
+        UserListView(config: .likes(trainingSession.id)) //TODO: should be able to follow ppl from here + go to their profile
+          .presentationDragIndicator(.visible)
+          .presentationDetents([PresentationDetent.fraction(0.60), .large])
+          .padding(.top, 30)
+      }
+    }
     .onAppear {
       Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
     }
@@ -162,6 +182,7 @@ struct TrainingSessionCell: View {
     }
     .onNotification { userInfo in
       guard let notificationType = userInfo["notificationType"] as? String else { return } //TODO: test this
+      showLikes = false
 
       switch notificationType {
       case "new_training_session_comment":
