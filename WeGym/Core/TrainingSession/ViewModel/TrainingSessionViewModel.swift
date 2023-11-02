@@ -26,14 +26,41 @@ class TrainingSessionViewModel: ObservableObject {
   @Published var currentUserTrainingSesssion: TrainingSession?
   @Published var trainingSessions = [TrainingSession]()
 
-  func reloadTrainingSessions() {
+  var userfollowingOrderLocal: [String]?
+
+  func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
     guard let currentUserId = UserService.shared.currentUser?.id else { return }
     currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
 
     trainingSessions.removeAll()
-    for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId }) {
-      guard session.date.dateValue().noon == day.noon else { continue }
-      trainingSessions.append(session)
+
+    let order: [String]? = userfollowingOrderLocal != nil ? userfollowingOrderLocal : UserService.shared.currentUser?.userFollowingOrder
+
+    if let order = order {
+      //TODO: ensure we are recieving orer from the backend
+      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId && $0.date.dateValue().noon == day.noon })
+
+      for uid in order {
+        for session in followingTrainingSessions {
+          if session.ownerUid == uid {
+            trainingSessions.append(session)
+            break
+          }
+        }
+      }
+      // account for a new follower who would not be found
+      // by adding any remaining session
+      for session in followingTrainingSessions {
+        if !trainingSessions.contains(session) {
+          trainingSessions.append(session)
+        }
+      }
+
+    } else {
+      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId }) {
+        guard session.date.dateValue().noon == day.noon else { continue }
+        trainingSessions.append(session)
+      }
     }
 
     Task {
@@ -98,6 +125,18 @@ class TrainingSessionViewModel: ObservableObject {
     TrainingSessionService.removeListener()
   }
 
+  var userFollowingTimer: Timer?
+
+  func setUserFollowingOrder() {
+    let newOrder = trainingSessions.map({ $0.ownerUid })
+    userfollowingOrderLocal = newOrder
+
+    userFollowingTimer?.invalidate()
+    userFollowingTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { timer in
+      Task { await TrainingSessionService.setUserFollowingOrder(newOrder) }
+    }
+  }
+
   // Makes more sense to have these separate from the main cache due to how the data is structured
   @Published var commentsCountCache = [String: Int]()
   @Published var didLikeCache = [String: Bool]()
@@ -110,7 +149,6 @@ class TrainingSessionViewModel: ObservableObject {
     } catch {
       print(error)
     }
-
   }
 
   @MainActor

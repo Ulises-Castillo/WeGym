@@ -158,6 +158,16 @@ extension TrainingSessionService {
     }
     return trainingSessions
   }
+
+  static func setUserFollowingOrder(_ newOrder: [String]) async {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+
+    do {
+      try await FirestoreConstants.UserCollection.document(uid).setData(["userFollowingOrder" : newOrder], merge: true) //TODO: test repeated calls
+    } catch {
+      print("*** \(error)")
+    }
+  }
 }
 
 // MARK: - Likes

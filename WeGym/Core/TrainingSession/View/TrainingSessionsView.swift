@@ -68,6 +68,7 @@ struct TrainingSessionsView: View {
 
         } moveAction: { from, to in
           viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
+          viewModel.setUserFollowingOrder()
         }
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
