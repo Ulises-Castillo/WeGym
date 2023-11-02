@@ -59,11 +59,15 @@ struct TrainingSessionsView: View {
           TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
         }
 
-        ForEach(viewModel.trainingSessions) { session in
+        ReorderableForEach(items: viewModel.trainingSessions) { session in
+
           NavigationLink(value: TrainingSessionsNavigation.profile(session.user!)) {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }.disabled(session.user == nil)
+
+        } moveAction: { from, to in
+          viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
         }
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
