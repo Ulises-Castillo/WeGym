@@ -108,14 +108,14 @@ struct TrainingSessionsView: View {
         }
       }
     }
-    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+    .gesture(DragGesture(minimumDistance: 1.5, coordinateSpace: .local)
       .onEnded { value in
         print(value.translation)
         switch(value.translation.width, value.translation.height) {
-        case (...0, -30...30):
+        case (...0, -60...60):
           viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
           selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
-        case (0..., -30...30):
+        case (0..., -60...60):
           viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
           selectedDate = selectedDate.addingTimeInterval(-86400)
         default:
