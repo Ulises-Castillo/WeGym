@@ -22,12 +22,12 @@ struct TrainingSessionsView: View {
   @State private var trainingSession: TrainingSession?
 
 
-  @StateObject var viewModel: TrainingSessionViewModel
+  @EnvironmentObject var viewModel: TrainingSessionViewModel
 
   init(path: Binding<[TrainingSessionsNavigation]>, showToday: Binding<Bool>) {
     self._showToday = showToday
     self._path = path
-    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
+//    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
 
   var body: some View {
@@ -59,11 +59,16 @@ struct TrainingSessionsView: View {
           TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
         }
 
-        ForEach(viewModel.trainingSessions) { session in
+        ReorderableForEach(items: viewModel.trainingSessions) { session in
+
           NavigationLink(value: TrainingSessionsNavigation.profile(session.user!)) {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
               .padding(.vertical, 12)
           }.disabled(session.user == nil)
+
+        } moveAction: { from, to in
+          viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
+          viewModel.setUserFollowingOrder()
         }
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
@@ -75,7 +80,7 @@ struct TrainingSessionsView: View {
         }
       }
       .foregroundColor(.black)
-      .navigationTitle(viewModel.relaiveDay())
+      .navigationTitle(relaiveDay(viewModel.day))
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -108,14 +113,14 @@ struct TrainingSessionsView: View {
         }
       }
     }
-    .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
+    .gesture(DragGesture(minimumDistance: 1.5, coordinateSpace: .local)
       .onEnded { value in
         print(value.translation)
         switch(value.translation.width, value.translation.height) {
-        case (...0, -30...30):
+        case (...0, -60...60):
           viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
           selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
-        case (0..., -30...30):
+        case (0..., -60...60):
           viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
           selectedDate = selectedDate.addingTimeInterval(-86400)
         default:
@@ -153,7 +158,10 @@ struct TrainingSessionsView: View {
       selectedDate = Date()
       viewModel.day = selectedDate
     }
-    .environmentObject(viewModel)
+    .onDisappear {
+      viewModel.removeTrainingSessionListener()
+    }
+//    .environmentObject(viewModel)
     .sheet(isPresented: $showComments) {
 
       if trainingSession != nil {

@@ -16,6 +16,7 @@ struct User: Identifiable, Hashable, Codable {
   var profileImageUrl: String?
   var bio: String?
   var isFollowed: Bool? = false
+  var userFollowingOrder: [String]?
 
   var isCurrentUser: Bool {
     guard let currentUid = Auth.auth().currentUser?.uid else { return false }

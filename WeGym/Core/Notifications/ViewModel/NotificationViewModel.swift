@@ -42,9 +42,10 @@ class NotificationsViewModel: ObservableObject {
       self.notifications[indexOfNotification].isFollowed = await isFollowed
     }
 
-    if let postId = notification.postId {
-      async let postSnapshot = await FirestoreConstants.PostsCollection.document(postId).getDocument()
-      self.notifications[indexOfNotification].post = try? await postSnapshot.data(as: Post.self)
+    if let trainingSessionId = notification.trainingSessionId {
+      async let trainingSessionSnapshot = await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument()
+      self.notifications[indexOfNotification].trainingSession = try? await trainingSessionSnapshot.data(as: TrainingSession.self)
+      self.notifications[indexOfNotification].trainingSession?.user = UserService.shared.cache[self.notifications[indexOfNotification].trainingSession?.ownerUid ?? ""] //FIXME: verbose
     }
   }
 }

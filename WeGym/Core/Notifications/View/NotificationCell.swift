@@ -13,46 +13,62 @@ import Kingfisher
 struct NotificationCell: View {
   @ObservedObject var viewModel: NotificationCellViewModel
   @Binding var notification: Notification2
-  
+
   var isFollowed: Bool {
     return notification.isFollowed ?? false
   }
-  
+
   init(notification: Binding<Notification2>) {
     self.viewModel = NotificationCellViewModel(notification: notification.wrappedValue)
     self._notification = notification
   }
-  
+
   var body: some View {
     HStack {
       if let user = notification.user {
         NavigationLink(value: NotificationsNavigation.profile(user)) {
           CircularProfileImageView(user: user, size: .xSmall)
-          
+
           HStack {
             Text(user.username)
               .font(.system(size: 14, weight: .semibold)) +
-            
+
             Text(notification.type.notificationMessage)
               .font(.system(size: 14)) +
-            
+
             Text(" \(notification.timestamp.timestampString())")
               .foregroundColor(.gray).font(.system(size: 12))
           }
           .multilineTextAlignment(.leading)
         }
       }
-      
+
       Spacer()
-      
+
       if notification.type != .follow {
-        if let post = notification.post {
-          NavigationLink(destination: FeedCell(post: post)) {
-            KFImage(URL(string: post.imageUrl))
-              .resizable()
-              .scaledToFill()
-              .frame(width: 40, height: 40)
-              .clipped()
+        if let trainingSession = notification.trainingSession {
+          NavigationLink{
+            TrainingSessionCell(trainingSession: trainingSession,
+                                shouldShowTime: true,
+                                showLikes: notification.type == .like,
+                                showComments: notification.type == .comment,
+                                commentsViewMode: notification.type == .comment,
+                                notificationCellMode: true) // deal with should show time
+              .padding(.top, 13)
+            Spacer()
+              .navigationTitle(relaiveDay(trainingSession.date.dateValue()))
+          } label: { //TODO: deal with should show time here
+            // body parts / workout type
+            HStack {
+              ForEach(beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
+                Text(" \(focus)   ")
+                  .frame(height: 24)
+                  .background(Color(.systemBlue))
+                  .cornerRadius(6)
+                  .foregroundColor(.white)
+                  .font(.system(size: 15, weight: .bold, design: Font.Design.rounded))
+              }
+            }
           }
         }
       } else {
@@ -72,7 +88,7 @@ struct NotificationCell: View {
             )
         })
       }
-      
+
     }
     .accentColor(.primary)
     .padding(.horizontal)

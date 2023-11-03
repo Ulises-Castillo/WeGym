@@ -10,137 +10,181 @@ import Foundation
 
 class TrainingSessionViewModel: ObservableObject {
 
-  @Published var trainingSessions = [TrainingSession]()
   var day = Date.now {
     didSet {
-//      print("*** DAY set: \(day.formatted())")
-      currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
-      trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
-
-      Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: day) }
-      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day //TODO: reduce duplication
-      if trainingSessionsCache[tomorrow.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: tomorrow) }
-      }
-      let dayAfterTmr = Calendar.current.date(byAdding: .day, value: 2, to: day) ?? day
-      if trainingSessionsCache[dayAfterTmr.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: dayAfterTmr) }
-      }
-      let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: day) ?? day
-      if trainingSessionsCache[yesterday.noon] == nil {
-        Task { async let _ = fetchTrainingSessionsUpdateCache(forDay: yesterday) }
-      }
+      reloadTrainingSessions()
+      Task { async let _ = observeTrainingSessions() }
     }
   }
 
-  //TODO: consider making this an array such that the user can have multiple training sessions scheduled in the same day (big for martial arts)
-  @Published var currentUserTrainingSesssion: TrainingSession?
-  @Published var shouldShowTime = true
-
-  var isFirstFetch = [Date: Bool]()
-
-  init() {
-    Task { try await fetchTrainingSessionsUpdateCache(forDay: day) }
+  @Published var trainingSessionsCache = [String: TrainingSession]() {
+    didSet {
+      reloadTrainingSessions()
+    }
   }
 
-  func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
-    var beautifiedFocuses = focuses
-    // make set with BRO & PPL
-    let categorySet = Set<String>(SchedulerConstants.workoutCategoryFocusesMap["BRO"]! +
-                                  SchedulerConstants.workoutCategoryFocusesMap["PPL"]!)
-    var majorFocus: String?
+  @Published var currentUserTrainingSesssion: TrainingSession?
+  @Published var trainingSessions = [TrainingSession]()
 
-    // loop through selected focuses
-    for focus in beautifiedFocuses {
-      if categorySet.contains(focus) {
-        if majorFocus != nil {
-          return beautifiedFocuses
-        } else {
-          majorFocus = focus
+  var userfollowingOrderLocal: [String]?
+
+  func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
+    guard let currentUserId = UserService.shared.currentUser?.id else { return }
+    currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
+
+    trainingSessions.removeAll()
+
+    let order: [String]? = userfollowingOrderLocal != nil ? userfollowingOrderLocal : UserService.shared.currentUser?.userFollowingOrder
+
+    if let order = order {
+      //TODO: ensure we are recieving orer from the backend
+      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId && $0.date.dateValue().noon == day.noon })
+
+      for uid in order {
+        for session in followingTrainingSessions {
+          if session.ownerUid == uid {
+            trainingSessions.append(session)
+            break
+          }
         }
       }
-    }
-    // if only one tag from BRO or PPL found
-    if var majorFocus = majorFocus {
-      // remove original focus
-      if let index = beautifiedFocuses.firstIndex(of: majorFocus) {
-        beautifiedFocuses.remove(at: index)
+      // account for a new follower who would not be found
+      // by adding any remaining session
+      for session in followingTrainingSessions {
+        if !trainingSessions.contains(session) {
+          trainingSessions.append(session)
+        }
       }
-      // make singular, if plural
-      if majorFocus.last == "s" {
-        majorFocus = String(majorFocus.dropLast(1))
-      }
-      // append "Day"
-      majorFocus = majorFocus + " Day"
-      beautifiedFocuses.insert(majorFocus, at: 0)
-    }
-    return beautifiedFocuses
-  }
 
-  func relaiveDay() -> String {
-    let relativeDateFormatter = DateFormatter()
-    relativeDateFormatter.timeStyle = .none
-    relativeDateFormatter.dateStyle = .medium
-    relativeDateFormatter.locale = Locale(identifier: "en_US")
-    relativeDateFormatter.doesRelativeDateFormatting = true
-
-    guard let dayOfWeek = day.dayOfWeek(),
-          let diff = Calendar.current.dateComponents([.day], from: day, to: Date()).day else { return "" }
-
-    let relativeDate = relativeDateFormatter.string(from: day)
-    let daySet: Set<String> = ["Yesterday", "Today", "Tomorrow"]
-
-    if daySet.contains(relativeDate)  {
-      return relativeDate
-    } else if diff <= 6 && diff >= -6 {
-      let calendar = Calendar.current
-      if dayOfWeek == "Sunday" && diff > 0 {
-        return "Past Sunday"
-      } else if calendar.component(.weekOfYear, from: day) == calendar.component(.weekOfYear, from: Date()) {
-        return dayOfWeek
-      } else if diff > 0 {
-        return "Past " + dayOfWeek
-      } else if diff >= -6 && dayOfWeek == "Sunday" {
-        return dayOfWeek
-      } else {
-        return "Next " + dayOfWeek
-      }
     } else {
-      return dayOfWeek + ", " + relativeDate.dropLast(6)
-    }
-  }
-
-  @Published var trainingSessionsCache = [Date : TrainingSessionViewData]() {
-    didSet {
-//      print("*** trainingSessionsCacheKeys: \(trainingSessionsCache.keys)")
-//      print("*** trainingSessionsCacheCount: \(trainingSessionsCache.count)")
-      if currentUserTrainingSesssion != trainingSessionsCache[day.noon]?.currentUserTrainingSession {
-        currentUserTrainingSesssion = trainingSessionsCache[day.noon]?.currentUserTrainingSession
+      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId }) {
+        guard session.date.dateValue().noon == day.noon else { continue }
+        trainingSessions.append(session)
       }
-      if trainingSessions != trainingSessionsCache[day.noon]?.followingTrainingSessions ?? [] {
-        trainingSessions = trainingSessionsCache[day.noon]?.followingTrainingSessions ?? []
+    }
+
+    Task {
+      for session in trainingSessionsCache.values {
+        guard didLikeCache[session.id] == nil else { continue }
+        await checkIfUserLikedTrainingSession(id: session.id)
+      }
+
+      for session in trainingSessionsCache.values {
+        guard commentsCountCache[session.id] == nil else { continue }
+        await updateCommentsCountCache(trainingSessionId: session.id)
       }
     }
   }
 
   @MainActor
-  func fetchTrainingSessionsUpdateCache(forDay date: Date) async throws {
-    guard let user = UserService.shared.currentUser else { return }
-    var currentUserTrainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: user.id, date: date)
-    currentUserTrainingSession?.user = user
-
-    let followingTrainingSessions = try await TrainingSessionService.fetchUserFollowingTrainingSessions(uid: user.id, date: date)
-
-    let data = TrainingSessionViewData(
-      currentUserTrainingSession: currentUserTrainingSession,
-      followingTrainingSessions: followingTrainingSessions
-    )
-    trainingSessionsCache[date.noon] = data
-    isFirstFetch[date.noon] = false
+  func deleteTrainingSession(session: TrainingSession) async throws {
+    //    trainingSessionsCache2[key(session.ownerUid, day)] = nil //TODO: consider deleting session locally, immediately
+    try await TrainingSessionService.deleteTrainingSession(withId: session.id)
   }
-}
 
-struct TrainingSessionViewData {
-  let currentUserTrainingSession: TrainingSession?
-  let followingTrainingSessions: [TrainingSession]
+  @MainActor
+  func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes)
+  }
+
+  @MainActor
+  func updateTrainingSession(session: TrainingSession) async throws {
+    //    trainingSessionsCache2[key(session.ownerUid, day)] = session //TODO: consider updating session locally, immediately
+    try await TrainingSessionService.updateTrainingSession(trainingSession: session)
+  }
+
+  func key(_ userID: String, _ date: Date) -> String {
+    return userID + "\(date.noon)"
+  }
+
+  @Published var shouldShowTime = true
+
+  var isFirstFetch = [Date: Bool]() //TODO: improve to account for the fact this is only being set when a training session IS scheduled for a certain date. In other words, Rest day cells will still take a sec to load (show spinner) because nothing was returned for those days.
+
+  @MainActor
+  func observeTrainingSessions() async throws {
+    try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] (trainingSessions, removedTrainingSessions) in
+      guard let self = self else { return }
+
+      print("*** Listener update: \(trainingSessions.count)")
+
+      for session in removedTrainingSessions {
+        trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
+      }
+
+      for session in trainingSessions {
+        var session = session
+        session.user = UserService.shared.cache[session.ownerUid]
+        trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = session
+      }
+      isFirstFetch[day.noon] = false
+    }
+  }
+
+  func removeTrainingSessionListener() {
+    TrainingSessionService.removeListener()
+  }
+
+  var userFollowingTimer: Timer?
+
+  func setUserFollowingOrder() {
+    let newOrder = trainingSessions.map({ $0.ownerUid })
+    userfollowingOrderLocal = newOrder
+
+    userFollowingTimer?.invalidate()
+    userFollowingTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { timer in
+      Task { await TrainingSessionService.setUserFollowingOrder(newOrder) }
+    }
+  }
+
+  // Makes more sense to have these separate from the main cache due to how the data is structured
+  @Published var commentsCountCache = [String: Int]()
+  @Published var didLikeCache = [String: Bool]()
+
+  @MainActor
+  func checkIfUserLikedTrainingSession(id: String) async {
+    guard !id.isEmpty else { return } // required to prevent CRASH on new session (no id yet)
+    do {
+      didLikeCache[id] = try await TrainingSessionService.checkIfUserLikedTrainingSession(id)
+    } catch {
+      print(error)
+    }
+  }
+
+  @MainActor
+  func like(_ trainingSession: TrainingSession) async { // pass in from cache // across the board deal only with cached session
+    do {
+      didLikeCache[trainingSession.id] = true
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes += 1
+      try await TrainingSessionService.likeTrainingSession(trainingSession) //TODO: send the cached training session
+    } catch {
+      didLikeCache[trainingSession.id] = false
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes -= 1
+    }
+  }
+
+  @MainActor
+  func unlike(_ trainingSession: TrainingSession) async {
+    do {
+      didLikeCache[trainingSession.id] = false
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes -= 1
+      try await TrainingSessionService.unlikeTrainingSession(trainingSession)
+    } catch {
+      didLikeCache[trainingSession.id] = true
+      trainingSessionsCache[key(trainingSession.ownerUid, trainingSession.date.dateValue())]?.likes += 1
+    }
+  }
+
+
+  @MainActor
+  func updateCommentsCountCache(trainingSessionId: String) async {
+    do {
+      let count = try await CommentService.commentsCount(id: trainingSessionId)
+      commentsCountCache[trainingSessionId] = count
+    } catch {
+      print(error)
+    }
+  }
+
+
 }

@@ -22,7 +22,7 @@ struct CommentCell: View {
 
       VStack(alignment: .leading, spacing: 4) {
         HStack(spacing: 2) {
-          Text(user?.fullName ?? user?.username ?? "")
+          Text(user?.fullName ?? user?.username ?? "" + " ")
             .fontWeight(.semibold)
             .foregroundColor(.primary)
 

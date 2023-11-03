@@ -10,6 +10,59 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
+  static private var firestoreListener: ListenerRegistration?
+
+  static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
+    // also need to observe current user for date (consider local updates etc) can use [user+date] as ID to update actual ID when create call returns
+
+    // get user following + add current user
+    guard let currentUser = UserService.shared.currentUser else { return }
+    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: cache users
+    userFollowing.append(currentUser)
+
+    var userFollowingIds: [String] = userFollowing.map({ $0.id })
+    userFollowingIds.append(currentUser.id)
+
+    guard let prevWeek = Calendar.current.date(byAdding: .day, value: -7, to: date),
+          let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: date) else { return }
+
+    let start = Timestamp(date: prevWeek.startOfDay)
+    let end = Timestamp(date: nextWeek.endOfDay)
+
+    let query = FirestoreConstants.TrainingSessionsCollection
+      .whereField("ownerUid", in: userFollowingIds)
+      .whereField("date", isGreaterThan: start)
+      .whereField("date", isLessThan: end)
+      .order(by: "date", descending: false) //TODO: add user-selected ordering field (?)
+
+    self.firestoreListener = query.addSnapshotListener { snapshot, _ in
+      guard let changes = snapshot?.documentChanges else { return }
+      var trainingSessions = [TrainingSession]()
+      var removedTrainingSessions = [TrainingSession]()
+
+      for change in changes {
+        guard let trainingSession = try? change.document.data(as: TrainingSession.self) else { continue }
+
+        if change.type == .removed {
+          removedTrainingSessions.append(trainingSession)
+        } else {
+          trainingSessions.append(trainingSession)
+        }
+      }
+
+      for i in 0..<trainingSessions.count {
+        trainingSessions[i].user = userFollowing.filter({ $0.id == trainingSessions[i].ownerUid }).first //TODO: make more efficient by making the map beforehand (should be using UserService cache anyway)
+      }
+
+      completion(trainingSessions, removedTrainingSessions)
+    }
+  }
+
+  static func removeListener() {
+    self.firestoreListener?.remove()
+    self.firestoreListener = nil
+  }
+
   static func fetchTrainingSessions(forDay: Date) async throws -> [TrainingSession] {
 
     let start = Timestamp(date: forDay.startOfDay)
@@ -105,6 +158,16 @@ extension TrainingSessionService {
     }
     return trainingSessions
   }
+
+  static func setUserFollowingOrder(_ newOrder: [String]) async {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+
+    do { //TODO: consider moving a different collection becuase this could grow large and is not needed for all users to download to every user (unneccessary data size)
+      try await FirestoreConstants.UserCollection.document(uid).setData(["userFollowingOrder" : newOrder], merge: true) //TODO: test repeated calls
+    } catch {
+      print("*** \(error)")
+    }
+  }
 }
 
 // MARK: - Likes
@@ -118,6 +181,8 @@ extension TrainingSessionService {
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).setData([:])
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes + 1])
     async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).setData([:])
+
+    async let _ = NotificationService.uploadNotification(toUid: trainingSession.ownerUid, type: .like, trainingSession: trainingSession)
   }
 
   static func unlikeTrainingSession(_ trainingSession: TrainingSession) async throws {
@@ -126,12 +191,14 @@ extension TrainingSessionService {
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).delete()
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes - 1])
     async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).delete()
+
+    async let _ = NotificationService.deleteNotification(toUid: trainingSession.ownerUid, type: .like, trainingSessionId: trainingSession.id)
   }
 
-  static func checkIfUserLikedTrainingSession(_ trainingSession: TrainingSession) async throws -> Bool {
+  static func checkIfUserLikedTrainingSession(_ id: String) async throws -> Bool {
     guard let uid = Auth.auth().currentUser?.uid else { return false }
 
-    let snapshot = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).getDocument()
+    let snapshot = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(id).getDocument()
     return snapshot.exists
   }
 }

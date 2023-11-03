@@ -45,6 +45,7 @@ enum SearchNavigation: Hashable {
 struct MainTabView: View {
 
   @State var shouldShowNotificationBadge = false
+  @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
 
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
@@ -105,6 +106,7 @@ struct MainTabView: View {
         appNav.selectedTab = .Notifications
       }
     }
+    .environmentObject(trainingSessionsViewModel)
   }
 }
 

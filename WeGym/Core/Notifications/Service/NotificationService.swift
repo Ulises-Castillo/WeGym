@@ -22,11 +22,11 @@ struct NotificationService {
         return snapshot.documents.compactMap({ try? $0.data(as: Notification2.self) })
     }
 
-    static func uploadNotification(toUid uid: String, type: NotificationType, post: Post? = nil) {
+    static func uploadNotification(toUid uid: String, type: NotificationType, trainingSession: TrainingSession? = nil) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         guard uid != currentUid else { return }
 
-        let notification = Notification2(postId: post?.id, timestamp: Timestamp(), type: type, uid: currentUid)
+        let notification = Notification2(trainingSessionId: trainingSession?.id, timestamp: Timestamp(), type: type, uid: currentUid)
         guard let data = try? Firestore.Encoder().encode(notification) else { return }
 
         FirestoreConstants
@@ -36,7 +36,7 @@ struct NotificationService {
             .addDocument(data: data)
     }
 
-    static func deleteNotification(toUid uid: String, type: NotificationType, postId: String? = nil) async throws {
+    static func deleteNotification(toUid uid: String, type: NotificationType, trainingSessionId: String? = nil) async throws {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
 
         let snapshot = try await FirestoreConstants
@@ -50,12 +50,22 @@ struct NotificationService {
             let notification = try? document.data(as: Notification2.self)
             guard notification?.type == type else { return }
 
-            if postId != nil {
-                guard postId == notification?.postId else { return }
+            if trainingSessionId != nil {
+                guard trainingSessionId == notification?.trainingSessionId else { return }
             }
 
             try await document.reference.delete()
         }
     }
+
+  static func resetBadgeCount() async {
+    guard let currentUid = Auth.auth().currentUser?.uid else { return }
+
+    do {
+      try await FirestoreConstants.UserMetaCollection.document(currentUid).setData(["badgeCount" : 0])
+    } catch {
+      print("*** resetBadgeCount error: \(error)")
+    }
+  }
 }
 

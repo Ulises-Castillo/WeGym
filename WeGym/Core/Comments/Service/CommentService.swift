@@ -19,6 +19,8 @@ class CommentService {
   }
 
   static func commentsCount(id: String) async throws -> Int {
+    guard !id.isEmpty else { return 0 } // prevent empty ID (locally
+
     let snapshot = try await FirestoreConstants
       .TrainingSessionsCollection
       .document(id)

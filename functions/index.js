@@ -19,6 +19,27 @@ const admin = require("firebase-admin");
 
 initializeApp();
 
+function getbadgeCount(uid) {
+
+    // get count from db
+    getFirestore().collection("user_meta").doc(uid).get().then((doc) => {
+        const badgeCount = doc.data().badgeCount;
+
+        if (badgeCount == null) {
+            console.log("DEBUG: no badge count, returning 0");
+            return 0;
+        } else {
+            console.log("DEBUG: badgeCount: ", badgeCount);
+            return badgeCount;
+        }
+    });
+
+    // increment count in the db //TODO: consider putting this after the message is sent, perhaps on success
+    console.log("DEBUG: should NEVER see this log statemment.");
+    // return 0 if no badge count yet
+    return 0;
+}
+
 exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-followers/{follower_uid}/", (event) => {
 
     getFirestore().collection("fcmTokens").doc(event.params.uid).get().then((doc) => {
@@ -66,60 +87,76 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
         return;
     }
 
-    getFirestore().collection("fcmTokens").doc(toId).get().then((doc) => {
+    getFirestore().collection("user_meta").doc(toId).get().then((doc) => {
+        const count = doc.data().badgeCount;
 
-        const token = doc.data().token;
+        const badgeCount = count == null ? 0 : count;
 
-        getFirestore().collection("users").doc(fromId).get().then((doc) => {
+        getFirestore().collection("fcmTokens").doc(toId).get().then((doc) => {
 
-            const fromName = doc.data().username; //TODO: should this be fullName instead? (optional)
+            const token = doc.data().token;
 
-            const message = {
-                notification: {
-                    title: "WeGym",
-                    body: `${messageText}`,
-                },
-                data: {
+            getFirestore().collection("users").doc(fromId).get().then((doc) => {
 
-                },
-                // Apple specific settings
-                apns: {
-                    headers: {
-                        'apns-priority': '10',
+                const fromName = doc.data().username; //TODO: should this be fullName instead? (optional)
+
+                const message = {
+                    notification: {
+                        title: "WeGym",
+                        body: `${messageText}`,
                     },
-                    payload: {
-                        aps: {
-                            "content-available": 1,
-                            sound: 'default',
-                            alert: {
-                                "title": "WeGym",
-                                "subtitle": `${fromName}`,
-                                "body": `${messageText}`
-                            }
+                    data: {
+
+                    },
+                    // Apple specific settings
+                    apns: {
+                        headers: {
+                            'apns-priority': '10',
                         },
-                        notificationType: "new_direct_message",
-                        "fromId": `${fromId}`
-                    }
-                },
-                token: token
-            };
+                        payload: {
+                            aps: {
+                                "content-available": 1,
+                                "badge": (badgeCount + 1),
+                                sound: 'default',
+                                alert: {
+                                    "title": "WeGym",
+                                    "subtitle": `${fromName}`,
+                                    "body": `${messageText}`
+                                }
+                            },
+                            notificationType: "new_direct_message",
+                            "fromId": `${fromId}`
+                        }
+                    },
+                    token: token
+                };
 
-            getMessaging().send(message)
-                .then((response) => {
-                    console.log("Successfully sent message:", response);
-                    console.log("data: ", token)
-                })
-                .catch((error) => {
-                    console.log("Error sending message:", error);
-                });
+                getMessaging().send(message)
+                    .then((response) => {
+                        console.log("Successfully sent message:", response);
+                        console.log("data: ", token);
 
+                        getFirestore().collection("user_meta").doc(toId).update({ badgeCount: admin.firestore.FieldValue.increment(1) }).then(() => {
+                            console.log("BadgeCount successfully written!");
+                        })
+                            .catch((error) => {
+                                console.log("Error writing BadgeCount: ", error);
+                            });
+
+                    })
+                    .catch((error) => {
+                        console.log("Error sending message:", error);
+                    });
+
+            });
         });
 
     });
 
 });
 
-
+//TODO: send separate message to training session owner (if he wasn't the new commenter himself)
+// this sepaarate message will also contain incremented badge count
 exports.sendNewCommentNotification = onDocumentCreated("/training_sessions/{training_session_uid}/post-comments/{comment_uid}", (event) => {
 
     //NOTE:     do not send notification to `commentOwnerUid` (filter), send to everyone else including `trainingSessionOwnerUid` (as  long as not equal to `commentOwnerUid`)
@@ -233,6 +270,8 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
 
     getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
 
+
+
         const data = doc.data();
         const ownerUid = data.ownerUid;
         const workoutFocus = data.focus.join(' ');
@@ -242,60 +281,75 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
             return;
         }
 
-        getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
+        getFirestore().collection("user_meta").doc(ownerUid).get().then((doc) => {
+            const count = doc.data().badgeCount;
 
-            const token = doc.data().token;
+            const badgeCount = count == null ? 0 : count;
 
-            getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
+            getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
 
-                const data = doc.data()
-                const likerName = data.fullName;
-                const likerUsername = data.username;
+                const token = doc.data().token;
 
-                const liker = likerName == null ? likerUsername : likerName;
+                getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
 
-                const message = {
-                    notification: {
-                        title: "WeGym",
-                        body: "",
-                    },
-                    data: {
+                    const data = doc.data()
+                    const likerName = data.fullName;
+                    const likerUsername = data.username;
 
-                    },
-                    // Apple specific settings
-                    apns: {
-                        headers: {
-                            'apns-priority': '10',
+                    const liker = likerName == null ? likerUsername : likerName;
+
+                    const message = {
+                        notification: {
+                            title: "WeGym",
+                            body: "",
                         },
-                        payload: {
-                            aps: {
-                                "content-available": 1,
-                                sound: 'default',
-                                alert: {
-                                    "title": `${liker}`,
-                                    // "subtitle" : `${li}`,
-                                    "body": `liked your ${workoutFocus} workout`
-                                }
-                            },
-                            notificationType: "new_training_session_like",
-                            fromId: `${event.params.liker_uid}`,
-                            date: `${timestamp.toDate()}`
-                        }
-                    },
-                    token: token
-                };
+                        data: {
 
-                getMessaging().send(message)
-                    .then((response) => {
-                        console.log("Successfully sent message:", response);
-                        console.log("data: ", token)
-                    })
-                    .catch((error) => {
-                        console.log("Error sending message:", error);
-                    });
+                        },
+                        // Apple specific settings
+                        apns: {
+                            headers: {
+                                'apns-priority': '10',
+                            },
+                            payload: {
+                                aps: {
+                                    "content-available": 1,
+                                    "badge": (badgeCount + 1),
+                                    sound: 'default',
+                                    alert: {
+                                        "title": `${liker}`,
+                                        // "subtitle" : `${li}`,
+                                        "body": `liked your ${workoutFocus} workout`
+                                    }
+                                },
+                                notificationType: "new_training_session_like",
+                                fromId: `${event.params.liker_uid}`,
+                                date: `${timestamp.toDate()}`
+                            }
+                        },
+                        token: token
+                    };
+
+                    getMessaging().send(message)
+                        .then((response) => {
+                            console.log("Successfully sent message:", response);
+                            console.log("data: ", token)
+
+                            getFirestore().collection("user_meta").doc(ownerUid).update({ badgeCount: admin.firestore.FieldValue.increment(1) }).then(() => {
+                                console.log("BadgeCount successfully written!");
+                            })
+                                .catch((error) => {
+                                    console.log("Error writing BadgeCount: ", error);
+                                });
+
+                        })
+                        .catch((error) => {
+                            console.log("Error sending message:", error);
+                        });
+
+                });
 
             });
-
         });
 
     });

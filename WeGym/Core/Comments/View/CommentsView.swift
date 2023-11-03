@@ -41,6 +41,9 @@ struct CommentsView: View {
             }
           }
         }
+        .onTapGesture {
+          inputFocused = false
+        }
         .padding(.top)
 
         Divider()

@@ -26,4 +26,6 @@ struct FirestoreConstants {
   static let MessagesCollection = Root.collection("messages")
   
   static let ChannelsCollection = Root.collection("channels")
+
+  static let UserMetaCollection = Root.collection("user_meta")
 }
