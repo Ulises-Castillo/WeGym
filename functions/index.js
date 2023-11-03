@@ -136,7 +136,7 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                         console.log("Successfully sent message:", response);
                         console.log("data: ", token);
 
-                        getFirestore().collection("user_meta").doc(ownerUid).update({ badgeCount: admin.firestore.FieldValue.increment(1) }).then(() => {
+                        getFirestore().collection("user_meta").doc(toId).update({ badgeCount: admin.firestore.FieldValue.increment(1) }).then(() => {
                             console.log("BadgeCount successfully written!");
                         })
                             .catch((error) => {
