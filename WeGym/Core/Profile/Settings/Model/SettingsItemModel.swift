@@ -12,7 +12,7 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
   case yourActivity
   case saved
   case logout
-
+  
   var title: String {
     switch self {
     case .settings:
@@ -25,7 +25,7 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
       return "Logout"
     }
   }
-
+  
   var imageName: String {
     switch self {
     case .settings:
@@ -35,9 +35,9 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
     case .saved:
       return "bookmark"
     case .logout:
-      return "arrow.left.square"
+      return "x.square"
     }
   }
-
+  
   var id: Int { return self.rawValue }
 }
