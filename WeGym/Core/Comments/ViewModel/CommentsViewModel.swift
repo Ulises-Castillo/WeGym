@@ -37,8 +37,9 @@ class CommentsViewModel: ObservableObject {
       timestamp: Timestamp(),
       commentOwnerUid: uid
     )
-    
+
     try await service.uploadComment(comment) //TODO: handle upload failure; match local data
+    NotificationService.uploadNotification(toUid: trainingSession.ownerUid, type: .comment, trainingSession: trainingSession)
   }
 
   private func fetchUserDataForComments() async throws {
@@ -48,7 +49,7 @@ class CommentsViewModel: ObservableObject {
       comments[i].user = user
     }
   }
-  
+
   func removeChatListener() {
     service.removeListener()
   }

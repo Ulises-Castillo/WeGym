@@ -22,12 +22,12 @@ struct TrainingSessionsView: View {
   @State private var trainingSession: TrainingSession?
 
 
-  @StateObject var viewModel: TrainingSessionViewModel
+  @EnvironmentObject var viewModel: TrainingSessionViewModel
 
   init(path: Binding<[TrainingSessionsNavigation]>, showToday: Binding<Bool>) {
     self._showToday = showToday
     self._path = path
-    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
+//    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
 
   var body: some View {
@@ -80,7 +80,7 @@ struct TrainingSessionsView: View {
         }
       }
       .foregroundColor(.black)
-      .navigationTitle(viewModel.relaiveDay())
+      .navigationTitle(relaiveDay(viewModel.day))
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -161,7 +161,7 @@ struct TrainingSessionsView: View {
     .onDisappear {
       viewModel.removeTrainingSessionListener()
     }
-    .environmentObject(viewModel)
+//    .environmentObject(viewModel)
     .sheet(isPresented: $showComments) {
 
       if trainingSession != nil {

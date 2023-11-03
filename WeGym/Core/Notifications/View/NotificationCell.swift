@@ -47,16 +47,25 @@ struct NotificationCell: View {
 
       if notification.type != .follow {
         if let trainingSession = notification.trainingSession {
-          NavigationLink(destination: TrainingSessionCell(trainingSession: trainingSession, shouldShowTime: true)) { //TODO: deal with should show time here
-
+          NavigationLink{
+            TrainingSessionCell(trainingSession: trainingSession,
+                                shouldShowTime: true,
+                                showLikes: notification.type == .like,
+                                showComments: notification.type == .comment,
+                                commentsViewMode: notification.type == .comment) // deal with should show time
+              .padding(.top, 13)
+            Spacer()
+              .navigationTitle(relaiveDay(trainingSession.date.dateValue()))
+          } label: { //TODO: deal with should show time here
+            // body parts / workout type
             HStack {
-              // body parts / workout type
-              Text(trainingSession.user?.fullName ?? trainingSession.user?.username ?? "NONE")
-              ForEach((trainingSession.focus), id: \.self) { focus in
+              ForEach(beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
                 Text(" \(focus)   ")
-                  .frame(height: 33)
+                  .frame(height: 24)
                   .background(Color(.systemBlue))
                   .cornerRadius(6)
+                  .foregroundColor(.white)
+                  .font(.system(size: 15, weight: .bold, design: Font.Design.rounded))
               }
             }
           }

@@ -8,13 +8,21 @@
 import SwiftUI
 
 struct TrainingSessionCell: View {
-  @State var commentsViewMode = false
+
   @Environment(\.scenePhase) var scenePhase
   let trainingSession: TrainingSession
 
-  init(trainingSession: TrainingSession, shouldShowTime: Bool) {
+  init(trainingSession: TrainingSession,
+       shouldShowTime: Bool,
+       showLikes: Bool = false,
+       showComments: Bool = false,
+       commentsViewMode: Bool = false) {
     self.shouldShowTime = shouldShowTime
     self.trainingSession = trainingSession
+
+    self._showLikes = State(initialValue: showLikes)
+    self._showComments = State(initialValue: showComments)
+    self._commentsViewMode = State(initialValue: commentsViewMode)
   }
 
   //NOTE: this has to be separate from the main cache because the snapshot listener will always clear didLike
@@ -36,8 +44,9 @@ struct TrainingSessionCell: View {
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
-  @State private var showComments = false
   @State private var showLikes = false
+  @State private var showComments = false
+  @State var commentsViewMode = false
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -65,7 +74,7 @@ struct TrainingSessionCell: View {
 
       HStack {
         // body parts / workout type
-        ForEach(viewModel.beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
+        ForEach(beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
           Text(" \(focus)   ")
             .frame(height: 33)
             .background(Color(.systemBlue))
@@ -107,11 +116,13 @@ struct TrainingSessionCell: View {
             .imageScale(.medium)
         }
 
-        NavigationLink(value: TrainingSessionsNavigation.chat(trainingSession.user!)) {
-          Image(systemName: "envelope")
-            .imageScale(.medium)
-        }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
-        Spacer()
+        if let user = trainingSession.user {
+          NavigationLink(value: TrainingSessionsNavigation.chat(user)) { //TODO: set user on notification cell model
+            Image(systemName: "envelope")
+              .imageScale(.medium)
+          }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
+          Spacer()
+        }
       }
       .padding(.leading, 8)
       .padding(.top, 4)
