@@ -19,6 +19,27 @@ const admin = require("firebase-admin");
 
 initializeApp();
 
+function getbadgeCount(uid) {
+
+    // get count from db
+    getFirestore().collection("user_meta").doc(uid).get().then((doc) => {
+        const badgeCount = doc.data().badgeCount;
+
+        if (badgeCount == null) {
+            console.log("DEBUG: no badge count, returning 0");
+            return 0;
+        } else {
+            console.log("DEBUG: badgeCount: ", badgeCount);
+            return badgeCount;
+        }
+    });
+
+    // increment count in the db //TODO: consider putting this after the message is sent, perhaps on success
+    console.log("DEBUG: should NEVER see this log statemment.");
+    // return 0 if no badge count yet
+    return 0;
+}
+
 exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-followers/{follower_uid}/", (event) => {
 
     getFirestore().collection("fcmTokens").doc(event.params.uid).get().then((doc) => {
@@ -231,71 +252,75 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
 
     // edge case: do not send notification when user likes his own session
 
-    getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
+    getbadgeCount().then((badgeCount) => {
 
-        const data = doc.data();
-        const ownerUid = data.ownerUid;
-        const workoutFocus = data.focus.join(' ');
-        const timestamp = data.date;
+        getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
 
-        if (ownerUid == event.params.liker_uid) {
-            return;
-        }
+            const data = doc.data();
+            const ownerUid = data.ownerUid;
+            const workoutFocus = data.focus.join(' ');
+            const timestamp = data.date;
 
-        getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
+            if (ownerUid == event.params.liker_uid) {
+                return;
+            }
 
-            const token = doc.data().token;
+            getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
 
-            getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
+                const token = doc.data().token;
 
-                const data = doc.data()
-                const likerName = data.fullName;
-                const likerUsername = data.username;
+                getFirestore().collection("users").doc(event.params.liker_uid).get().then((doc) => {
 
-                const liker = likerName == null ? likerUsername : likerName;
+                    const data = doc.data()
+                    const likerName = data.fullName;
+                    const likerUsername = data.username;
 
-                const message = {
-                    notification: {
-                        title: "WeGym",
-                        body: "",
-                    },
-                    data: {
+                    const liker = likerName == null ? likerUsername : likerName;
 
-                    },
-                    // Apple specific settings
-                    apns: {
-                        headers: {
-                            'apns-priority': '10',
+                    const message = {
+                        notification: {
+                            title: "WeGym",
+                            body: "",
                         },
-                        payload: {
-                            aps: {
-                                "content-available": 1,
-                                sound: 'default',
-                                alert: {
-                                    "title": `${liker}`,
-                                    // "subtitle" : `${li}`,
-                                    "body": `liked your ${workoutFocus} workout`
-                                }
-                            },
-                            notificationType: "new_training_session_like",
-                            fromId: `${event.params.liker_uid}`,
-                            date: `${timestamp.toDate()}`
-                        }
-                    },
-                    token: token
-                };
+                        data: {
 
-                getMessaging().send(message)
-                    .then((response) => {
-                        console.log("Successfully sent message:", response);
-                        console.log("data: ", token)
-                    })
-                    .catch((error) => {
-                        console.log("Error sending message:", error);
-                    });
+                        },
+                        // Apple specific settings
+                        apns: {
+                            headers: {
+                                'apns-priority': '10',
+                            },
+                            payload: {
+                                aps: {
+                                    "content-available": 1,
+                                    "badge": (badgeCount + 1),
+                                    sound: 'default',
+                                    alert: {
+                                        "title": `${liker}`,
+                                        // "subtitle" : `${li}`,
+                                        "body": `liked your ${workoutFocus} workout`
+                                    }
+                                },
+                                notificationType: "new_training_session_like",
+                                fromId: `${event.params.liker_uid}`,
+                                date: `${timestamp.toDate()}`
+                            }
+                        },
+                        token: token
+                    };
+
+                    getMessaging().send(message)
+                        .then((response) => {
+                            console.log("Successfully sent message:", response);
+                            console.log("data: ", token)
+                        })
+                        .catch((error) => {
+                            console.log("Error sending message:", error);
+                        });
+
+                });
 
             });
-
         });
 
     });
