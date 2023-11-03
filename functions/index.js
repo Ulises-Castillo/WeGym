@@ -252,9 +252,9 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
 
     // edge case: do not send notification when user likes his own session
 
-    getbadgeCount().then((badgeCount) => {
-
         getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
+
+            
 
             const data = doc.data();
             const ownerUid = data.ownerUid;
@@ -264,6 +264,8 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
             if (ownerUid == event.params.liker_uid) {
                 return;
             }
+
+            getbadgeCount(ownerUid).then((badgeCount) => {
 
             getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
 

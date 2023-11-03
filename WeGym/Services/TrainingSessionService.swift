@@ -162,7 +162,7 @@ extension TrainingSessionService {
   static func setUserFollowingOrder(_ newOrder: [String]) async {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
-    do {
+    do { //TODO: consider moving a different collection becuase this could grow large and is not needed for all users to download to every user (unneccessary data size)
       try await FirestoreConstants.UserCollection.document(uid).setData(["userFollowingOrder" : newOrder], merge: true) //TODO: test repeated calls
     } catch {
       print("*** \(error)")
