@@ -57,5 +57,15 @@ struct NotificationService {
             try await document.reference.delete()
         }
     }
+
+  static func resetBadgeCount() async {
+    guard let currentUid = Auth.auth().currentUser?.uid else { return }
+
+    do {
+      try await FirestoreConstants.UserMetaCollection.document(currentUid).setData(["badgeCount" : 0])
+    } catch {
+      print("*** resetBadgeCount error: \(error)")
+    }
+  }
 }
 
