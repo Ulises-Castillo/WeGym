@@ -319,7 +319,7 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
                             console.log("Successfully sent message:", response);
                             console.log("data: ", token)
 
-                                getFirestore().collection("user_meta").doc(ownerUid).set({badgeCount: (badgeCount + 1)}).then(() => {
+                                getFirestore().collection("user_meta").doc(ownerUid).set({badgeCount: admin.firestore.FieldValue.increment(1)}).then(() => {
                                     console.log("BadgeCount successfully written!");
                                 })
                                 .catch((error) => {
