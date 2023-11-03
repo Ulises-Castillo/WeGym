@@ -181,6 +181,8 @@ extension TrainingSessionService {
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).setData([:])
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes + 1])
     async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).setData([:])
+
+    async let _ = NotificationService.uploadNotification(toUid: trainingSession.ownerUid, type: .like, trainingSession: trainingSession)
   }
 
   static func unlikeTrainingSession(_ trainingSession: TrainingSession) async throws {
@@ -189,6 +191,8 @@ extension TrainingSessionService {
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).collection("training_session-likes").document(uid).delete()
     async let _ = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).updateData(["likes": trainingSession.likes - 1])
     async let _ = try await FirestoreConstants.UserCollection.document(uid).collection("user-likes").document(trainingSession.id).delete()
+
+    async let _ = NotificationService.deleteNotification(toUid: trainingSession.ownerUid, type: .like, trainingSessionId: trainingSession.id)
   }
 
   static func checkIfUserLikedTrainingSession(_ id: String) async throws -> Bool {
