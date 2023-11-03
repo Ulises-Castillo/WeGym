@@ -52,7 +52,8 @@ struct NotificationCell: View {
                                 shouldShowTime: true,
                                 showLikes: notification.type == .like,
                                 showComments: notification.type == .comment,
-                                commentsViewMode: notification.type == .comment) // deal with should show time
+                                commentsViewMode: notification.type == .comment,
+                                notificationCellMode: true) // deal with should show time
               .padding(.top, 13)
             Spacer()
               .navigationTitle(relaiveDay(trainingSession.date.dateValue()))

@@ -16,13 +16,15 @@ struct TrainingSessionCell: View {
        shouldShowTime: Bool,
        showLikes: Bool = false,
        showComments: Bool = false,
-       commentsViewMode: Bool = false) {
+       commentsViewMode: Bool = false,
+       notificationCellMode: Bool = false) {
     self.shouldShowTime = shouldShowTime
     self.trainingSession = trainingSession
 
     self._showLikes = State(initialValue: showLikes)
     self._showComments = State(initialValue: showComments)
     self._commentsViewMode = State(initialValue: commentsViewMode)
+    self._notificationCellMode = State(initialValue: notificationCellMode)
   }
 
   //NOTE: this has to be separate from the main cache because the snapshot listener will always clear didLike
@@ -47,6 +49,7 @@ struct TrainingSessionCell: View {
   @State private var showLikes = false
   @State private var showComments = false
   @State var commentsViewMode = false
+  @State var notificationCellMode = false
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -192,6 +195,7 @@ struct TrainingSessionCell: View {
       }
     }
     .onNotification { userInfo in
+      guard !notificationCellMode else { return } //prevent hide likes/comments bug from notification cell
       guard let notificationType = userInfo["notificationType"] as? String else { return } //TODO: test this
       showLikes = false
 
