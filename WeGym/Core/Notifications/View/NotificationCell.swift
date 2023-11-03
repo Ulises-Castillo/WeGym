@@ -59,15 +59,13 @@ struct NotificationCell: View {
               .navigationTitle(relaiveDay(trainingSession.date.dateValue()))
           } label: { //TODO: deal with should show time here
             // body parts / workout type
-            HStack {
-              ForEach(beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
-                Text(" \(focus)   ")
-                  .frame(height: 24)
+            HStack { //TOODO: consider showing only first focus, larger font size (just a preview)
+              Text(" \(beautifyWorkoutFocuses(focuses: trainingSession.focus).first ?? "")   ")
+                .frame(width: 100, height: 32)
                   .background(Color(.systemBlue))
                   .cornerRadius(6)
                   .foregroundColor(.white)
-                  .font(.system(size: 15, weight: .bold, design: Font.Design.rounded))
-              }
+                  .font(.system(size: 14, weight: .bold, design: Font.Design.rounded))
             }
           }
         }

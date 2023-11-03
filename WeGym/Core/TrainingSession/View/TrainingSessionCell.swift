@@ -76,16 +76,16 @@ struct TrainingSessionCell: View {
 
 
       HStack {
-        // body parts / workout type
-        ForEach(beautifyWorkoutFocuses(focuses: trainingSession.focus), id: \.self) { focus in
-          Text(" \(focus)   ")
-            .frame(height: 33)
+        // body parts / workout type        //TODO: consider horizontal scrollview beyond 3 focuses
+        ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
+          Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
+            .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 32)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
       }
       .foregroundColor(.white)
-      .font(.system(size: 21, weight: .bold, design: Font.Design.rounded))
+      .font(.system(size: 14, weight: .bold, design: Font.Design.rounded))
 
       HStack {
         if shouldShowTime {

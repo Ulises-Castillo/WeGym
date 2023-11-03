@@ -9,13 +9,13 @@ import SwiftUI
 
 struct SettingsRowView: View {
   let model: SettingsItemModel
-  
+
   var body: some View {
     HStack(spacing: 12) {
       Image(systemName: model.imageName)
         .imageScale(.medium)
         .foregroundColor(model == .logout ? .red : .primary)
-      
+
       Text(model.title)
         .font(.subheadline)
         .foregroundColor(model == .logout ? .red : .primary)
