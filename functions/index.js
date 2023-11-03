@@ -266,7 +266,9 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
         }
 
         getFirestore().collection("user_meta").doc(ownerUid).get().then((doc) => {
-            const badgeCount = doc.data().badgeCount;
+            const count = doc.data().badgeCount;
+
+            const badgeCount = count == null ? 0 : count;
 
             getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
 
