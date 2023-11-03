@@ -252,20 +252,21 @@ exports.sendNewTrainingSessionLikeNotification = onDocumentCreated("/training_se
 
     // edge case: do not send notification when user likes his own session
 
-        getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
+    getFirestore().collection("training_sessions").doc(event.params.training_session_uid).get().then((doc) => {
 
-            
 
-            const data = doc.data();
-            const ownerUid = data.ownerUid;
-            const workoutFocus = data.focus.join(' ');
-            const timestamp = data.date;
 
-            if (ownerUid == event.params.liker_uid) {
-                return;
-            }
+        const data = doc.data();
+        const ownerUid = data.ownerUid;
+        const workoutFocus = data.focus.join(' ');
+        const timestamp = data.date;
 
-            getbadgeCount(ownerUid).then((badgeCount) => {
+        if (ownerUid == event.params.liker_uid) {
+            return;
+        }
+
+        getFirestore().collection("user_meta").doc(ownerUid).get().then((doc) => {
+            const badgeCount = doc.data().badgeCount;
 
             getFirestore().collection("fcmTokens").doc(ownerUid).get().then((doc) => {
 
