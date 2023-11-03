@@ -87,7 +87,7 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
         return;
     }
 
-    getFirestore().collection("user_meta").doc(ownerUid).get().then((doc) => {
+    getFirestore().collection("user_meta").doc(toId).get().then((doc) => {
         const count = doc.data().badgeCount;
 
         const badgeCount = count == null ? 0 : count;
