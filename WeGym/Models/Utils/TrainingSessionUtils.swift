@@ -41,7 +41,7 @@ func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
   return beautifiedFocuses
 }
 
-func relaiveDay(_ date: Date) -> String {
+func relativeDay(_ date: Date) -> String {
   let relativeDateFormatter = DateFormatter()
   relativeDateFormatter.timeStyle = .none
   relativeDateFormatter.dateStyle = .medium

@@ -80,7 +80,7 @@ struct TrainingSessionsView: View {
         }
       }
       .foregroundColor(.black)
-      .navigationTitle(relaiveDay(viewModel.day))
+      .navigationTitle(relativeDay(viewModel.day))
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {

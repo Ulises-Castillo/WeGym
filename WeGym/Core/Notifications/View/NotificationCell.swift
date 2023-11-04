@@ -56,7 +56,7 @@ struct NotificationCell: View {
                                 notificationCellMode: true) // deal with should show time
               .padding(.top, 13)
             Spacer()
-              .navigationTitle(relaiveDay(trainingSession.date.dateValue()))
+              .navigationTitle(relativeDay(trainingSession.date.dateValue()))
           } label: { //TODO: deal with should show time here
             // body parts / workout type
             HStack { //TOODO: consider showing only first focus, larger font size (just a preview)

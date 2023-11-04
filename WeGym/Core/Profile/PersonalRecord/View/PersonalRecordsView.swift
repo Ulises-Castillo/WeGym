@@ -15,18 +15,8 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
   var body: some View {
     ScrollView(showsIndicators: false) {
       VStack {
-        ForEach(0...1, id: \.self) { _ in
-          PersonalRecordCell()
-        }
-
-        PersonalRecordCell(isFavorite: false, isMax: true)
-
-        ForEach(0...3, id: \.self) { _ in
-          PersonalRecordCell()
-        }
-        PersonalRecordCell(isFavorite: false, isMax: true)
-        ForEach(0...6, id: \.self) { _ in
-          PersonalRecordCell()
+        ForEach(PersonalRecord.MOCK_PERSONAL_RECORDS) { pr in
+          PersonalRecordCell(pr)
         }
         Spacer()
       }

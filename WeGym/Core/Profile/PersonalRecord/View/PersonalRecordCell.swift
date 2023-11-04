@@ -10,10 +10,12 @@ import SwiftUI
 struct PersonalRecordCell: View {
   @State var isFavorite = false
   @State var isMax = true
+  let personalRecord: PersonalRecord
 
   let gold = UIColor(red: 252.0/255.0, green: 194.0/255.0, blue: 0, alpha: 1.0)
 
-  init(isFavorite: Bool = false, isMax: Bool = false) {
+  init(_ personalRecord: PersonalRecord, isFavorite: Bool = false, isMax: Bool = false) {
+    self.personalRecord = personalRecord
     self._isFavorite = State(initialValue: isFavorite)
     self._isMax = State(initialValue: isMax)
   }
@@ -21,7 +23,7 @@ struct PersonalRecordCell: View {
   var body: some View {
     HStack {
       // Date (beautified)
-      Text("June 2022")
+      Text(relativeDay(personalRecord.timestamp.dateValue()))
         .frame(width: (UIScreen.main.bounds.width/3.5) - 15, height: 32)
         .background(Color(isFavorite ? .systemBlue : .systemGray2))
         .cornerRadius(6)
@@ -29,7 +31,7 @@ struct PersonalRecordCell: View {
         .foregroundColor(.white)
 
       // PR Type (ex: Bench)
-      Text(" Bench   ") //TODO: investigate actual root cause of issue
+      Text(" \(personalRecord.type)   ") //TODO: investigate actual root cause of issue
         .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 32)
         .background(Color(isFavorite ? .systemBlue : .systemGray2))
         .cornerRadius(6)
@@ -37,7 +39,7 @@ struct PersonalRecordCell: View {
         .foregroundColor(.white)
 
       // PR number (245)
-      Text(" 245   ") //TODO: investigate actual root cause of issue
+      Text(" \(personalRecord.number)   ") //TODO: investigate actual root cause of issue
         .frame(width: (UIScreen.main.bounds.width/3.5) - 15, height: 32)
         .background(Color(isFavorite ? .systemBlue : .systemGray2))
         .cornerRadius(6)
@@ -57,10 +59,10 @@ struct PersonalRecordCell: View {
           .foregroundColor(Color(.systemBlue))
       }
     }
-    .font(.system(size: 14, weight: .regular, design: Font.Design.rounded))
+    .font(.system(size: 14, weight: .regular, design: .rounded))
   }
 }
 
 #Preview {
-  PersonalRecordCell()
+  PersonalRecordCell(PersonalRecord.MOCK_PERSONAL_RECORDS[0])
 }
