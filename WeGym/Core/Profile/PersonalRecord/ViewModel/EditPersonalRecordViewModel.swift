@@ -33,6 +33,6 @@ class EditPersonalRecordViewModel: ObservableObject {
     ]
   ]
 
-  @Published var personalRecordTypes: [String] = []
+  @Published var personalRecordTypes: [String] = [] // this the one
   @Published var selectedPersonalRecordType = [String]()
 }

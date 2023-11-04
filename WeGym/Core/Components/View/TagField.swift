@@ -24,7 +24,8 @@ public struct TagField: View {
 
   @Binding var isSelected: [String]
   @EnvironmentObject var viewModel: TrainingSessionSchedulerViewModel
-  
+  @EnvironmentObject var prViewModel: EditPersonalRecordViewModel
+
   public var body: some View {
     VStack(spacing: 0){
       ScrollViewReader { scrollView in
@@ -46,7 +47,7 @@ public struct TagField: View {
                 if isPersonalRecord {
 
                   if let selected = isSelected.first, isSelector {
-                    //TODO: replicate below
+                    prViewModel.personalRecordTypes = prViewModel.prCategoryMap[selected] ?? []
                   }
 
                   return
@@ -91,7 +92,12 @@ public struct TagField: View {
             }
             .onAppear {
               if isPersonalRecord {
-                return //TODO: same as below
+                if let initiallySelectedPRCategory = prViewModel.personalRecordCategories.first, isSelector {
+                  isSelected.append(initiallySelectedPRCategory) //TODO: clean up logic
+                  prViewModel.personalRecordTypes = prViewModel.prCategoryMap[initiallySelectedPRCategory] ??  []
+                }
+
+                return
               }
 
               if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
