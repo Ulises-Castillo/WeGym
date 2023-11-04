@@ -84,6 +84,7 @@ struct EditPersonalRecordView: View {
       }
       .navigationTitle("Add PR") //TODO: will be add or edit depending on whether a PR is passed in or not
       .navigationBarTitleDisplayMode(.inline)
+      .environmentObject(viewModel)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
