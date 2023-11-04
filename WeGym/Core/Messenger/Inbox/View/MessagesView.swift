@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MessagesView: View {
   @State private var showNewMessageView = false
-  @StateObject var viewModel = InboxViewModel()
+  @StateObject var viewModel = InboxViewModel() //TODO: make enviroment object at mainTabView to fetch messages instantly
   @State private var selectedUser: User?
   @Environment(\.colorScheme) var colorScheme
   @Binding var path: [MessagesNavigation]

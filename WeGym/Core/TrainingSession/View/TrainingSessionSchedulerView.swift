@@ -35,7 +35,8 @@ struct TrainingSessionSchedulerView: View {
                    set: $schedulerViewModel.selectedWorkoutCategory,
                    placeholder: "", prefix: "",
                    multiSelect: false,
-                   isSelector: true)
+                   isSelector: true,
+                   isPersonalRecord: false)
           .accentColor(Color(.systemBlue))
 
           // select workout / body parts
@@ -44,7 +45,8 @@ struct TrainingSessionSchedulerView: View {
                    placeholder: "Other",
                    prefix: "",
                    multiSelect: true,
-                   isSelector: false)
+                   isSelector: false,
+                   isPersonalRecord: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
@@ -66,7 +68,8 @@ struct TrainingSessionSchedulerView: View {
                    placeholder: "Other",
                    prefix: "",
                    multiSelect: false,
-                   isSelector: false)
+                   isSelector: false,
+                   isPersonalRecord: false)
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()

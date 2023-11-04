@@ -57,6 +57,10 @@
 		1C3EEACD2AF4D9C300D94C12 /* SettingsItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEACC2AF4D9C300D94C12 /* SettingsItemModel.swift */; };
 		1C3EEACF2AF4D9F800D94C12 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEACE2AF4D9F800D94C12 /* SettingsRowView.swift */; };
 		1C3EEAD12AF4DA3600D94C12 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD02AF4DA3600D94C12 /* SettingsView.swift */; };
+		1C3EEAD42AF5E8A500D94C12 /* PersonalRecordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD32AF5E8A500D94C12 /* PersonalRecordsView.swift */; };
+		1C3EEAD62AF5EE6200D94C12 /* PersonalRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD52AF5EE6200D94C12 /* PersonalRecordCell.swift */; };
+		1C3EEAD92AF6148D00D94C12 /* EditPersonalRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */; };
+		1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
 		1CAA9F432AEB853400FB28BC /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
@@ -186,6 +190,10 @@
 		1C3EEACC2AF4D9C300D94C12 /* SettingsItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItemModel.swift; sourceTree = "<group>"; };
 		1C3EEACE2AF4D9F800D94C12 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		1C3EEAD02AF4DA3600D94C12 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1C3EEAD32AF5E8A500D94C12 /* PersonalRecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordsView.swift; sourceTree = "<group>"; };
+		1C3EEAD52AF5EE6200D94C12 /* PersonalRecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordCell.swift; sourceTree = "<group>"; };
+		1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordView.swift; sourceTree = "<group>"; };
+		1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordViewModel.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -585,6 +593,33 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		1C3EEAD22AF5E83F00D94C12 /* PersonalRecord */ = {
+			isa = PBXGroup;
+			children = (
+				1C3EEAD72AF6146300D94C12 /* View */,
+				1C3EEADA2AF6154500D94C12 /* ViewModel */,
+			);
+			path = PersonalRecord;
+			sourceTree = "<group>";
+		};
+		1C3EEAD72AF6146300D94C12 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1C3EEAD32AF5E8A500D94C12 /* PersonalRecordsView.swift */,
+				1C3EEAD52AF5EE6200D94C12 /* PersonalRecordCell.swift */,
+				1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1C3EEADA2AF6154500D94C12 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		1CDEE2772AD6621900F1A2D6 = {
 			isa = PBXGroup;
 			children = (
@@ -708,6 +743,7 @@
 		1CDEE2982AD8ACB500F1A2D6 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				1C3EEAD22AF5E83F00D94C12 /* PersonalRecord */,
 				1C3EEAC92AF4D98C00D94C12 /* Settings */,
 				1C2FFA642AE23A35009CDA2D /* ProfileComponents */,
 				1CDEE30B2ADA441E00F1A2D6 /* View */,
@@ -1050,6 +1086,7 @@
 				1CAA9F432AEB853400FB28BC /* AdaptsToKeyboard.swift in Sources */,
 				1C2FFA862AE2487E009CDA2D /* NotificationsCellViewModel.swift in Sources */,
 				1C3C0B9D2AEB244900FFAA75 /* ChatService.swift in Sources */,
+				1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */,
 				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
@@ -1060,6 +1097,7 @@
 				1C3C0B6E2AEAE29700FFAA75 /* Message.swift in Sources */,
 				1C05E5E22AE7978000D53AE6 /* CommentsViewModel.swift in Sources */,
 				1C3EEAC82AF4766900D94C12 /* TrainingSessionUtils.swift in Sources */,
+				1C3EEAD42AF5E8A500D94C12 /* PersonalRecordsView.swift in Sources */,
 				1C2FFA752AE24084009CDA2D /* ProfileActionButtonView.swift in Sources */,
 				1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionsView.swift in Sources */,
 				1C3C0BA22AEB260000FFAA75 /* ChatBubble.swift in Sources */,
@@ -1121,7 +1159,9 @@
 				1C05E5E02AE7976300D53AE6 /* CommentService.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1C05E5DE2AE7966B00D53AE6 /* Comment.swift in Sources */,
+				1C3EEAD62AF5EE6200D94C12 /* PersonalRecordCell.swift in Sources */,
 				1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */,
+				1C3EEAD92AF6148D00D94C12 /* EditPersonalRecordView.swift in Sources */,
 				1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */,
 				1CDEE2A02AD8ADC400F1A2D6 /* MainTabView.swift in Sources */,
 				1C2FFA922AE3BA6E009CDA2D /* NotificationManager.swift in Sources */,
