@@ -10,6 +10,7 @@ import SwiftUI
 struct PersonalRecordCell: View {
   @State var personalRecord: PersonalRecord
   @State var showingEditPersonalRecordView = false
+  @EnvironmentObject var personalRecordsViewModel: PersonalRecordsViewModel
 
   let gold = UIColor(red: 252.0/255.0, green: 194.0/255.0, blue: 0, alpha: 1.0)
 
@@ -49,7 +50,7 @@ struct PersonalRecordCell: View {
 
       // Fav button
       Button {
-        personalRecord.isFavorite.toggle()
+        personalRecordsViewModel.setFavorite(personalRecord)
       } label: {
         Image(systemName: "star.square.fill")
           .resizable()
