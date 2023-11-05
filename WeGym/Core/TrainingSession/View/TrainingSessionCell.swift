@@ -79,7 +79,7 @@ struct TrainingSessionCell: View {
         // body parts / workout type        //TODO: consider horizontal scrollview beyond 3 focuses
         ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
           Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
-            .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 32)
+            .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 32)
             .background(Color(.systemBlue))
             .cornerRadius(6)
         }
