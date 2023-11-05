@@ -137,6 +137,8 @@
 		1CDEE3372ADB9B0100F1A2D6 /* TrainingSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */; };
 		1CDEE3392ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */; };
 		1CF350622AF6C96600E8D428 /* PersonalRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF350612AF6C96600E8D428 /* PersonalRecord.swift */; };
+		1CF350642AF7492300E8D428 /* PersonalRecordsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF350632AF7492300E8D428 /* PersonalRecordsViewModel.swift */; };
+		1CF350672AF7560300E8D428 /* PersonalRecordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF350662AF7560300E8D428 /* PersonalRecordService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -244,6 +246,8 @@
 		1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionsView.swift; sourceTree = "<group>"; };
 		1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionSchedulerView.swift; sourceTree = "<group>"; };
 		1CF350612AF6C96600E8D428 /* PersonalRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecord.swift; sourceTree = "<group>"; };
+		1CF350632AF7492300E8D428 /* PersonalRecordsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordsViewModel.swift; sourceTree = "<group>"; };
+		1CF350662AF7560300E8D428 /* PersonalRecordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -599,6 +603,7 @@
 			isa = PBXGroup;
 			children = (
 				1CF350602AF6C94A00E8D428 /* Model */,
+				1CF350652AF755E900E8D428 /* Service */,
 				1C3EEAD72AF6146300D94C12 /* View */,
 				1C3EEADA2AF6154500D94C12 /* ViewModel */,
 			);
@@ -619,6 +624,7 @@
 			isa = PBXGroup;
 			children = (
 				1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */,
+				1CF350632AF7492300E8D428 /* PersonalRecordsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -973,6 +979,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		1CF350652AF755E900E8D428 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				1CF350662AF7560300E8D428 /* PersonalRecordService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1152,6 +1166,7 @@
 				1CDEE2B12AD8F56100F1A2D6 /* CreateUsernameView.swift in Sources */,
 				1CDEE3012ADA1B6100F1A2D6 /* UserService.swift in Sources */,
 				1CDEE2B32AD8F7FB00F1A2D6 /* CreatePasswordView.swift in Sources */,
+				1CF350642AF7492300E8D428 /* PersonalRecordsViewModel.swift in Sources */,
 				1C3C0B642AEAE07D00FFAA75 /* MessagesView.swift in Sources */,
 				1CDEE2A52AD8B99D00F1A2D6 /* UserStatView.swift in Sources */,
 				1CDEE3352ADB9AE100F1A2D6 /* TrainingSessionCell.swift in Sources */,
@@ -1169,6 +1184,7 @@
 				1C2FFA792AE24599009CDA2D /* Extensions.swift in Sources */,
 				1C35D4FF2AECF2A700194F73 /* NavigationRouter.swift in Sources */,
 				1C05E5E02AE7976300D53AE6 /* CommentService.swift in Sources */,
+				1CF350672AF7560300E8D428 /* PersonalRecordService.swift in Sources */,
 				1CDEE2A72AD8C37100F1A2D6 /* SearchView.swift in Sources */,
 				1C05E5DE2AE7966B00D53AE6 /* Comment.swift in Sources */,
 				1C3EEAD62AF5EE6200D94C12 /* PersonalRecordCell.swift in Sources */,

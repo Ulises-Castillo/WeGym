@@ -9,7 +9,7 @@ import Firebase
 
 struct PersonalRecord: Identifiable, Hashable, Codable, Equatable {
   let id: String
-  var weight: Int
+  var weight: Int?
   var reps: Int?
   var category: String
   var type: String

@@ -7,10 +7,12 @@
 
 import SwiftUI
 import Combine
+import Firebase
 import SlideButton
 
 struct EditPersonalRecordView: View {
 
+  @EnvironmentObject var personalRecordsViewModel: PersonalRecordsViewModel
   @StateObject var viewModel = EditPersonalRecordViewModel()
   @State private var personalRecordNumber = ""
   @State private var notes = ""
@@ -23,6 +25,11 @@ struct EditPersonalRecordView: View {
     self.personalRecord = personalRecord
   }
 
+  func isPrValid() -> Bool {
+    return !viewModel.selectedPersonalRecordCategory.isEmpty &&
+    !viewModel.selectedPersonalRecordType.isEmpty &&
+    !personalRecordNumber.isEmpty
+  }
 
   var body: some View {
     NavigationStack {
@@ -51,7 +58,7 @@ struct EditPersonalRecordView: View {
           HStack {
             Spacer()
             TextField("PR", text: $personalRecordNumber)
-              .frame(width: 66)
+              .frame(width: 81)
               .fontWeight(.heavy)
               .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.rounded))
               .keyboardType(.numberPad)
@@ -64,10 +71,10 @@ struct EditPersonalRecordView: View {
                 }
               }
               .onReceive(Just(personalRecordNumber)) { _ in
-                      if personalRecordNumber.count > 3 {
-                        personalRecordNumber = String(personalRecordNumber.prefix(3))
-                      }
-                  }
+                if personalRecordNumber.count > 3 {
+                  personalRecordNumber = String(personalRecordNumber.prefix(3))
+                }
+              }
             Button { // make tappability more apparent to user with styling
               isKgs.toggle()
             } label: {
@@ -102,25 +109,56 @@ struct EditPersonalRecordView: View {
 
           if let pr = personalRecord {
             SlideButton("Delete", styling: slideButtonStyling, action: {
-              //TODO: delete() service call here
+              Task { try await personalRecordsViewModel.deletePersonalRecord(pr) }
               dismiss()
             })
             .padding()
           }
         }
       }
+      .scrollDismissesKeyboard(.interactively)
+      .keyboardAvoiding()
       .navigationTitle((personalRecord == nil ? "Add" : "Edit") + " PR")
       .navigationBarTitleDisplayMode(.inline)
       .environmentObject(viewModel)
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
+            guard isPrValid() else { return }
+
+            Task {
+              if let pr = personalRecord {
+
+                let updatedPr = PersonalRecord(id: pr.id,
+                                               weight: Int(personalRecordNumber),
+                                               reps: 1, //TODO: add in reps
+                                               category: viewModel.selectedPersonalRecordCategory.first ?? "",
+                                               type: viewModel.selectedPersonalRecordType.first ?? "",
+                                               ownerUid: UserService.shared.currentUser?.id ?? "",
+                                               timestamp: pr.timestamp,
+                                               notes: notes)
+
+                try await personalRecordsViewModel.updatePersonalRecord(updatedPr)
+
+              } else {
+                let newPr = PersonalRecord(id: "",
+                                           weight: Int(personalRecordNumber),
+                                           reps: 1, //TODO: add in reps
+                                           category: viewModel.selectedPersonalRecordCategory.first ?? "",
+                                           type: viewModel.selectedPersonalRecordType.first ?? "",
+                                           ownerUid: UserService.shared.currentUser?.id ?? "",
+                                           timestamp: Timestamp(),
+                                           notes: notes)
+
+                try await personalRecordsViewModel.addPersonalRecord(newPr)
+              }
+            }
             dismiss()
           } label: {
             Image(systemName: "checkmark.square.fill")
           }
-          .foregroundColor(.green)
-//          .foregroundColor(schedulerViewModel.selectedWorkoutFocuses.isEmpty ? .gray : .green)
+          .foregroundColor(isPrValid() ? .green : .gray)
+          //          .foregroundColor(schedulerViewModel.selectedWorkoutFocuses.isEmpty ? .gray : .green)
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
@@ -133,7 +171,7 @@ struct EditPersonalRecordView: View {
       }
       .onAppear {
         if let pr = personalRecord {
-          personalRecordNumber = String(pr.weight)
+          personalRecordNumber = String(pr.weight ?? 0)
           notes = pr.notes
           viewModel.selectedPersonalRecordCategory = [pr.category]
           viewModel.selectedPersonalRecordType = [pr.type]

@@ -11,11 +11,12 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
 
 
   @State private var showingAddPersonalRecordView = false
+  @StateObject private var viewModel = PersonalRecordsViewModel()
 
   var body: some View {
     ScrollView(showsIndicators: false) {
       VStack {
-        ForEach(PersonalRecord.MOCK_PERSONAL_RECORDS) { pr in
+        ForEach(viewModel.personalRecords, id: \.self) { pr in
           PersonalRecordCell(pr)
         }
         Spacer()
@@ -23,6 +24,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
       .sheet(isPresented: $showingAddPersonalRecordView) {
         EditPersonalRecordView()
       }
+      .environmentObject(viewModel)
       .padding(.top, 21)
       .navigationTitle("PRs")
       .navigationBarTitleDisplayMode(.large)
@@ -38,6 +40,9 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
         }
       }
 
+    }
+    .onDisappear {
+      viewModel.removePersonalRecordListener()
     }
   }
 }

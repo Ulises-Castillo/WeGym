@@ -39,7 +39,7 @@ struct PersonalRecordCell: View {
           .foregroundColor(.white)
 
         // PR number (ex: 245)
-        Text(" \(personalRecord.weight)   ") //TODO: investigate actual root cause of issue
+        Text(" \(personalRecord.weight ?? 0)   ") //TODO: investigate actual root cause of issue
           .frame(width: (UIScreen.main.bounds.width/3.5) - 15, height: 32)
           .background(Color(personalRecord.isFavorite ? .systemBlue : .systemGray2))
           .cornerRadius(6)
