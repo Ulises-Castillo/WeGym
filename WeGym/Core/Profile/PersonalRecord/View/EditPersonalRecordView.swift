@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import SlideButton
 
 struct EditPersonalRecordView: View {
 
@@ -14,8 +15,14 @@ struct EditPersonalRecordView: View {
   @State private var personalRecordNumber = ""
   @State private var notes = ""
   @State private var isKgs = false
-  @FocusState private var isPrFocused: Bool
+  @FocusState private var isPrInputFocused: Bool
   @Environment(\.dismiss) var dismiss
+  var personalRecord: PersonalRecord?
+
+  init(_ personalRecord: PersonalRecord? = nil) {
+    self.personalRecord = personalRecord
+  }
+
 
   var body: some View {
     NavigationStack {
@@ -48,7 +55,7 @@ struct EditPersonalRecordView: View {
               .fontWeight(.heavy)
               .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.rounded))
               .keyboardType(.numberPad)
-              .focused($isPrFocused)
+              .focused($isPrInputFocused)
               .multilineTextAlignment(.trailing)
               .onReceive(Just(personalRecordNumber)) { newValue in
                 let filtered = newValue.filter { "0123456789".contains($0) }
@@ -61,7 +68,7 @@ struct EditPersonalRecordView: View {
                         personalRecordNumber = String(personalRecordNumber.prefix(3))
                       }
                   }
-            Button {
+            Button { // make tappability more apparent to user with styling
               isKgs.toggle()
             } label: {
               Text(isKgs ? "kgs" : "lbs")
@@ -75,14 +82,34 @@ struct EditPersonalRecordView: View {
 
           TextField("", text: $notes, prompt: Text("Add Notes...").foregroundColor(.primary), axis: .vertical)
             .padding()
-            .padding(.bottom, 90)
+            .padding(.bottom, 162)
             .font(.system(size: 16, weight: Font.Weight.medium, design: Font.Design.rounded))
             .disableAutocorrection(true)
 
-          //TODO: add delete slider for "edit PR"
+          let slideButtonStyling = SlideButtonStyling(
+            indicatorSize: 60,
+            indicatorSpacing: 5,
+            indicatorColor: .red,
+            backgroundColor: .red.opacity(0.3),
+            textColor: .secondary,
+            indicatorSystemName: "trash",
+            indicatorDisabledSystemName: "xmark",
+            textAlignment: .globalCenter,
+            textFadesOpacity: true,
+            textHiddenBehindIndicator: true,
+            textShimmers: false
+          )
+
+          if let pr = personalRecord {
+            SlideButton("Delete", styling: slideButtonStyling, action: {
+              //TODO: delete() service call here
+              dismiss()
+            })
+            .padding()
+          }
         }
       }
-      .navigationTitle("Add PR") //TODO: will be add or edit depending on whether a PR is passed in or not
+      .navigationTitle((personalRecord == nil ? "Add" : "Edit") + " PR")
       .navigationBarTitleDisplayMode(.inline)
       .environmentObject(viewModel)
       .toolbar {
@@ -105,12 +132,22 @@ struct EditPersonalRecordView: View {
         }
       }
       .onAppear {
-        isPrFocused = true //TODO: only focus if adding PR, not for "edit PR"
+        if let pr = personalRecord {
+          personalRecordNumber = String(pr.weight)
+          notes = pr.notes
+          viewModel.selectedPersonalRecordCategory = [pr.category]
+          viewModel.selectedPersonalRecordType = [pr.type]
+        } else {
+          isPrInputFocused = true
+        }
+      }
+      .onTapGesture {
+        self.endTextEditing()
       }
     }
   }
 }
 
 #Preview {
-  EditPersonalRecordView()
+  EditPersonalRecordView(PersonalRecord.MOCK_PERSONAL_RECORDS[0])
 }

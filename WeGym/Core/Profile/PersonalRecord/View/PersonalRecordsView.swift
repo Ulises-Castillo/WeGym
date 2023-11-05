@@ -10,7 +10,7 @@ import SwiftUI
 struct PersonalRecordsView: View { //TODO: personal record blue color should be lighter as the PR is older / less weight/reps
 
 
-  @State private var showingEditPersonalRecordView = false
+  @State private var showingAddPersonalRecordView = false
 
   var body: some View {
     ScrollView(showsIndicators: false) {
@@ -20,7 +20,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
         }
         Spacer()
       }
-      .sheet(isPresented: $showingEditPersonalRecordView) {
+      .sheet(isPresented: $showingAddPersonalRecordView) {
         EditPersonalRecordView()
       }
       .padding(.top, 21)
@@ -29,7 +29,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-            showingEditPersonalRecordView.toggle()
+            showingAddPersonalRecordView.toggle()
           } label: {
             Image(systemName: "plus")
               .foregroundColor(Color(.systemBlue))

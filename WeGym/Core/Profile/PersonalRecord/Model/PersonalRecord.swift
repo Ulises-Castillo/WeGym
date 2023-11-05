@@ -9,7 +9,8 @@ import Firebase
 
 struct PersonalRecord: Identifiable, Hashable, Codable, Equatable {
   let id: String
-  var number: Int
+  var weight: Int
+  var reps: Int?
   var category: String
   var type: String
   let ownerUid: String
@@ -22,7 +23,7 @@ struct PersonalRecord: Identifiable, Hashable, Codable, Equatable {
 extension PersonalRecord {
   static let MOCK_PERSONAL_RECORDS: [PersonalRecord] = [
     .init(id: NSUUID().uuidString,
-          number: 245,
+          weight: 245,
           category: "PowerLifting",
           type: "Bench",
           ownerUid: NSUUID().uuidString,
@@ -30,7 +31,7 @@ extension PersonalRecord {
           notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 315,
+            weight: 315,
             category: "PowerLifting",
             type: "Squat",
             ownerUid: NSUUID().uuidString,
@@ -38,7 +39,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
     
       .init(id: NSUUID().uuidString,
-            number: 365,
+            weight: 365,
             category: "PowerLifting",
             type: "Deadlift",
             ownerUid: NSUUID().uuidString,
@@ -46,7 +47,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 225,
+            weight: 225,
             category: "PowerLifting",
             type: "Bench",
             ownerUid: NSUUID().uuidString,
@@ -54,7 +55,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 295,
+            weight: 295,
             category: "PowerLifting",
             type: "Squat",
             ownerUid: NSUUID().uuidString,
@@ -62,7 +63,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 315,
+            weight: 315,
             category: "PowerLifting",
             type: "Deadlift",
             ownerUid: NSUUID().uuidString,
@@ -70,7 +71,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 205,
+            weight: 205,
             category: "PowerLifting",
             type: "Bench",
             ownerUid: NSUUID().uuidString,
@@ -78,7 +79,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 205,
+            weight: 205,
             category: "PowerLifting",
             type: "Squat",
             ownerUid: NSUUID().uuidString,
@@ -86,7 +87,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 295,
+            weight: 295,
             category: "PowerLifting",
             type: "Deadlift",
             ownerUid: NSUUID().uuidString,
@@ -94,7 +95,7 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 185,
+            weight: 185,
             category: "PowerLifting",
             type: "Squat",
             ownerUid: NSUUID().uuidString,
@@ -102,11 +103,11 @@ extension PersonalRecord {
             notes: "These are my note for this PR"),
 
       .init(id: NSUUID().uuidString,
-            number: 185,
+            weight: 185,
             category: "PowerLifting",
             type: "Bench",
             ownerUid: NSUUID().uuidString,
-            timestamp: Timestamp(date: Date.now.addingTimeInterval(-900000)),
+            timestamp: Timestamp(date: Date.now.addingTimeInterval(-505000)),
             notes: "These are my note for this PR"),
   ]
 }
