@@ -29,47 +29,56 @@ class PersonalRecordsViewModel: ObservableObject {
 
   @Published var favoritePersonalRecordIds = [String]()
 
-  func setFavorite(_ personalRecord: PersonalRecord) { //TODO: simplify by using fav array as single source of truth, add/remove from it, mark all as fav, all others non-fav
+  func setFavorite(_ personalRecord: PersonalRecord) { //TODO: clean up redundancy, simplify (use data stucture), separate unfav
 
-    //TODO: deal with unfavorite (personalRecord already contained in favs array)
-    if personalRecordsCache[personalRecord.id]?.isFavorite ?? false {
-      personalRecordsCache[personalRecord.id]?.isFavorite = false
+    Task {
+      //TODO: deal with unfavorite (personalRecord already contained in favs array)
+      if personalRecordsCache[personalRecord.id]?.isFavorite ?? false {
+        personalRecordsCache[personalRecord.id]?.isFavorite = false
 
-      Task {
+
         guard let updatedPr = personalRecordsCache[personalRecord.id] else { return }
         try await PersonalRecordService.updatePersonalRecord(updatedPr)
         try await PersonalRecordService.uploadFavoritePersonalRecordIds(favoritePersonalRecordIds)
+
+        return
       }
-      return
-    }
 
 
-    // 1. unfavorite any pr's in the same category, if any
-    for i in 0..<favoritePersonalRecordIds.count {
+      // 1. unfavorite any pr's in the same category, if any
+      for (id, pr) in personalRecordsCache {
+        if pr.isFavorite &&
+            pr.category == personalRecord.category &&
+            pr.type == personalRecord.type {
+          personalRecordsCache[id]?.isFavorite = false
 
-      let id = favoritePersonalRecordIds[i]
 
-      if personalRecordsCache[id]?.category == personalRecord.category &&
-          personalRecordsCache[id]?.type == personalRecord.type {
-        personalRecordsCache[id]?.isFavorite = false
-        break
+          guard let updatedPr = personalRecordsCache[id] else { return }
+          try await PersonalRecordService.updatePersonalRecord(updatedPr)
+
+          break
+        }
       }
-    }
 
-    // 2. unfavorte oldest favorite PR if more than 2 favorite PRs
-    while favoritePersonalRecordIds.count > 2 {
-      personalRecordsCache[favoritePersonalRecordIds[0]]?.isFavorite = false
-    }
+      // 2. unfavorte oldest favorite PR if more than 2 favorite PRs
+      if favoritePersonalRecordIds.count > 2 {
+        personalRecordsCache[favoritePersonalRecordIds[0]]?.isFavorite = false
 
-    // 3. set new favorite PRs array (size: 3)
-    personalRecordsCache[personalRecord.id]?.isFavorite = true
+        guard let updatedPr = personalRecordsCache[favoritePersonalRecordIds[0]] else { return }
+        try await PersonalRecordService.updatePersonalRecord(updatedPr) //FIXME: removed PR not persisting on relaunch
+
+      }
+
+      // 3. set new favorite PRs array (size: 3)
+      personalRecordsCache[personalRecord.id]?.isFavorite = true
 
 
-    // 4. update DB
-    Task { 
+      // 4. update DB
+
       try await PersonalRecordService.uploadFavoritePersonalRecordIds(favoritePersonalRecordIds)
       guard let updatePr = personalRecordsCache[personalRecord.id] else { return }
       try await PersonalRecordService.updatePersonalRecord(updatePr)
+
     }
   }
 

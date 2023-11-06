@@ -20,7 +20,6 @@ struct ProfileHeaderView: View {
           .padding(.leading)
 
         Spacer()
-        if viewModel.user.isCurrentUser {
           if viewModel.isLoading {
             ProgressView()
               .scaleEffect(1, anchor: .center)
@@ -39,7 +38,7 @@ struct ProfileHeaderView: View {
             }
             .foregroundColor(.primary)
             .padding(.trailing)
-          } else {
+          } else if viewModel.user.isCurrentUser {
             NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
               HStack {
                 Image(systemName: "trophy")
@@ -50,7 +49,6 @@ struct ProfileHeaderView: View {
 
             }
             Spacer()
-          }
         }
       }
       .onAppear {
