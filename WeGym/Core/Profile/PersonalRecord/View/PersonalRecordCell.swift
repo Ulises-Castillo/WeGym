@@ -41,7 +41,7 @@ struct PersonalRecordCell: View {
           .foregroundColor(.white)
 
         // PR Type (ex: Bench)
-        Text(" \(personalRecord.type)   ") //TODO: investigate actual root cause of issue
+        Text(" \(personalRecord.type)   ")
           .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 32)
           .background(Color(isFav(personalRecord) ? .systemBlue : .systemGray2))
           .cornerRadius(6)
@@ -49,7 +49,7 @@ struct PersonalRecordCell: View {
           .foregroundColor(.white)
 
         // PR number (ex: 245)
-        Text(" \(personalRecord.weight ?? 0)   ") //TODO: investigate actual root cause of issue
+        Text(" \(personalRecord.weight ?? 0)   ")
           .frame(width: (UIScreen.main.bounds.width/3.5) - 15, height: 32)
           .background(Color(isFav(personalRecord) ? .systemBlue : .systemGray2))
           .cornerRadius(6)
