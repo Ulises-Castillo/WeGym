@@ -55,10 +55,10 @@ struct PersonalRecordCell: View {
         Image(systemName: "trophy.fill")
           .resizable()
           .frame(width: (UIScreen.main.bounds.width/8) - 15, height: 32)
-          .background(personalRecord.isFavorite ? Color(.systemBlue) : Color(.systemBlue))
+          .background(personalRecord.isFavorite ? Color(.systemBlue) : Color(.systemGray2))
           .cornerRadius(6)
           .fontWeight(.semibold)
-          .foregroundColor(personalRecord.isFavorite ? Color(gold) : Color(.systemGray2))
+          .foregroundColor(personalRecord.isFavorite ? Color(gold) : Color(.white))
       }
     }
     .font(.system(size: 14, weight: .regular, design: .rounded))

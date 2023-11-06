@@ -29,6 +29,7 @@ class PersonalRecordsViewModel: ObservableObject {
 
   @Published var favoritePersonalRecordIds = [String]()
 
+  @MainActor
   func setFavorite(_ personalRecord: PersonalRecord) { //TODO: clean up redundancy, simplify (use data stucture), separate unfav
 
     Task {
