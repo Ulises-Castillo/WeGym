@@ -78,6 +78,7 @@ struct ProfileHeaderView: View {
     .navigationDestination(for: SearchViewModelConfig.self) { config in
       if viewModel.user.isCurrentUser {
         PersonalRecordsView()
+          .environmentObject(viewModel)
       } else {
         //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
       }

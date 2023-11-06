@@ -44,6 +44,39 @@ class ProfileViewModel: ObservableObject {
     print("**** favoritePersonalRecords: \(favoritePersonalRecords)")
   }
 
+  func isFav(_ pr: PersonalRecord) -> Bool {
+    return favoritePersonalRecords.map({ $0.id }).contains(pr.id)
+  }
+
+  func setFav(_ pr: PersonalRecord) {
+
+    func updateDB() async throws {
+
+      try await PersonalRecordService.uploadFavoritePersonalRecordIds(favoritePersonalRecords.map({$0.id}))
+    }
+
+    // remove if already fav and retrun
+    if isFav(pr) {
+      favoritePersonalRecords = favoritePersonalRecords.filter({ $0.id != pr.id })
+    } else {
+      //TODO: in future, should match reps also
+      for (i, record) in favoritePersonalRecords.enumerated() {
+        if record.type == pr.type {
+          favoritePersonalRecords.remove(at: i)
+          break
+        }
+      }
+
+      if favoritePersonalRecords.count > 2 {
+        favoritePersonalRecords.remove(at: 0)
+      }
+
+      favoritePersonalRecords.append(pr)
+    }
+
+    Task { try await updateDB() }
+  }
+
   func loadUserData() {
     Task {
       //            async let stats = try await UserService.fetchUserStats(uid: user.id)

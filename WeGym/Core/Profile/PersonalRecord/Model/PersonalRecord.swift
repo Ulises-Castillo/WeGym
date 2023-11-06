@@ -16,7 +16,7 @@ struct PersonalRecord: Identifiable, Hashable, Codable, Equatable {
   let ownerUid: String
   let timestamp: Timestamp
   var notes: String
-  var isFavorite = false
+//  var isFavorite = false // all handled by favorite PRs array, single source of truth
   var isCategoryMax = false
 }
 
