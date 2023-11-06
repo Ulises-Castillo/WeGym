@@ -52,13 +52,13 @@ struct PersonalRecordCell: View {
       Button {
         personalRecordsViewModel.setFavorite(personalRecord)
       } label: {
-        Image(systemName: "star.square.fill")
+        Image(systemName: "trophy.fill")
           .resizable()
           .frame(width: (UIScreen.main.bounds.width/8) - 15, height: 32)
-          .background(personalRecord.isFavorite ? Color(gold) : .clear)
+          .background(personalRecord.isFavorite ? Color(.systemBlue) : Color(.systemBlue))
           .cornerRadius(6)
           .fontWeight(.semibold)
-          .foregroundColor(Color(.systemBlue))
+          .foregroundColor(personalRecord.isFavorite ? Color(gold) : Color(.systemGray2))
       }
     }
     .font(.system(size: 14, weight: .regular, design: .rounded))

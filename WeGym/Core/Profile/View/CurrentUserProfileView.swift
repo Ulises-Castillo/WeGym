@@ -30,7 +30,11 @@ struct CurrentUserProfileView: View {
       .navigationTitle(UserService.shared.currentUser!.username)
       .navigationBarTitleDisplayMode(.inline)
       .navigationDestination(isPresented: $showDetail, destination: {
-        Text(selectedSettingsOption?.title ?? "")
+        if selectedSettingsOption == .personalRecords {
+          PersonalRecordsView()
+        } else {
+          Text(selectedSettingsOption?.title ?? "")
+        }
       })
       .sheet(isPresented: $showSettingsSheet) {
         SettingsView(selectedOption: $selectedSettingsOption)

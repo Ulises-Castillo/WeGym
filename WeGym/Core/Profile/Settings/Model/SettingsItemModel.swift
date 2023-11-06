@@ -9,6 +9,7 @@ import Foundation
 
 enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
   case settings
+  case personalRecords
   case yourActivity
   case saved
   case logout
@@ -17,6 +18,8 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
     switch self {
     case .settings:
       return "Settings"
+    case .personalRecords:
+      return "Personal Records"
     case .yourActivity:
       return "Your Activity"
     case .saved:
@@ -30,6 +33,8 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
     switch self {
     case .settings:
       return "gear"
+    case .personalRecords:
+      return "trophy"
     case .yourActivity:
       return "cursorarrow.click.badge.clock"
     case .saved:

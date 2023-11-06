@@ -11,6 +11,7 @@ import SwiftUI
 class ProfileViewModel: ObservableObject {
   @Published var user: User
   @Published var favoritePersonalRecords = [PersonalRecord]()
+  @Published var isLoading = true
 
   init(user: User) {
     self.user = user
@@ -19,7 +20,27 @@ class ProfileViewModel: ObservableObject {
   }
 
   func fetchFavoritePersonalRecords(_ userId: String) {
-    Task { favoritePersonalRecords = try await PersonalRecordService.fetchFavoritePersonalRecords(userId: user.id) }
+    Task { 
+      let prs = try await PersonalRecordService.fetchFavoritePersonalRecords(userId: user.id)
+
+      var sbd = [PersonalRecord]()
+
+      for type in ["Squat", "Bench", "Deadlift"] {
+        for pr in prs {
+          if pr.type == type {
+            sbd.append(pr)
+            break
+          }
+        }
+      }
+
+      if sbd.count == 3 {
+        favoritePersonalRecords = sbd
+      } else {
+        favoritePersonalRecords = prs
+      }
+      isLoading = false
+    }
     print("**** favoritePersonalRecords: \(favoritePersonalRecords)")
   }
 

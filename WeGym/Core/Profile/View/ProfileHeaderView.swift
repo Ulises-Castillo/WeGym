@@ -20,29 +20,37 @@ struct ProfileHeaderView: View {
           .padding(.leading)
 
         Spacer()
-
-        if !viewModel.favoritePersonalRecords.isEmpty {
-          ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
-            HStack(spacing: 16) {
-              NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
-                UserStatView(value: pr.weight ?? 0, title: pr.type)
+        if viewModel.user.isCurrentUser {
+          if viewModel.isLoading {
+            ProgressView()
+              .scaleEffect(1, anchor: .center)
+              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+              .padding(.top, 15)
+              .frame(maxWidth: .infinity)
+          } else if !viewModel.favoritePersonalRecords.isEmpty {
+            ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
+              HStack() {
+                NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+                  UserStatView(value: pr.weight ?? 0, title: pr.type)
+                }
+                .disabled(!viewModel.user.isCurrentUser)
+                .frame(maxWidth: .infinity)
               }
-              .disabled(!viewModel.user.isCurrentUser)
             }
-          }
-          .foregroundColor(.primary)
-          .padding(.trailing)
-        } else {
-          NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) { //FIXME: button looks terrible
-            VStack {
-              Image(systemName: "plus")
-              Text("Add PR")
-                .padding(.top, 1)
+            .foregroundColor(.primary)
+            .padding(.trailing)
+          } else {
+            NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+              HStack {
+                Image(systemName: "trophy")
+                Text("Add Personal Record")
+                  .font(.footnote)
+              }
+              .frame(maxWidth: .infinity)
+
             }
+            Spacer()
           }
-          .foregroundColor(Color(.systemBlue))
-          .padding(.trailing, 21)
-          Spacer()
         }
       }
       .onAppear {
@@ -70,7 +78,11 @@ struct ProfileHeaderView: View {
         .padding(.top)
     }
     .navigationDestination(for: SearchViewModelConfig.self) { config in
-      PersonalRecordsView()
+      if viewModel.user.isCurrentUser {
+        PersonalRecordsView()
+      } else {
+        //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
+      }
     }
   }
 
