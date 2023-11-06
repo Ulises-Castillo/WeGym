@@ -42,7 +42,7 @@ struct ProfileHeaderView: View {
             NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
               HStack {
                 Image(systemName: "trophy")
-                Text("Add Personal Record")
+                Text("Add Personal Records")
                   .font(.footnote)
               }
               .frame(maxWidth: .infinity)

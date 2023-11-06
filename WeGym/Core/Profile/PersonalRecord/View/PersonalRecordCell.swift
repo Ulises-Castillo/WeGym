@@ -63,7 +63,7 @@ struct PersonalRecordCell: View {
       } label: {
         Image(systemName: "trophy.fill")
           .resizable()
-          .frame(width: (UIScreen.main.bounds.width/9) - 15, height: 24)
+          .frame(width: (UIScreen.main.bounds.width/10) - 15, height: 24)
           .scaledToFill()
           .background(.clear)
           .fontWeight(.semibold)

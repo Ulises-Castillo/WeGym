@@ -41,7 +41,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
       }
     }
     .onAppear {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { //TODO: minimize delays
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
         if viewModel.personalRecords.isEmpty {
           showingAddPersonalRecordView = true
         }
