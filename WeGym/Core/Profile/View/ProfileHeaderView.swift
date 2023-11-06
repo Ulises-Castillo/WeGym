@@ -21,26 +21,32 @@ struct ProfileHeaderView: View {
 
         Spacer()
 
-        HStack(spacing: 16) {
-          NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
-            UserStatView(value: 315, title: "Squat")
+        if !viewModel.favoritePersonalRecords.isEmpty {
+          ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
+            HStack(spacing: 16) {
+              NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+                UserStatView(value: pr.weight ?? 0, title: pr.type)
+              }
+              .disabled(!viewModel.user.isCurrentUser)
+            }
           }
-          .disabled(!viewModel.user.isCurrentUser)
-
-          NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
-            UserStatView(value: 245, title: "Bench")
+          .foregroundColor(.primary)
+          .padding(.trailing)
+        } else {
+          NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) { //FIXME: button looks terrible
+            VStack {
+              Image(systemName: "plus")
+              Text("Add PR")
+                .padding(.top, 1)
+            }
           }
-          .disabled(!viewModel.user.isCurrentUser)
-
-          NavigationLink(value: SearchViewModelConfig.following(viewModel.user.id)) {
-            UserStatView(value: 365, title: "Deadlift")
-          }
-          .disabled(!viewModel.user.isCurrentUser)
-
-
+          .foregroundColor(Color(.systemBlue))
+          .padding(.trailing, 21)
+          Spacer()
         }
-        .foregroundColor(.primary)
-        .padding(.trailing)
+      }
+      .onAppear {
+        viewModel.fetchFavoritePersonalRecords(viewModel.user.id)
       }
 
       VStack(alignment: .leading, spacing: 4) {

@@ -17,6 +17,9 @@ class PersonalRecordsViewModel: ObservableObject {
         .sorted(by: {
           $0.timestamp.dateValue().timeIntervalSince1970 > $1.timestamp.dateValue().timeIntervalSince1970
         })
+
+      favoritePersonalRecordIds = personalRecords.filter({ $0.isFavorite }).map({ $0.id })
+      print("**** favoritePersonalRecordIds: \(favoritePersonalRecordIds)")
     }
   }
 
@@ -31,11 +34,17 @@ class PersonalRecordsViewModel: ObservableObject {
     //TODO: deal with unfavorite (personalRecord already contained in favs array)
     if personalRecordsCache[personalRecord.id]?.isFavorite ?? false {
       personalRecordsCache[personalRecord.id]?.isFavorite = false
-      favoritePersonalRecordIds = favoritePersonalRecordIds.filter({ $0 != personalRecord.id })
+//      favoritePersonalRecordIds = favoritePersonalRecordIds.filter({ $0 != personalRecord.id })
+      
+      Task {
+        guard let updatedPr = personalRecordsCache[personalRecord.id] else { return }
+        try await PersonalRecordService.updatePersonalRecord(updatedPr)
+        try await PersonalRecordService.uploadFavoritePersonalRecordIds(favoritePersonalRecordIds)
+      }
       return
     }
 
-    print("Fav PRs BEFORE: \(favoritePersonalRecordIds)")
+//    print("Fav PRs BEFORE: \(favoritePersonalRecordIds)")
 
     // 1. unfavorite any pr's in the same category, if any
     for i in 0..<favoritePersonalRecordIds.count {
@@ -45,7 +54,7 @@ class PersonalRecordsViewModel: ObservableObject {
       if personalRecordsCache[id]?.category == personalRecord.category &&
           personalRecordsCache[id]?.type == personalRecord.type {
         personalRecordsCache[id]?.isFavorite = false
-        favoritePersonalRecordIds.remove(at: i) //TODO: check this, dangerous to remove during for loop // perhaps break right after
+//        favoritePersonalRecordIds.remove(at: i) //TODO: check this, dangerous to remove during for loop // perhaps break right after
         break
       }
     }
@@ -53,18 +62,21 @@ class PersonalRecordsViewModel: ObservableObject {
     // 2. unfavorte oldest favorite PR if more than 2 favorite PRs
     while favoritePersonalRecordIds.count > 2 {
       personalRecordsCache[favoritePersonalRecordIds[0]]?.isFavorite = false
-      favoritePersonalRecordIds.remove(at: 0)
+//      favoritePersonalRecordIds.remove(at: 0)
     }
 
     // 3. set new favorite PRs array (size: 3)
     personalRecordsCache[personalRecord.id]?.isFavorite = true
-    favoritePersonalRecordIds.append(personalRecord.id)
+//    favoritePersonalRecordIds.append(personalRecord.id)
 
 
-    print("Fav PRs AFTER: \(favoritePersonalRecordIds)")
+//    print("Fav PRs AFTER: \(favoritePersonalRecordIds)")
     // 4. update DB
-    //TODO: pr service set pr favorites: [String]
-    // just 3 ids of the fav PRs
+    Task { 
+      try await PersonalRecordService.uploadFavoritePersonalRecordIds(favoritePersonalRecordIds)
+      guard let updatePr = personalRecordsCache[personalRecord.id] else { return }
+      try await PersonalRecordService.updatePersonalRecord(updatePr)
+    }
   }
 
   @MainActor

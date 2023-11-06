@@ -62,7 +62,7 @@ struct NotificationService {
     guard let currentUid = Auth.auth().currentUser?.uid else { return }
 
     do {
-      try await FirestoreConstants.UserMetaCollection.document(currentUid).setData(["badgeCount" : 0])
+      try await FirestoreConstants.UserMetaCollection.document(currentUid).setData(["badgeCount" : 0], merge: true)
     } catch {
       print("*** resetBadgeCount error: \(error)")
     }

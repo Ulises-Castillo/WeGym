@@ -53,7 +53,7 @@ struct PersonalRecordService {
       .collection("personal-records")
       .document()
 
-    var newPr = PersonalRecord(id: postRef.documentID,
+    let newPr = PersonalRecord(id: postRef.documentID,
                                weight: personalRecord.weight,
                                reps: personalRecord.reps,
                                category: personalRecord.category,
@@ -64,6 +64,30 @@ struct PersonalRecordService {
 
     guard let encodedPersonalRecord = try? Firestore.Encoder().encode(newPr) else { return }
     try await postRef.setData(encodedPersonalRecord)
+  }
+
+  static func uploadFavoritePersonalRecordIds(_ favPrIds: [String]) async throws {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+
+    let postRef = FirestoreConstants.UserMetaCollection.document(uid)
+    try await postRef.setData(["favPrIds": favPrIds], merge: true)
+  }
+
+  static func fetchFavoritePersonalRecords(userId: String) async throws -> [PersonalRecord] {
+
+    let snapshot = try await FirestoreConstants.UserMetaCollection.document(userId).getDocument()
+    guard let data = snapshot.data(), let favPrIds = data["favPrIds"] as? [String], !favPrIds.isEmpty else { return [] }
+
+    print("*** favPrIds: \(favPrIds)")
+
+    let query = FirestoreConstants.UserCollection
+      .document(userId)
+      .collection("personal-records")
+      .whereField("id", in: favPrIds)
+
+    guard let snapshot = try? await query.getDocuments() else { return [] }
+    let favPrs = snapshot.documents.compactMap({ try? $0.data(as: PersonalRecord.self) })
+    return favPrs
   }
 
   static func updatePersonalRecord(_ personalRecord: PersonalRecord) async throws {
