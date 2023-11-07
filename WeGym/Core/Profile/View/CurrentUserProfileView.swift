@@ -13,13 +13,15 @@ struct CurrentUserProfileView: View {
   @State private var showSettingsSheet = false
   @State private var selectedSettingsOption: SettingsItemModel?
   @State private var showDetail = false
+  @Binding var path: [CurrentUserProfileNavigation]
 
-  init() {
+  init(path: Binding<[CurrentUserProfileNavigation]>) {
+    self._path = path
     self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: UserService.shared.currentUser!))
   }
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       ScrollView {
         VStack(spacing: 24) {
           ProfileHeaderView(viewModel: viewModel)
@@ -29,15 +31,15 @@ struct CurrentUserProfileView: View {
       }
       .navigationTitle(UserService.shared.currentUser!.username)
       .navigationBarTitleDisplayMode(.inline)
-      .navigationDestination(isPresented: $showDetail, destination: {
+      .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
         if selectedSettingsOption == .personalRecords {
           PersonalRecordsView()
         } else {
           Text(selectedSettingsOption?.title ?? "")
         }
-      })
+      }
       .sheet(isPresented: $showSettingsSheet) {
-        SettingsView(selectedOption: $selectedSettingsOption)
+        SettingsView(selectedOption: $selectedSettingsOption, path: $path)
           .presentationDetents([.height(CGFloat(SettingsItemModel.allCases.count * 56))])
           .presentationDragIndicator(.visible)
       }

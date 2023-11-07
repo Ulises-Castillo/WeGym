@@ -20,6 +20,7 @@ class AppNavigation: ObservableObject {
   @Published var messagesNavigationStack = [MessagesNavigation]()
   @Published var notificationsNavigationStack = [NotificationsNavigation]()
   @Published var searchNavigationStack = [SearchNavigation]()
+  @Published var currentUserProfileNavigationStack = [CurrentUserProfileNavigation]()
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
@@ -40,6 +41,10 @@ enum NotificationsNavigation: Hashable {
 
 enum SearchNavigation: Hashable {
   case profile(User)
+}
+
+enum CurrentUserProfileNavigation: Hashable {
+  case personalRecords
 }
 
 struct MainTabView: View {
@@ -74,7 +79,7 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(Tab.Search)
-      CurrentUserProfileView()
+      CurrentUserProfileView(path: $appNav.currentUserProfileNavigationStack)
 
         .tabItem {
           Image(systemName: "person")
@@ -150,7 +155,10 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
             appNav.searchNavigationStack = []
           }
         case .CurrentUserProfile:
-          break
+          if appNav.currentUserProfileNavigationStack.isEmpty {
+          } else {
+            appNav.currentUserProfileNavigationStack = []
+          }
         }
       }
       //Set the tab to the user selected tab

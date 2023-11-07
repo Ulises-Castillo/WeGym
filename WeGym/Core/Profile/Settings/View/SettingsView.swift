@@ -10,27 +10,31 @@ import SwiftUI
 struct SettingsView: View {
   @Binding var selectedOption: SettingsItemModel?
   @Environment(\.dismiss) var dismiss
+  @Binding var path: [CurrentUserProfileNavigation]
 
   var body: some View {
-    List {
-      ForEach(SettingsItemModel.allCases) { model in
-        Button {
-          selectedOption = model
-          dismiss()
-        } label: {
-          SettingsRowView(model: model)
+    NavigationStack(path: $path) {
+      List {
+        ForEach(SettingsItemModel.allCases) { model in
+          Button {
+            selectedOption = model
+            dismiss()
+            path.append(.personalRecords)
+          } label: {
+            SettingsRowView(model: model)
+          }
         }
       }
+      .listStyle(PlainListStyle())
+      .padding(.vertical)
     }
-    .listStyle(PlainListStyle())
-    .padding(.vertical)
   }
 }
 
 
 
-struct SettingsView_Previews: PreviewProvider {
-  static var previews: some View {
-    SettingsView(selectedOption: .constant(nil))
-  }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    SettingsView(selectedOption: .constant(nil))
+//  }
+//}

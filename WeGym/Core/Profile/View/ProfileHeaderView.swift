@@ -29,7 +29,7 @@ struct ProfileHeaderView: View {
           } else if !viewModel.favoritePersonalRecords.isEmpty {
             ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
               HStack() {
-                NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+                NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
                   UserStatView(value: pr.weight ?? 0, title: pr.type)
                 }
                 .disabled(!viewModel.user.isCurrentUser)
@@ -39,7 +39,7 @@ struct ProfileHeaderView: View {
             .foregroundColor(.primary)
             .padding(.trailing)
           } else if viewModel.user.isCurrentUser {
-            NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
+            NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
               HStack {
                 Image(systemName: "trophy")
                 Text("Add Personal Records")
@@ -75,12 +75,15 @@ struct ProfileHeaderView: View {
       ProfileActionButtonView(viewModel: viewModel)
         .padding(.top)
     }
-    .navigationDestination(for: SearchViewModelConfig.self) { config in
-      if viewModel.user.isCurrentUser {
-        PersonalRecordsView()
-          .environmentObject(viewModel)
-      } else {
-        //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
+    .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+      switch screen {
+      case .personalRecords:
+        if viewModel.user.isCurrentUser {
+          PersonalRecordsView()
+            .environmentObject(viewModel)
+        } else {
+          //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
+        }
       }
     }
   }
