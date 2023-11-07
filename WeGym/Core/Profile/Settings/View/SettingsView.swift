@@ -19,7 +19,11 @@ struct SettingsView: View {
           Button {
             selectedOption = model
             dismiss()
-            path.append(.personalRecords)
+            if selectedOption == .personalRecords {
+              path.append(.personalRecords)
+            } else if selectedOption == .settings {
+              path.append(.settings)
+            }
           } label: {
             SettingsRowView(model: model)
           }

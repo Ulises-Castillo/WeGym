@@ -45,6 +45,7 @@ enum SearchNavigation: Hashable {
 
 enum CurrentUserProfileNavigation: Hashable {
   case personalRecords
+  case settings
 }
 
 struct MainTabView: View {

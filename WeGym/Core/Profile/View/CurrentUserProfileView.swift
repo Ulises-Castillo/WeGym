@@ -25,15 +25,16 @@ struct CurrentUserProfileView: View {
         VStack(spacing: 24) {
           ProfileHeaderView(viewModel: viewModel)
 
-          PostGridView(config: .profile(UserService.shared.currentUser!))
+//          PostGridView(config: .profile(UserService.shared.currentUser!))
         }
       }
-      .navigationTitle(UserService.shared.currentUser!.username)
+      .navigationTitle(UserService.shared.currentUser?.username ?? "")
       .navigationBarTitleDisplayMode(.inline)
       .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
-        if selectedSettingsOption == .personalRecords {
+        switch screen {
+        case .personalRecords:
           PersonalRecordsView()
-        } else {
+        default:
           Text(selectedSettingsOption?.title ?? "")
         }
       }

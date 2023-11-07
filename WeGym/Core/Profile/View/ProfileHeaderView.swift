@@ -84,6 +84,8 @@ struct ProfileHeaderView: View {
         } else {
           //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
         }
+      case .settings:
+        Text("Settings")
       }
     }
   }

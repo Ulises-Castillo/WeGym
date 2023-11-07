@@ -25,6 +25,6 @@ struct SettingsRowView: View {
 
 struct SettingsRowView_Previews: PreviewProvider {
   static var previews: some View {
-    SettingsRowView(model: .saved)
+    SettingsRowView(model: .personalRecords)
   }
 }
