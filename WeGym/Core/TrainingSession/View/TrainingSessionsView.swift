@@ -43,14 +43,14 @@ struct TrainingSessionsView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] && UserService.shared.currentUser != nil {
-            RestDayCell(user: UserService.shared.currentUser!) //CRASH: force unwrap; FIX: added check above
-          } else {
+          } else if !TrainingSessionService.hasBeenFetched(date: viewModel.day) {
             ProgressView()
               .scaleEffect(1, anchor: .center)
               .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
               .padding(.top, 15)
               .frame(width: 50)
+          } else if let user = UserService.shared.currentUser {
+            RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
           }
         }
         .padding(.top, 12)
