@@ -20,7 +20,7 @@ struct TrainingSessionsView: View {
   @Binding var showToday: Bool
   @State private var showComments = false
   @State private var trainingSession: TrainingSession?
-
+  @State private var defaultDayTimer: Timer?
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
@@ -85,6 +85,7 @@ struct TrainingSessionsView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
+            defaultDayTimer?.invalidate()
             viewModel.day = viewModel.day.addingTimeInterval(86400)
             selectedDate = selectedDate.addingTimeInterval(86400)
           } label: {
@@ -104,6 +105,7 @@ struct TrainingSessionsView: View {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
               .onChange(of: selectedDate) { _ in
                 showingDateSheet.toggle()
+                defaultDayTimer?.invalidate() //TODO: test behavior with new timer
                 viewModel.day = selectedDate
               }
               .datePickerStyle(.graphical)
@@ -118,9 +120,11 @@ struct TrainingSessionsView: View {
         print(value.translation)
         switch(value.translation.width, value.translation.height) {
         case (...0, -60...60):
+          defaultDayTimer?.invalidate()
           viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
           selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
         case (0..., -60...60):
+          defaultDayTimer?.invalidate()
           viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
           selectedDate = selectedDate.addingTimeInterval(-86400)
         default:
@@ -152,6 +156,9 @@ struct TrainingSessionsView: View {
         AppNavigation.shared.showCommentsTrainingSessionID = nil
       }
     }
+    .onChange(of: showingDateSheet) { _ in
+      defaultDayTimer?.invalidate()
+    }
     .onAppear{
       guard shouldSetDateOnAppear else {
         shouldSetDateOnAppear = true
@@ -162,13 +169,21 @@ struct TrainingSessionsView: View {
       selectedDate = date
       viewModel.day = selectedDate
 
-      Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+      // Timer intended only to deal with case where data has not been fetched yet (spinner)
+      // waiting for data to check if we should show tomorrow view
+      guard !TrainingSessionService.hasBeenFetched(date: Date()) else { return } //TODO: test Date() change (starting at 3Pm [after today's workout])
+
+      //TODO: test all cases ensure user always in control – invalidate timer anytime user changes `viewModel.day()`
+      defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
 //        print("***** Timer fired !!")
         let (date, setTmr) = viewModel.defaultDay()
-        selectedDate = date
-        viewModel.day = selectedDate
 
-        if setTmr || TrainingSessionService.hasBeenFetched(date: viewModel.day) {
+        withAnimation(.easeIn(duration: 0.5)) {
+          selectedDate = date
+          viewModel.day = selectedDate
+        }
+
+        if setTmr || TrainingSessionService.hasBeenFetched(date: Date()) {
           timer.invalidate()
         }
       }
@@ -189,6 +204,7 @@ struct TrainingSessionsView: View {
     }
     .onNotification { userInfo in
       shouldSetDateOnAppear = false
+      defaultDayTimer?.invalidate() //TODO: test notification behavior with new timer
 
       guard let notificationType = userInfo["notificationType"] as? String else { return }
 
