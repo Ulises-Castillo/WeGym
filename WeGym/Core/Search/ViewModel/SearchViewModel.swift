@@ -46,7 +46,7 @@ class SearchViewModel: ObservableObject {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         let query = FirestoreConstants.UserCollection.limit(to: 20)
 
-        if let last = lastDoc {
+        if let last = lastDoc { //TODO: integrate with UserService Cache, single source of truth + this paging logic can be used for cache
             let next = query.start(afterDocument: last)
             guard let snapshot = try? await next.getDocuments() else { return }
             self.lastDoc = snapshot.documents.last

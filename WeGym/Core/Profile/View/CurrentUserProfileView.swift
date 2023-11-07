@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CurrentUserProfileView: View {
 
-  @StateObject var viewModel: ProfileViewModel
+  @EnvironmentObject var viewModel: ProfileViewModel
   @State private var showSettingsSheet = false
   @State private var selectedSettingsOption: SettingsItemModel?
   @State private var showDetail = false
@@ -17,7 +17,6 @@ struct CurrentUserProfileView: View {
 
   init(path: Binding<[CurrentUserProfileNavigation]>) {
     self._path = path
-    self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: UserService.shared.currentUser!))
   }
 
   var body: some View {

@@ -53,6 +53,8 @@ struct MainTabView: View {
   @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
   @StateObject var inboxViewModel = InboxViewModel()
   @StateObject var notificationsViewModel = NotificationsViewModel()
+  @StateObject var searchViewModel = SearchViewModel(config: .search)
+  @StateObject var currentUserProfileViewModel = ProfileViewModel(user: UserService.shared.currentUser!) //FIXME: unwrap
 
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
@@ -116,6 +118,8 @@ struct MainTabView: View {
     .environmentObject(trainingSessionsViewModel)
     .environmentObject(inboxViewModel)
     .environmentObject(notificationsViewModel)
+    .environmentObject(searchViewModel)
+    .environmentObject(currentUserProfileViewModel)
   }
 }
 
