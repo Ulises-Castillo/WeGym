@@ -51,6 +51,7 @@ struct MainTabView: View {
 
   @State var shouldShowNotificationBadge = false
   @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
+  @StateObject var inboxViewModel = InboxViewModel()
 
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
@@ -112,6 +113,7 @@ struct MainTabView: View {
       }
     }
     .environmentObject(trainingSessionsViewModel)
+    .environmentObject(inboxViewModel)
   }
 }
 
