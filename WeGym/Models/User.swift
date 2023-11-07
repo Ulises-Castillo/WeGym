@@ -5,7 +5,6 @@
 //  Created by Ulises Castillo on 10/13/23.
 //
 
-import Foundation
 import Firebase
 
 struct User: Identifiable, Hashable, Codable {

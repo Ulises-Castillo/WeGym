@@ -9,57 +9,85 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileHeaderView: View {
-    @ObservedObject var viewModel: ProfileViewModel
-    @State var updatedProfileImageUrl: String?
-    @StateObject var userService = UserService.shared
+  @ObservedObject var viewModel: ProfileViewModel
+  @State var updatedProfileImageUrl: String?
+  @StateObject var userService = UserService.shared
 
-    var body: some View {
-        VStack {
-            HStack {
-              CircularProfileImageView(user: viewModel.user.isCurrentUser ? userService.currentUser : viewModel.user, size: .large)
-                    .padding(.leading)
+  var body: some View {
+    VStack {
+      HStack {
+        CircularProfileImageView(user: viewModel.user.isCurrentUser ? userService.currentUser : viewModel.user, size: .large)
+          .padding(.leading)
 
-                Spacer()
-
-//                HStack(spacing: 16) {
-//                    UserStatView(value: viewModel.user.stats?.posts, title: "Posts")
-//
-//                    NavigationLink(value: SearchViewModelConfig.followers(viewModel.user.id)) {
-//                        UserStatView(value: viewModel.user.stats?.followers, title: "Followers")
-//                    }
-//                    .disabled(viewModel.user.stats?.followers == 0)
-//
-//                    NavigationLink(value: SearchViewModelConfig.following(viewModel.user.id)) {
-//                        UserStatView(value: viewModel.user.stats?.following, title: "Following")
-//                    }
-//                    .disabled(viewModel.user.stats?.following == 0)
-//                }
-//                .padding(.trailing)
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-              if let fullname = viewModel.user.isCurrentUser ? userService.currentUser?.fullName : viewModel.user.fullName {
-                    Text(fullname)
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .padding(.leading)
+        Spacer()
+          if viewModel.isLoading {
+            ProgressView()
+              .scaleEffect(1, anchor: .center)
+              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+              .padding(.top, 15)
+              .frame(maxWidth: .infinity)
+          } else if !viewModel.favoritePersonalRecords.isEmpty {
+            ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
+              HStack() {
+                NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
+                  UserStatView(value: pr.weight ?? 0, title: pr.type)
                 }
-
-
-                if let bio = viewModel.user.isCurrentUser ? userService.currentUser?.bio : viewModel.user.bio {
-                    Text(bio)
-                        .font(.footnote)
-                        .padding(.leading)
-                }
+                .disabled(!viewModel.user.isCurrentUser)
+                .frame(maxWidth: .infinity)
+              }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundColor(.primary)
+            .padding(.trailing)
+          } else if viewModel.user.isCurrentUser {
+            NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
+              HStack {
+                Image(systemName: "trophy")
+                Text("Add Personal Records")
+                  .font(.footnote)
+              }
+              .frame(maxWidth: .infinity)
 
-            ProfileActionButtonView(viewModel: viewModel)
-                .padding(.top)
+            }
+            Spacer()
         }
-        .navigationDestination(for: SearchViewModelConfig.self) { config in
-            UserListView(config: config)
+      }
+      .onAppear {
+        viewModel.fetchFavoritePersonalRecords(viewModel.user.id)
+      }
+
+      VStack(alignment: .leading, spacing: 4) {
+        if let fullname = viewModel.user.isCurrentUser ? userService.currentUser?.fullName : viewModel.user.fullName {
+          Text(fullname)
+            .font(.footnote)
+            .fontWeight(.semibold)
+            .padding(.leading)
         }
+
+
+        if let bio = viewModel.user.isCurrentUser ? userService.currentUser?.bio : viewModel.user.bio {
+          Text(bio)
+            .font(.footnote)
+            .padding(.leading)
+        }
+      }
+      .frame(maxWidth: .infinity, alignment: .leading)
+
+      ProfileActionButtonView(viewModel: viewModel)
+        .padding(.top)
     }
+    .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+      switch screen {
+      case .personalRecords:
+        if viewModel.user.isCurrentUser {
+          PersonalRecordsView()
+            .environmentObject(viewModel)
+        } else {
+          //TODO: should toggle between lbs & kgs when viewing other users profiles (will  use button and append to nav $path)
+        }
+      case .settings:
+        Text("Settings")
+      }
+    }
+  }
 
 }

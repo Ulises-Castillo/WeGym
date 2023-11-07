@@ -20,10 +20,12 @@ public struct TagField: View {
   private var lowercase: Bool = false
   private var multiSelect: Bool
   private var isSelector: Bool
-  
+  private var isPersonalRecord: Bool
+
   @Binding var isSelected: [String]
   @EnvironmentObject var viewModel: TrainingSessionSchedulerViewModel
-  
+  @EnvironmentObject var prViewModel: EditPersonalRecordViewModel
+
   public var body: some View {
     VStack(spacing: 0){
       ScrollViewReader { scrollView in
@@ -42,10 +44,16 @@ public struct TagField: View {
                   isSelected.append(tag)
                 }
                 
+                if isPersonalRecord {
+                  if let selected = isSelected.first, isSelector {
+                    prViewModel.personalRecordTypes = prViewModel.prCategoryMap[selected] ?? []
+                  }
+                  return
+                }
+
                 if let selected = isSelected.first, isSelector {
                   viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[selected] ?? []
                 }
-                
               } label: {
                 Text("\(prefix + tag)")
                   .fixedSize()
@@ -80,6 +88,15 @@ public struct TagField: View {
               
             }
             .onAppear {
+              if isPersonalRecord {
+                if let initiallySelectedPRCategory = prViewModel.personalRecordCategories.first, isSelector {
+                  isSelected.append(initiallySelectedPRCategory) //TODO: clean up logic
+                  prViewModel.personalRecordTypes = prViewModel.prCategoryMap[initiallySelectedPRCategory] ??  []
+                }
+
+                return
+              }
+
               if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
                 isSelected.append(initiallySelectedWorkoutCategory) //TODO: clean up logic
                 viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
@@ -151,24 +168,46 @@ public struct TagField: View {
       return false
     }
   }
-  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, multiSelect: Bool, isSelector: Bool) {
+  public init(tags: Binding<[String]>, 
+              set: Binding<[String]>,
+              placeholder: String,
+              multiSelect: Bool,
+              isSelector: Bool,
+              isPersonalRecord: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
     self.multiSelect = multiSelect
     self.isSelector = isSelector
+    self.isPersonalRecord = isPersonalRecord
   }
   
-  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, multiSelect: Bool, isSelector: Bool) {
+  public init(tags: Binding<[String]>, 
+              set: Binding<[String]>,
+              placeholder: String,
+              prefix: String,
+              multiSelect: Bool,
+              isSelector: Bool,
+              isPersonalRecord: Bool) {
     self._tags = tags
     self._isSelected = set
     self.placeholder = placeholder
     self.prefix = prefix
     self.multiSelect = multiSelect
     self.isSelector = isSelector
+    self.isPersonalRecord = isPersonalRecord
   }
   
-  public init(tags: Binding<[String]>, set: Binding<[String]>, placeholder: String, prefix: String, color: Color, style: TagFieldStyle, lowercase: Bool, multiSelect: Bool, isSelector: Bool) {
+  public init(tags: Binding<[String]>, 
+              set: Binding<[String]>,
+              placeholder: String,
+              prefix: String,
+              color: Color,
+              style: TagFieldStyle,
+              lowercase: Bool,
+              multiSelect: Bool,
+              isSelector: Bool,
+              isPersonalRecord: Bool) {
     self._tags = tags
     self._isSelected = set
     self.prefix = prefix
@@ -178,6 +217,7 @@ public struct TagField: View {
     self.lowercase = lowercase
     self.multiSelect = multiSelect
     self.isSelector = isSelector
+    self.isPersonalRecord = isPersonalRecord
   }
 }
 
@@ -190,7 +230,8 @@ extension TagField {
              style: self.style,
              lowercase: self.lowercase,
              multiSelect: self.multiSelect,
-             isSelector: self.isSelector)
+             isSelector: self.isSelector,
+             isPersonalRecord: self.isPersonalRecord)
   }
   public func styled(_ style: TagFieldStyle) -> TagField {
     TagField(tags: self.$tags,
@@ -200,7 +241,8 @@ extension TagField {
              style: style,
              lowercase: self.lowercase,
              multiSelect: self.multiSelect,
-             isSelector: self.isSelector)
+             isSelector: self.isSelector,
+             isPersonalRecord: self.isPersonalRecord)
   }
   public func lowercase(_ bool: Bool) -> TagField {
     TagField(tags: self.$tags,
@@ -211,6 +253,7 @@ extension TagField {
              style: self.style,
              lowercase: bool,
              multiSelect: self.multiSelect,
-             isSelector: self.isSelector)
+             isSelector: self.isSelector,
+             isPersonalRecord: self.isPersonalRecord)
   }
 }

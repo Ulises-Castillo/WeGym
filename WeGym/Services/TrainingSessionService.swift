@@ -10,6 +10,19 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct TrainingSessionService {
+  static private var fetchedDates = [ClosedRange<Date>]()
+
+  static func hasBeenFetched(date: Date) -> Bool { //TODO: merge overlapping date ranges
+    let noon = date.noon
+
+    for range in fetchedDates {
+      if range.contains(noon) {
+        return true
+      }
+    }
+    return false
+  }
+
   static private var firestoreListener: ListenerRegistration?
 
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
@@ -55,6 +68,9 @@ struct TrainingSessionService {
       }
 
       completion(trainingSessions, removedTrainingSessions)
+
+      fetchedDates.append(start.dateValue()...end.dateValue())
+//      print("**** fetchedDates: \(fetchedDates)")
     }
   }
 

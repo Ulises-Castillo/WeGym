@@ -9,18 +9,21 @@ import Foundation
 
 enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
   case settings
-  case yourActivity
-  case saved
+  case personalRecords
+//  case yourActivity
+//  case saved
   case logout
   
   var title: String {
     switch self {
     case .settings:
       return "Settings"
-    case .yourActivity:
-      return "Your Activity"
-    case .saved:
-      return "Saved"
+    case .personalRecords:
+      return "Personal Records"
+//    case .yourActivity:
+//      return "Your Activity"
+//    case .saved:
+//      return "Saved"
     case .logout:
       return "Logout"
     }
@@ -30,10 +33,12 @@ enum SettingsItemModel: Int, Identifiable, Hashable, CaseIterable {
     switch self {
     case .settings:
       return "gear"
-    case .yourActivity:
-      return "cursorarrow.click.badge.clock"
-    case .saved:
-      return "bookmark"
+    case .personalRecords:
+      return "trophy"
+//    case .yourActivity:
+//      return "cursorarrow.click.badge.clock"
+//    case .saved:
+//      return "bookmark"
     case .logout:
       return "x.square"
     }

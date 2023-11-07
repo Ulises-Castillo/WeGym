@@ -43,14 +43,14 @@ struct TrainingSessionsView: View {
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
             TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
-          } else if !viewModel.isFirstFetch[viewModel.day.noon, default: true] && UserService.shared.currentUser != nil {
-            RestDayCell(user: UserService.shared.currentUser!) //CRASH: force unwrap; FIX: added check above
-          } else {
+          } else if !TrainingSessionService.hasBeenFetched(date: viewModel.day) {
             ProgressView()
               .scaleEffect(1, anchor: .center)
               .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
               .padding(.top, 15)
               .frame(width: 50)
+          } else if let user = UserService.shared.currentUser {
+            RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
           }
         }
         .padding(.top, 12)
@@ -80,7 +80,7 @@ struct TrainingSessionsView: View {
         }
       }
       .foregroundColor(.black)
-      .navigationTitle(relaiveDay(viewModel.day))
+      .navigationTitle(relativeDay(viewModel.day))
 
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
@@ -134,14 +134,16 @@ struct TrainingSessionsView: View {
         return
       }
       if newPhase == .active {
-        selectedDate = Date()
+        let (date, _) = viewModel.defaultDay()
+        selectedDate = date
         viewModel.day = selectedDate
       }
     }
     .onChange(of: showToday) { newValue in
       if showToday {
         showToday = false
-        selectedDate = Date()         //TODO: reduce dup (see below)
+        let (date, _) = viewModel.defaultDay()
+        selectedDate = date
         viewModel.day = selectedDate
       }
     }
@@ -155,8 +157,21 @@ struct TrainingSessionsView: View {
         shouldSetDateOnAppear = true
         return
       }
-      selectedDate = Date()
+
+      let (date, _) = viewModel.defaultDay()
+      selectedDate = date
       viewModel.day = selectedDate
+
+      Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+//        print("***** Timer fired !!")
+        let (date, setTmr) = viewModel.defaultDay()
+        selectedDate = date
+        viewModel.day = selectedDate
+
+        if setTmr || TrainingSessionService.hasBeenFetched(date: viewModel.day) {
+          timer.invalidate()
+        }
+      }
     }
     .onDisappear {
       viewModel.removeTrainingSessionListener()

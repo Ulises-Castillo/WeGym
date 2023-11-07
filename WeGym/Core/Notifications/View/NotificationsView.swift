@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct NotificationsView: View {
-  @StateObject var viewModel: NotificationsViewModel
+  @EnvironmentObject var viewModel: NotificationsViewModel
   @Binding var shouldShowNotificationBadge: Bool
   @Binding var path: [NotificationsNavigation]
 
   init(path: Binding<[NotificationsNavigation]>, _ shouldShowNotificationBadge: Binding<Bool>) {
     self._path = path
     self._shouldShowNotificationBadge = shouldShowNotificationBadge
-    self._viewModel = StateObject(wrappedValue: NotificationsViewModel())
   }
 
   var body: some View {

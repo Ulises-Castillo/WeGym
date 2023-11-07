@@ -20,6 +20,7 @@ class AppNavigation: ObservableObject {
   @Published var messagesNavigationStack = [MessagesNavigation]()
   @Published var notificationsNavigationStack = [NotificationsNavigation]()
   @Published var searchNavigationStack = [SearchNavigation]()
+  @Published var currentUserProfileNavigationStack = [CurrentUserProfileNavigation]()
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
@@ -42,10 +43,19 @@ enum SearchNavigation: Hashable {
   case profile(User)
 }
 
+enum CurrentUserProfileNavigation: Hashable {
+  case personalRecords
+  case settings
+}
+
 struct MainTabView: View {
 
   @State var shouldShowNotificationBadge = false
   @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
+  @StateObject var inboxViewModel = InboxViewModel()
+  @StateObject var notificationsViewModel = NotificationsViewModel()
+  @StateObject var searchViewModel = SearchViewModel(config: .search)
+  @StateObject var currentUserProfileViewModel = ProfileViewModel(user: UserService.shared.currentUser!) //FIXME: unwrap
 
   init(user: User) {
     UITabBarItem.appearance().badgeColor = .systemBlue
@@ -74,7 +84,7 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "magnifyingglass")
         }.tag(Tab.Search)
-      CurrentUserProfileView()
+      CurrentUserProfileView(path: $appNav.currentUserProfileNavigationStack)
 
         .tabItem {
           Image(systemName: "person")
@@ -107,6 +117,10 @@ struct MainTabView: View {
       }
     }
     .environmentObject(trainingSessionsViewModel)
+    .environmentObject(inboxViewModel)
+    .environmentObject(notificationsViewModel)
+    .environmentObject(searchViewModel)
+    .environmentObject(currentUserProfileViewModel)
   }
 }
 
@@ -150,7 +164,10 @@ extension MainTabView { //TODO: implement popToRoot/scrollToTop when tab current
             appNav.searchNavigationStack = []
           }
         case .CurrentUserProfile:
-          break
+          if appNav.currentUserProfileNavigationStack.isEmpty {
+          } else {
+            appNav.currentUserProfileNavigationStack = []
+          }
         }
       }
       //Set the tab to the user selected tab

@@ -9,31 +9,37 @@ import SwiftUI
 
 struct CurrentUserProfileView: View {
 
-  @StateObject var viewModel: ProfileViewModel
+  @EnvironmentObject var viewModel: ProfileViewModel
   @State private var showSettingsSheet = false
   @State private var selectedSettingsOption: SettingsItemModel?
   @State private var showDetail = false
+  @Binding var path: [CurrentUserProfileNavigation]
 
-  init() {
-    self._viewModel = StateObject(wrappedValue: ProfileViewModel(user: UserService.shared.currentUser!))
+  init(path: Binding<[CurrentUserProfileNavigation]>) {
+    self._path = path
   }
 
   var body: some View {
-    NavigationStack {
+    NavigationStack(path: $path) {
       ScrollView {
         VStack(spacing: 24) {
           ProfileHeaderView(viewModel: viewModel)
 
-          PostGridView(config: .profile(UserService.shared.currentUser!))
+//          PostGridView(config: .profile(UserService.shared.currentUser!))
         }
       }
-      .navigationTitle(UserService.shared.currentUser!.username)
+      .navigationTitle(UserService.shared.currentUser?.username ?? "")
       .navigationBarTitleDisplayMode(.inline)
-      .navigationDestination(isPresented: $showDetail, destination: {
-        Text(selectedSettingsOption?.title ?? "")
-      })
+      .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+        switch screen {
+        case .personalRecords:
+          PersonalRecordsView()
+        default:
+          Text(selectedSettingsOption?.title ?? "")
+        }
+      }
       .sheet(isPresented: $showSettingsSheet) {
-        SettingsView(selectedOption: $selectedSettingsOption)
+        SettingsView(selectedOption: $selectedSettingsOption, path: $path)
           .presentationDetents([.height(CGFloat(SettingsItemModel.allCases.count * 56))])
           .presentationDragIndicator(.visible)
       }

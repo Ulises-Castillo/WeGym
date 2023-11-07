@@ -27,5 +27,6 @@ struct ProfileView: View {
         }
         .navigationTitle(user.username)
         .navigationBarTitleDisplayMode(.inline)
+
     }
 }

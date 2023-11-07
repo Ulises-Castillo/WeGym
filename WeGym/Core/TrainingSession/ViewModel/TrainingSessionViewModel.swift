@@ -186,5 +186,13 @@ class TrainingSessionViewModel: ObservableObject {
     }
   }
 
-
+  func defaultDay() -> (Date, Bool) { //account for session scheduled late at night, say 11pm
+    if let user = UserService.shared.currentUser, let currUserSession = trainingSessionsCache[key(user.id, Date())] {
+      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(60*60*2)
+      if Date().timeIntervalSince1970 > workoutEnd.timeIntervalSince1970 {
+        return (currUserSession.date.dateValue().addingTimeInterval(60*60*24).noon, true)
+      }
+    }
+    return (Date(), false)
+  }
 }
