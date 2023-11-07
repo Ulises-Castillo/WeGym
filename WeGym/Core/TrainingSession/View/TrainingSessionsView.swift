@@ -134,14 +134,16 @@ struct TrainingSessionsView: View {
         return
       }
       if newPhase == .active {
-        selectedDate = Date()
+        let (date, _) = viewModel.defaultDay()
+        selectedDate = date
         viewModel.day = selectedDate
       }
     }
     .onChange(of: showToday) { newValue in
       if showToday {
         showToday = false
-        selectedDate = Date()         //TODO: reduce dup (see below)
+        let (date, _) = viewModel.defaultDay()
+        selectedDate = date
         viewModel.day = selectedDate
       }
     }
@@ -155,8 +157,21 @@ struct TrainingSessionsView: View {
         shouldSetDateOnAppear = true
         return
       }
-      selectedDate = Date()
+
+      let (date, _) = viewModel.defaultDay()
+      selectedDate = date
       viewModel.day = selectedDate
+
+      Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+//        print("***** Timer fired !!")
+        let (date, setTmr) = viewModel.defaultDay()
+        selectedDate = date
+        viewModel.day = selectedDate
+
+        if setTmr || TrainingSessionService.hasBeenFetched(date: viewModel.day) {
+          timer.invalidate()
+        }
+      }
     }
     .onDisappear {
       viewModel.removeTrainingSessionListener()
