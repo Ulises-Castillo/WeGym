@@ -45,6 +45,9 @@ struct NotificationsView: View {
       .overlay {
         if viewModel.isLoading {
           ProgressView()
+        } else if viewModel.notifications.isEmpty {
+          Text("No notifications yet")
+            .foregroundColor(.secondary)
         }
       }
     }

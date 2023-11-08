@@ -47,7 +47,10 @@ class InboxViewModel: ObservableObject {
     }.store(in: &cancellables)
 
     InboxService.shared.$documentChanges.sink { [weak self] changes in
-      guard let self = self, !changes.isEmpty else { return }
+      guard let self = self, !changes.isEmpty else {
+        self?.didCompleteInitialLoad = true //TODO: test all cases
+        return
+      }
 
       if !self.didCompleteInitialLoad {
         self.loadInitialMessages(fromChanges: changes)
