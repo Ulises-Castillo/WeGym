@@ -174,7 +174,7 @@ struct TrainingSessionCell: View {
           .foregroundColor(.primary)
 
         Divider()
-        UserListView(config: .likes(trainingSession.id)) //TODO: should be able to follow ppl from here + go to their profile
+        UserListView(viewModel: SearchViewModel(config: .likes(trainingSession.id))) //TODO: should be able to follow ppl from here + go to their profile
           .presentationDragIndicator(.visible)
           .presentationDetents([PresentationDetent.fraction(0.60), .large])
           .padding(.top, 30)

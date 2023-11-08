@@ -11,10 +11,11 @@ struct SearchView: View {
   @State var searchText = ""
   @State var inSearchMode = false
   @Binding var path: [SearchNavigation]
+  @EnvironmentObject var preloadedSearchViewModel: SearchViewModel
 
   var body: some View {
     NavigationStack(path: $path) {
-      UserListView(config: .search)
+      UserListView(viewModel: preloadedSearchViewModel)
         .navigationDestination(for: SearchNavigation.self) { screen in
           switch screen {
           case .profile(let user):
