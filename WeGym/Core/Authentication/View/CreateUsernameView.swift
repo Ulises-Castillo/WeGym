@@ -49,6 +49,8 @@ struct CreateUsernameView: View {
           .background(Color(.systemBlue))
           .cornerRadius(8)
       }
+      .disabled(!formIsValid)
+      .opacity(formIsValid ? 1.0 : 0.5)
       .padding(.vertical)
       
       Spacer()
@@ -66,6 +68,12 @@ struct CreateUsernameView: View {
       }
     }
   }
+}
+
+extension CreateUsernameView {
+    var formIsValid: Bool {
+      return viewModel.username.count > 3
+    }
 }
 
 #Preview {

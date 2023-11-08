@@ -48,6 +48,8 @@ struct AddEmailView: View {
           .background(Color(.systemBlue))
           .cornerRadius(8)
       }
+      .disabled(!formIsValid)
+      .opacity(formIsValid ? 1.0 : 0.5)
       .padding(.vertical)
       
       Spacer()
@@ -66,6 +68,14 @@ struct AddEmailView: View {
       }
     }
   }
+}
+
+extension AddEmailView {
+    var formIsValid: Bool {
+        return !viewModel.email.isEmpty
+        && viewModel.email.contains("@")
+        && viewModel.email.contains(".")
+    }
 }
 
 #Preview {
