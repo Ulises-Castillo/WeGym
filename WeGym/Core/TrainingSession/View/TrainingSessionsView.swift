@@ -42,7 +42,7 @@ struct TrainingSessionsView: View {
           }
         } label: {
           if let session = viewModel.currentUserTrainingSesssion {
-            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
+            TrainingSessionCell(trainingSession: session)
           } else if !TrainingSessionService.hasBeenFetched(date: viewModel.day) {
             ProgressView()
               .scaleEffect(1, anchor: .center)
@@ -62,7 +62,7 @@ struct TrainingSessionsView: View {
         ReorderableForEach(items: viewModel.trainingSessions) { session in
 
           NavigationLink(value: TrainingSessionsNavigation.profile(session.user!)) {
-            TrainingSessionCell(trainingSession: session, shouldShowTime: viewModel.shouldShowTime)
+            TrainingSessionCell(trainingSession: session)
               .padding(.vertical, 12)
           }.disabled(session.user == nil)
 
@@ -178,7 +178,7 @@ struct TrainingSessionsView: View {
 //        print("***** Timer fired !!")
         let (date, setTmr) = viewModel.defaultDay()
 
-        withAnimation(.easeIn(duration: 0.5)) {
+        withAnimation(.default) {
           selectedDate = date
           viewModel.day = selectedDate
         }

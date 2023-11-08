@@ -106,7 +106,7 @@ struct TrainingSessionService {
     return trainingSessions
   }
 
-  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?, likes: Int) async throws {
+  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool) async throws {
 
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let postRef = FirestoreConstants.TrainingSessionsCollection.document()
@@ -117,7 +117,8 @@ struct TrainingSessionService {
                                           focus: focus,
                                           location: location,
                                           caption: caption,
-                                          likes: likes)
+                                          likes: likes,
+                                          shouldShowTime: shouldShowTime)
 
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await postRef.setData(encodedTrainingSession)
@@ -125,8 +126,9 @@ struct TrainingSessionService {
 
   static func updateTrainingSession(trainingSession: TrainingSession) async throws {
 
-    guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
-    try await FirestoreConstants.TrainingSessionsCollection.document(trainingSession.id).setData(encodedTrainingSession)
+    var session = trainingSession; session.user = nil // no need to store possibly soon-to-be-stale user info
+    guard let encodedTrainingSession = try? Firestore.Encoder().encode(session) else { return }
+    try await FirestoreConstants.TrainingSessionsCollection.document(session.id).setData(encodedTrainingSession)
   }
 
   static func deleteTrainingSession(withId id: String) async throws {

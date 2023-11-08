@@ -13,12 +13,10 @@ struct TrainingSessionCell: View {
   let trainingSession: TrainingSession
 
   init(trainingSession: TrainingSession,
-       shouldShowTime: Bool,
        showLikes: Bool = false,
        showComments: Bool = false,
        commentsViewMode: Bool = false,
        notificationCellMode: Bool = false) {
-    self.shouldShowTime = shouldShowTime
     self.trainingSession = trainingSession
 
     self._showLikes = State(initialValue: showLikes)
@@ -41,7 +39,6 @@ struct TrainingSessionCell: View {
     return viewModel.commentsCountCache[trainingSession.id, default: 0]
   }
 
-  let shouldShowTime: Bool
   @StateObject var userService = UserService.shared
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
@@ -88,7 +85,7 @@ struct TrainingSessionCell: View {
       .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
 
       HStack {
-        if shouldShowTime {
+        if trainingSession.shouldShowTime {
           // TrainingSession time
           let date = trainingSession.date.dateValue()
           Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())

@@ -49,11 +49,10 @@ struct NotificationCell: View {
         if let trainingSession = notification.trainingSession {
           NavigationLink{
             TrainingSessionCell(trainingSession: trainingSession,
-                                shouldShowTime: true,
                                 showLikes: notification.type == .like,
                                 showComments: notification.type == .comment,
                                 commentsViewMode: notification.type == .comment,
-                                notificationCellMode: true) // deal with should show time
+                                notificationCellMode: true)
               .padding(.top, 13)
             Spacer()
               .navigationTitle(relativeDay(trainingSession.date.dateValue()))

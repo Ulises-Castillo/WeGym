@@ -84,7 +84,7 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
   }
 
   @MainActor
@@ -97,7 +97,7 @@ class TrainingSessionViewModel: ObservableObject {
     return userID + "\(date.noon)"
   }
 
-  @Published var shouldShowTime = true
+//  @Published var shouldShowTime = true //TODO: replace properly
 
   var isFirstFetch = [Date: Bool]() //TODO: improve to account for the fact this is only being set when a training session IS scheduled for a certain date. In other words, Rest day cells will still take a sec to load (show spinner) because nothing was returned for those days.
 
