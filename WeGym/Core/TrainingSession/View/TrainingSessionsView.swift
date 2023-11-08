@@ -36,27 +36,29 @@ struct TrainingSessionsView: View {
 
       ScrollView(.vertical, showsIndicators: false) {
 
-        Button {
-          if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
-            showingEditSheet.toggle()
+        if !TrainingSessionService.hasBeenFetched(date: viewModel.day) {
+          ProgressView()
+            .scaleEffect(1, anchor: .center)
+            .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+            .padding(.top, 15)
+            .frame(width: 50)
+        } else {
+          Button {
+            if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
+              showingEditSheet.toggle()
+            }
+          } label: {
+            if let session = viewModel.currentUserTrainingSesssion {
+              TrainingSessionCell(trainingSession: session)
+            } else if let user = UserService.shared.currentUser {
+              RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
+            }
           }
-        } label: {
-          if let session = viewModel.currentUserTrainingSesssion {
-            TrainingSessionCell(trainingSession: session)
-          } else if !TrainingSessionService.hasBeenFetched(date: viewModel.day) {
-            ProgressView()
-              .scaleEffect(1, anchor: .center)
-              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
-              .padding(.top, 15)
-              .frame(width: 50)
-          } else if let user = UserService.shared.currentUser {
-            RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
+          .padding(.top, 12)
+          .padding(.bottom, 15)
+          .sheet(isPresented: $showingEditSheet) {
+            TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
           }
-        }
-        .padding(.top, 12)
-        .padding(.bottom, 15)
-        .sheet(isPresented: $showingEditSheet) {
-          TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
         }
 
         ReorderableForEach(items: viewModel.trainingSessions) { session in
