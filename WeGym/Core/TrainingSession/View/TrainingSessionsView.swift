@@ -199,9 +199,6 @@ struct TrainingSessionsView: View {
           .presentationDragIndicator(.visible)
       }
     }
-    .task { //TODO: cache traing sessions also
-      await UserService.shared.updateCache() //TODO: use userservice cache across the app
-    }
     .onNotification { userInfo in
       shouldSetDateOnAppear = false
       defaultDayTimer?.invalidate() //TODO: test notification behavior with new timer

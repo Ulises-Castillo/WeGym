@@ -14,24 +14,6 @@ class UserService: ObservableObject {
   static let shared = UserService()
   @Published var currentUser: User?
   @Published var profileImage: UIImage?
-  @Published var cache = [String : User]()
-
-  @MainActor
-  func updateCache() async {
-    guard let currentUid = Auth.auth().currentUser?.uid else { return }
-    let query = FirestoreConstants.UserCollection
-
-    do {
-      let snapshot = try await query.getDocuments()
-      let users = mapUsers(fromSnapshot: snapshot)
-
-      for user in users {
-        cache[user.id] = user
-      }
-      } catch {
-        print("*** \(error)")
-      }
-  }
 
   private func mapUsers(fromSnapshot snapshot: QuerySnapshot) -> [User] {
     return snapshot.documents

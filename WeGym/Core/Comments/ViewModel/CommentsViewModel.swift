@@ -23,7 +23,13 @@ class CommentsViewModel: ObservableObject {
   func observeComments() {
     service.observeComments { [weak self] comments in
       guard let self = self else { return }
-      self.comments.insert(contentsOf: comments, at: 0)
+      var comments = comments
+      Task {
+        for i in 0..<comments.count {
+          comments[i].user = try await UserService.fetchUser(withUid: comments[i].commentOwnerUid)
+        }
+        self.comments.insert(contentsOf: comments, at: 0)
+      }
     }
   }
 

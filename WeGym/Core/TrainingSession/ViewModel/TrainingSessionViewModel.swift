@@ -112,12 +112,14 @@ class TrainingSessionViewModel: ObservableObject {
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
       }
 
-      for session in trainingSessions {
-        var session = session
-        session.user = UserService.shared.cache[session.ownerUid] //TODO: remove cache, try regular fetch and see if any difference
-        trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = session
+      Task {
+        for session in trainingSessions {
+          var session = session
+          session.user = try await UserService.fetchUser(withUid: session.ownerUid)
+          self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session
+        }
+        self.isFirstFetch[self.day.noon] = false
       }
-      isFirstFetch[day.noon] = false
     }
   }
 
