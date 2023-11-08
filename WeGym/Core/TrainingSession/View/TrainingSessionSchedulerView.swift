@@ -53,7 +53,7 @@ struct TrainingSessionSchedulerView: View {
 
           DatePicker("",
                      selection: $workoutTime,
-                     in: Date()...,
+//                     in: Date()..., // Don't restrict user date selection
                      displayedComponents: .hourAndMinute)
           .padding()
           .font(.headline)
