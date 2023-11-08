@@ -93,10 +93,15 @@ struct ChatView: View {
       }
 
     }
-//    .onAppear {
-//      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
-//        let value = notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-//        let height = value.height
+    .onAppear {
+      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { notification in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          withAnimation(.spring()) {
+            self.proxy?.scrollTo("thwartKeyboard", anchor: .bottom)
+          }
+        }
+      }
+    }
 //
 ////        self.value = height
 //        viewModel.messages = viewModel.messages
