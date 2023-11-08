@@ -10,7 +10,8 @@ import SwiftUI
 struct AddEmailView: View {
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: RegistrationViewModel
-  
+  @FocusState var inputFocused: Bool
+
   var body: some View {
     VStack(spacing: 12) {
       Text("Add your email")
@@ -26,11 +27,15 @@ struct AddEmailView: View {
         .padding(.top, 1)
       
       TextField("Email", text: $viewModel.email)
+        .keyboardType(.asciiCapable)
+        .textContentType(.oneTimeCode)
+        .disableAutocorrection(true)
         .autocapitalization(.none)
-        .autocorrectionDisabled()
+        .autocorrectionDisabled(true)
         .modifier(WGTextFieldModifier())
         .padding(.top)
-      
+        .focused($inputFocused)
+
       NavigationLink {
         CreateUsernameView()
           .navigationBarBackButtonHidden()
@@ -46,6 +51,9 @@ struct AddEmailView: View {
       .padding(.vertical)
       
       Spacer()
+    }
+    .onAppear {
+      inputFocused = true
     }
     .toolbar {
       ToolbarItem(placement: .navigationBarLeading) {
