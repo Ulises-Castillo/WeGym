@@ -44,16 +44,14 @@ struct TrainingSessionsView: View {
             .frame(width: 50)
         } else {
           Button {
-            if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
               showingEditSheet.toggle()
-            }
           } label: {
             if let session = viewModel.currentUserTrainingSesssion {
               TrainingSessionCell(trainingSession: session)
             } else if let user = UserService.shared.currentUser {
               RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
             }
-          }
+          }.disabled(viewModel.day.timeIntervalSince1970 < Date.now.startOfDay.timeIntervalSince1970)
           .padding(.top, 12)
           .padding(.bottom, 15)
           .sheet(isPresented: $showingEditSheet) {
