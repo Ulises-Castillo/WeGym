@@ -114,7 +114,7 @@ class TrainingSessionViewModel: ObservableObject {
 
       for session in trainingSessions {
         var session = session
-        session.user = UserService.shared.cache[session.ownerUid]
+        session.user = UserService.shared.cache[session.ownerUid] //TODO: remove cache, try regular fetch and see if any difference
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = session
       }
       isFirstFetch[day.noon] = false
