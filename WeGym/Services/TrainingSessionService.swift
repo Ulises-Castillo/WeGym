@@ -23,6 +23,16 @@ struct TrainingSessionService {
     return false
   }
 
+  static var start: Timestamp?
+  static var end: Timestamp?
+
+  static func updateHasBeenFetched() {
+    guard let start = start, let end = end else { return }
+    fetchedDates.append(start.dateValue()...end.dateValue())
+    self.start = nil
+    self.end = nil
+  }
+
   static private var firestoreListener: ListenerRegistration?
 
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
@@ -39,13 +49,13 @@ struct TrainingSessionService {
     guard let prevWeek = Calendar.current.date(byAdding: .day, value: -7, to: date),
           let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: date) else { return }
 
-    let start = Timestamp(date: prevWeek.startOfDay)
-    let end = Timestamp(date: nextWeek.endOfDay)
+    start = Timestamp(date: prevWeek.startOfDay)
+    end = Timestamp(date: nextWeek.endOfDay)
 
     let query = FirestoreConstants.TrainingSessionsCollection
       .whereField("ownerUid", in: userFollowingIds)
-      .whereField("date", isGreaterThan: start)
-      .whereField("date", isLessThan: end)
+      .whereField("date", isGreaterThan: start!)
+      .whereField("date", isLessThan: end!)
       .order(by: "date", descending: false) //TODO: add user-selected ordering field (?)
 
     self.firestoreListener = query.addSnapshotListener { snapshot, _ in
@@ -68,9 +78,6 @@ struct TrainingSessionService {
       }
 
       completion(trainingSessions, removedTrainingSessions)
-
-      fetchedDates.append(start.dateValue()...end.dateValue())
-//      print("**** fetchedDates: \(fetchedDates)")
     }
   }
 

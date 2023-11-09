@@ -97,10 +97,6 @@ class TrainingSessionViewModel: ObservableObject {
     return userID + "\(date.noon)"
   }
 
-//  @Published var shouldShowTime = true //TODO: replace properly
-
-  var isFirstFetch = [Date: Bool]() //TODO: improve to account for the fact this is only being set when a training session IS scheduled for a certain date. In other words, Rest day cells will still take a sec to load (show spinner) because nothing was returned for those days.
-
   @MainActor
   func observeTrainingSessions() async throws {
     try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] (trainingSessions, removedTrainingSessions) in
@@ -118,7 +114,7 @@ class TrainingSessionViewModel: ObservableObject {
           session.user = try await UserService.fetchUser(withUid: session.ownerUid)
           self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session
         }
-        self.isFirstFetch[self.day.noon] = false
+        TrainingSessionService.updateHasBeenFetched()
       }
     }
   }
