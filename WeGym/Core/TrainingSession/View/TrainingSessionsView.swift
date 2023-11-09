@@ -21,6 +21,7 @@ struct TrainingSessionsView: View {
   @State private var showComments = false
   @State private var trainingSession: TrainingSession?
   @State private var defaultDayTimer: Timer?
+  @State private var isAnimationForward = true
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
@@ -41,38 +42,39 @@ struct TrainingSessionsView: View {
             .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
             .padding(.top, 15)
             .frame(width: 50)
-        } else {
+        }
+        
+        ReorderableForEach(items: viewModel.trainingSessions) { session in
           Button {
-            defaultDayTimer?.invalidate()
-            showingEditSheet.toggle()
-          } label: {
-            if let session = viewModel.currentUserTrainingSesssion {
-              TrainingSessionCell(trainingSession: session)
-            } else if let user = UserService.shared.currentUser {
-              RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
-            }
-          }.disabled(viewModel.day.timeIntervalSince1970 < Date.now.startOfDay.timeIntervalSince1970)
-            .padding(.top, 12)
-            .padding(.bottom, 15)
-            .sheet(isPresented: $showingEditSheet) {
-              if let user = UserService.shared.currentUser {
-                TrainingSessionSchedulerView(user: user) //TODO: test change
+            if let user = session.user {
+              defaultDayTimer?.invalidate()
+
+              if user.isCurrentUser {
+                showingEditSheet.toggle()
+              } else {
+                path.append(.profile(user))
               }
             }
-            .transition(AnyTransition.backslide.animation(.easeIn))
-        }
-
-        ReorderableForEach(items: viewModel.trainingSessions) { session in
-
-          NavigationLink(value: TrainingSessionsNavigation.profile(session.user!)) {
-            TrainingSessionCell(trainingSession: session)
-              .padding(.vertical, 12)
-          }.disabled(session.user == nil)
-
+          } label: {
+            if session.id == "rest_day", let user = UserService.shared.currentUser {
+              if TrainingSessionService.hasBeenFetched(date: viewModel.day) {
+                RestDayCell(user: user)
+              }
+            } else {
+              TrainingSessionCell(trainingSession: session)
+                .padding(.vertical, 12)
+            }
+          }
+          .sheet(isPresented: $showingEditSheet) {
+            if let user = UserService.shared.currentUser {
+              TrainingSessionSchedulerView(user: user) //TODO: test change
+            }
+          }
         } moveAction: { from, to in
           viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
           viewModel.setUserFollowingOrder()
-        }.transition(AnyTransition.backslide.animation(.easeIn))
+        }
+          .transition(AnyTransition.asymmetric(insertion: AnyTransition.move(edge: isAnimationForward ? .trailing : .leading), removal: AnyTransition.move(edge: isAnimationForward ? .leading : .trailing)))
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
         switch screen {
@@ -124,12 +126,18 @@ struct TrainingSessionsView: View {
         switch(value.translation.width, value.translation.height) {
         case (...0, -60...60):
           defaultDayTimer?.invalidate()
-          viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
-          selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
+          isAnimationForward = true
+          withAnimation(.interactiveSpring(duration: 0.5)) {
+            viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
+            selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
+          }
         case (0..., -60...60):
           defaultDayTimer?.invalidate()
-          viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
-          selectedDate = selectedDate.addingTimeInterval(-86400)
+          isAnimationForward = false
+          withAnimation(.interactiveSpring(duration: 0.5)) {
+            viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
+            selectedDate = selectedDate.addingTimeInterval(-86400)
+          }
         default:
           break
         }

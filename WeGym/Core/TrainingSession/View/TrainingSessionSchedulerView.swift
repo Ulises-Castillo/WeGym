@@ -61,7 +61,8 @@ struct TrainingSessionSchedulerView: View {
           .fontWeight(.medium)
           .onTapGesture {
             timeTapped = true
-            viewModel.currentUserTrainingSesssion?.shouldShowTime = true
+            guard let currentUserId = UserService.shared.currentUser?.id else { return }
+            viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
           }
 
           // set gym / workout location

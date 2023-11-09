@@ -5,7 +5,7 @@
 //  Created by Ulises Castillo on 10/17/23.
 //
 
-import Foundation
+import Firebase
 
 
 class TrainingSessionViewModel: ObservableObject {
@@ -23,14 +23,18 @@ class TrainingSessionViewModel: ObservableObject {
     }
   }
 
-  @Published var currentUserTrainingSesssion: TrainingSession?
+  var currentUserTrainingSesssion: TrainingSession? {
+    guard let currentUserId = UserService.shared.currentUser?.id else { return nil }
+    return trainingSessionsCache[key(currentUserId, day)]
+  }
+
   @Published var trainingSessions = [TrainingSession]()
 
   var userfollowingOrderLocal: [String]?
 
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
     guard let currentUserId = UserService.shared.currentUser?.id else { return }
-    currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
+    let currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
 
     trainingSessions.removeAll()
 
@@ -61,6 +65,13 @@ class TrainingSessionViewModel: ObservableObject {
         guard session.date.dateValue().noon == day.noon else { continue }
         trainingSessions.append(session)
       }
+    }
+
+    if let currentUserTrainingSesssion = currentUserTrainingSesssion {
+      trainingSessions.insert(currentUserTrainingSesssion, at: 0)
+    } else {
+      let dummy = TrainingSession(id: "rest_day", ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      trainingSessions.insert(dummy, at: 0)
     }
 
     Task {
