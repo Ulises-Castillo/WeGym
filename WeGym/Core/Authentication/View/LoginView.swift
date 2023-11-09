@@ -8,24 +8,26 @@
 import SwiftUI
 
 struct LoginView: View {
-  
+
   @StateObject var viewModel = LoginViewModel()
   @AppStorage("USER_EMAIL") var savedEmail = ""
+  @FocusState var isPasswordInputFocused: Bool
 
   var body: some View {
     NavigationStack {
       VStack {
         Spacer()
-        
+
         // logo image
         Text("WeGym") //TODO: ask Jeff for logo image
           .font(.system(size: 66))
-        
+
         // text fields
         VStack {
           TextField("Enter your email", text: $viewModel.email)
             .autocapitalization(.none)
             .modifier(WGTextFieldModifier())
+            .clearButton(text: $viewModel.email)
             .onChange(of: viewModel.email) { email in
               self.savedEmail = email
             }
@@ -34,9 +36,11 @@ struct LoginView: View {
             }
 
           SecureField("Enter your password", text: $viewModel.password)
+            .focused($isPasswordInputFocused)
             .modifier(WGTextFieldModifier())
+            .clearButton(text: $viewModel.password)
         }
-        
+
         Button {
           print("Show forgot password")
         } label: {
@@ -45,10 +49,10 @@ struct LoginView: View {
             .fontWeight(.semibold)
             .padding(.top)
             .padding(.trailing, 28)
-          
+
         }
         .frame(maxWidth: .infinity, alignment: .trailing)
-        
+
         Button {
           Task { try await viewModel.signIn() }
         } label: {
@@ -61,11 +65,11 @@ struct LoginView: View {
             .cornerRadius(8)
         }
         .padding(.vertical)
-        
+
         Spacer()
-        
+
         Divider()
-        
+
         NavigationLink {
           AddEmailView()
             .navigationBarBackButtonHidden()
@@ -80,6 +84,39 @@ struct LoginView: View {
         .padding(.vertical, 16)
       }
     }
+    .onAppear {
+      if savedEmail.contains("@") && savedEmail.contains(".") {
+        isPasswordInputFocused = true
+      }
+    }
+  }
+}
+
+struct ClearButton: ViewModifier {
+  @Binding var text: String
+
+  func body(content: Content) -> some View {
+    ZStack(alignment: .trailing) {
+      content
+
+      if !text.isEmpty {
+        Button {
+          text = ""
+        } label: {
+          Image(systemName: "multiply.circle.fill")
+            .resizable()
+            .frame(width: 18, height: 18)
+            .foregroundStyle(.gray)
+        }
+        .padding(.trailing, UIScreen.main.bounds.width / 11)
+      }
+    }
+  }
+}
+
+extension View {
+  func clearButton(text: Binding<String>) -> some View {
+    modifier(ClearButton(text: text))
   }
 }
 
