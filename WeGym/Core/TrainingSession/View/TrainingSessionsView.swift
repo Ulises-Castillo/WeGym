@@ -56,15 +56,16 @@ struct TrainingSessionsView: View {
               }
             }
           } label: {
-            if session.id == "rest_day", let user = UserService.shared.currentUser {
+            if session.id == dummyId, let user = UserService.shared.currentUser {
               if TrainingSessionService.hasBeenFetched(date: viewModel.day) {
                 RestDayCell(user: user)
               }
             } else {
               TrainingSessionCell(trainingSession: session)
-                .padding(.vertical, 12)
             }
           }
+          .padding(.vertical, 12)
+          .disabled(viewModel.day.timeIntervalSince1970 < Date.now.startOfDay.timeIntervalSince1970)
           .sheet(isPresented: $showingEditSheet) {
             if let user = UserService.shared.currentUser {
               TrainingSessionSchedulerView(user: user) //TODO: test change

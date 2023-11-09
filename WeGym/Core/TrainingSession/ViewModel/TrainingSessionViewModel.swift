@@ -33,8 +33,8 @@ class TrainingSessionViewModel: ObservableObject {
   var userfollowingOrderLocal: [String]?
 
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
-    guard let currentUserId = UserService.shared.currentUser?.id else { return }
-    let currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
+    guard let currentUser = UserService.shared.currentUser else { return }
+    let currentUserTrainingSesssion = trainingSessionsCache[key(currentUser.id, day)]
 
     trainingSessions.removeAll()
 
@@ -42,7 +42,7 @@ class TrainingSessionViewModel: ObservableObject {
 
     if let order = order {
       //TODO: ensure we are recieving orer from the backend
-      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId && $0.date.dateValue().noon == day.noon })
+      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUser.id && $0.date.dateValue().noon == day.noon })
 
       for uid in order {
         for session in followingTrainingSessions {
@@ -61,7 +61,7 @@ class TrainingSessionViewModel: ObservableObject {
       }
 
     } else {
-      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId }) {
+      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUser.id }) {
         guard session.date.dateValue().noon == day.noon else { continue }
         trainingSessions.append(session)
       }
@@ -70,7 +70,8 @@ class TrainingSessionViewModel: ObservableObject {
     if let currentUserTrainingSesssion = currentUserTrainingSesssion {
       trainingSessions.insert(currentUserTrainingSesssion, at: 0)
     } else {
-      let dummy = TrainingSession(id: "rest_day", ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      dummy.user = currentUser
       trainingSessions.insert(dummy, at: 0)
     }
 

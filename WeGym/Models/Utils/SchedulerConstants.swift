@@ -67,3 +67,5 @@ struct SchedulerConstants {
     ],
   ]
 }
+
+let dummyId = "rest_day"
