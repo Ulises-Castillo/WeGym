@@ -55,11 +55,13 @@ struct TrainingSessionsView: View {
         
         ReorderableForEach(items: viewModel.trainingSessions) { session in
           Button {
-            if let user = session.user {
-              defaultDayTimer?.invalidate()
+            defaultDayTimer?.invalidate()
 
+            if let user = session.user {
               if user.isCurrentUser {
-                showingEditSheet.toggle()
+                if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
+                  showingEditSheet.toggle()
+                }
               } else {
                 path.append(.profile(user))
               }
@@ -74,7 +76,6 @@ struct TrainingSessionsView: View {
             }
           }
           .padding(.vertical, 12)
-          .disabled(viewModel.day.timeIntervalSince1970 < Date.now.startOfDay.timeIntervalSince1970)
           .sheet(isPresented: $showingEditSheet) {
             if let user = UserService.shared.currentUser {
               TrainingSessionSchedulerView(user: user) //TODO: test change
@@ -215,14 +216,12 @@ struct TrainingSessionsView: View {
         Task {
           trainingSession = try await TrainingSessionService.fetchUserTrainingSession(uid: uid) //TODO: cache training sessions to get instantly // This is FAILING sometimes WACK !
           AppNavigation.shared.showCommentsTrainingSessionID = trainingSession?.id
-          selectedDate = trainingSession?.date.dateValue() ?? Date() //training session date retrieved manually
-          viewModel.day = selectedDate
+          animateDayChange(newDate: trainingSession?.date.dateValue() ?? Date(), duration: 0.39)
           showComments = true //TODO: should also scrollo to TrainingSession ID (scrollreader ?)
-        } //TODO: try using animateDayChange with push notifications
+        }
       default:
         guard let dateString = userInfo["date"] as? String else { return }
-        selectedDate = dateString.parsedDate() ?? Date() //training session date passed from like notification
-        viewModel.day = selectedDate
+        animateDayChange(newDate: dateString.parsedDate() ?? Date(), duration: 0.39)
       }
 
     }
