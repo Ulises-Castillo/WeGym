@@ -30,6 +30,15 @@ struct TrainingSessionsView: View {
     self._path = path
   }
 
+  func animateDayChange(newDate: Date, duration: CGFloat) {
+    isAnimationForward = newDate.timeIntervalSince1970 > viewModel.day.timeIntervalSince1970
+
+    withAnimation(.interactiveSpring(duration: duration)) {
+      selectedDate = newDate
+      viewModel.day = selectedDate
+    }
+  }
+
   var body: some View {
 
     NavigationStack(path: $path) {
@@ -75,8 +84,7 @@ struct TrainingSessionsView: View {
           guard from != IndexSet(integer: 0), to != 0 else { return } // prevent Current User cell from being re-ordered
           viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
           viewModel.setUserFollowingOrder()
-        }
-          .transition(AnyTransition.asymmetric(insertion: AnyTransition.move(edge: isAnimationForward ? .trailing : .leading), removal: AnyTransition.move(edge: isAnimationForward ? .leading : .trailing)))
+        }.transition(.asymmetric(insertion: .move(edge: isAnimationForward ? .trailing : .leading), removal: .move(edge: isAnimationForward ? .leading : .trailing)))
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
         switch screen {
@@ -93,8 +101,7 @@ struct TrainingSessionsView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             defaultDayTimer?.invalidate()
-            viewModel.day = viewModel.day.addingTimeInterval(86400)
-            selectedDate = selectedDate.addingTimeInterval(86400)
+            animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
           } label: {
             Image(systemName: "arrow.forward.square")
               .foregroundColor(Color(.systemBlue))
@@ -103,6 +110,7 @@ struct TrainingSessionsView: View {
         }
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
+            defaultDayTimer?.invalidate()
             showingDateSheet.toggle()
           } label: {
             Image(systemName: "calendar")
@@ -112,8 +120,7 @@ struct TrainingSessionsView: View {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
               .onChange(of: selectedDate) { _ in
                 showingDateSheet.toggle()
-                defaultDayTimer?.invalidate() //TODO: test behavior with new timer
-                viewModel.day = selectedDate
+                animateDayChange(newDate: selectedDate, duration: 0.39)
               }
               .datePickerStyle(.graphical)
               .presentationDetents([.medium])
@@ -124,22 +131,12 @@ struct TrainingSessionsView: View {
     }
     .gesture(DragGesture(minimumDistance: 1.5, coordinateSpace: .local)
       .onEnded { value in
-        print(value.translation)
+        defaultDayTimer?.invalidate()
         switch(value.translation.width, value.translation.height) {
         case (...0, -60...60):
-          defaultDayTimer?.invalidate()
-          isAnimationForward = true
-          withAnimation(.interactiveSpring(duration: 0.5)) {
-            viewModel.day = viewModel.day.addingTimeInterval(86400) //TODO: put this all in the viewModel
-            selectedDate = selectedDate.addingTimeInterval(86400)   // too much dup
-          }
+          animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
         case (0..., -60...60):
-          defaultDayTimer?.invalidate()
-          isAnimationForward = false
-          withAnimation(.interactiveSpring(duration: 0.5)) {
-            viewModel.day = viewModel.day.addingTimeInterval(-86400) //TODO: move to constant file
-            selectedDate = selectedDate.addingTimeInterval(-86400)
-          }
+          animateDayChange(newDate: viewModel.day.addingTimeInterval(-86400), duration: 0.39)
         default:
           break
         }
@@ -152,16 +149,14 @@ struct TrainingSessionsView: View {
       }
       if newPhase == .active {
         let (date, _) = viewModel.defaultDay()
-        selectedDate = date
-        viewModel.day = selectedDate
+        animateDayChange(newDate: date, duration: 0.39)
       }
     }
     .onChange(of: showToday) { newValue in
       if showToday {
         showToday = false
         let (date, _) = viewModel.defaultDay()
-        selectedDate = date
-        viewModel.day = selectedDate
+        animateDayChange(newDate: date, duration: 0.39)
       }
     }
     .onChange(of: showComments) { newValue in
@@ -191,10 +186,7 @@ struct TrainingSessionsView: View {
       defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { timer in
         let (date, setTmr) = viewModel.defaultDay()
 
-        withAnimation(.interactiveSpring(duration: 1.5)) {
-          selectedDate = date
-          viewModel.day = selectedDate
-        }
+        animateDayChange(newDate: date, duration: 1.5)
 
         if setTmr || TrainingSessionService.hasBeenFetched(date: Date()) {
           timer.invalidate()
@@ -226,7 +218,7 @@ struct TrainingSessionsView: View {
           selectedDate = trainingSession?.date.dateValue() ?? Date() //training session date retrieved manually
           viewModel.day = selectedDate
           showComments = true //TODO: should also scrollo to TrainingSession ID (scrollreader ?)
-        }
+        } //TODO: try using animateDayChange with push notifications
       default:
         guard let dateString = userInfo["date"] as? String else { return }
         selectedDate = dateString.parsedDate() ?? Date() //training session date passed from like notification
