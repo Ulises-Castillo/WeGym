@@ -72,6 +72,7 @@ struct TrainingSessionsView: View {
             }
           }
         } moveAction: { from, to in
+          guard from != IndexSet(integer: 0), to != 0 else { return } // prevent Current User cell from being re-ordered
           viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
           viewModel.setUserFollowingOrder()
         }
