@@ -20,6 +20,7 @@ struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   //  var broLimit: Int?  //TODO: not part of MVP
   //  var weekly: Bool = false
   var didLike: Bool? = false
+  var shouldShowTime: Bool = false
 }
 
 /*

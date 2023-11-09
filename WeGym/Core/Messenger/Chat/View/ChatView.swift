@@ -50,26 +50,28 @@ struct ChatView: View {
               .id(viewModel.messages[index].id)
             }
           }
-          .padding(.vertical).id("thwartKeyboard")
+          .padding(.bottom).id("thwartKeyboard")
         }
         .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.messages) { newValue in
-          guard  let lastMessage = newValue.last else { return }
           self.proxy = proxy
 
           if isFirstLoad {
             isFirstLoad = false
-            proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+            proxy.scrollTo("thwartKeyboard") //Bug: tapping above nav bar to scrollToTop causes jitter, no scrollToTop
+//            withAnimation(.linear(duration: 0.000001)) { //FIX: for some reason using withAnimation prevent bug: tapping above nav bar to scroll to top
+//              proxy.scrollTo("thwartKeyboard")  // likely this issue would be fixed by caching messages locally //TODO: try and have Firestore return these from cache
+//            }
             return
           }
 
           withAnimation(.spring()) {
-            proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+            proxy.scrollTo("thwartKeyboard")
           }
 
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { //TODO: remove hacky code
             withAnimation(.spring()) {
-              proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+              proxy.scrollTo("thwartKeyboard")
             }
           }
         }
@@ -79,13 +81,13 @@ struct ChatView: View {
             inputFocused = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
               withAnimation(.spring()) {
-                proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+                proxy.scrollTo("thwartKeyboard")
               }
             }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
               withAnimation(.spring()) {
-                proxy.scrollTo("thwartKeyboard", anchor: .bottom)
+                proxy.scrollTo("thwartKeyboard")
               }
             }
           }
@@ -93,10 +95,15 @@ struct ChatView: View {
       }
 
     }
-//    .onAppear {
-//      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
-//        let value = notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-//        let height = value.height
+    .onAppear {
+      NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { notification in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+          withAnimation(.spring()) {
+            self.proxy?.scrollTo("thwartKeyboard")
+          }
+        }
+      }
+    }
 //
 ////        self.value = height
 //        viewModel.messages = viewModel.messages

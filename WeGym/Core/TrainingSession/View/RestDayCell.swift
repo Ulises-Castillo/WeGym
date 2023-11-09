@@ -32,7 +32,7 @@ struct RestDayCell: View {
       Text("Rest Day 😞")
         .font(.largeTitle)
         .padding(.bottom, 6)
-      if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
+      if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 { //FIXME: this pops in towards the end of the swipe animation due to `viewModel.day` moving forward, use state bool on viewModel to indicate animation in progress (but then cells the legitimately need the button might be affected)
         HStack {
           Image(systemName: "plus")
           Text("Add Workout")

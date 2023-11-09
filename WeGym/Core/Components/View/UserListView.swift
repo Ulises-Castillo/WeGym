@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct UserListView: View {
-  @EnvironmentObject var viewModel: SearchViewModel
-  private let config: SearchViewModelConfig
+  @StateObject var viewModel: SearchViewModel
   @State private var searchText = ""
-  
-  init(config: SearchViewModelConfig) {
-    self.config = config
+
+
+  init(viewModel: SearchViewModel) {
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
   
   var users: [User] {

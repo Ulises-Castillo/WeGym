@@ -5,7 +5,7 @@
 //  Created by Ulises Castillo on 10/17/23.
 //
 
-import Foundation
+import Firebase
 
 
 class TrainingSessionViewModel: ObservableObject {
@@ -23,14 +23,18 @@ class TrainingSessionViewModel: ObservableObject {
     }
   }
 
-  @Published var currentUserTrainingSesssion: TrainingSession?
+  var currentUserTrainingSesssion: TrainingSession? {
+    guard let currentUserId = UserService.shared.currentUser?.id else { return nil }
+    return trainingSessionsCache[key(currentUserId, day)]
+  }
+
   @Published var trainingSessions = [TrainingSession]()
 
   var userfollowingOrderLocal: [String]?
 
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
-    guard let currentUserId = UserService.shared.currentUser?.id else { return }
-    currentUserTrainingSesssion = trainingSessionsCache[key(currentUserId, day)]
+    guard let currentUser = UserService.shared.currentUser else { return }
+    let currentUserTrainingSesssion = trainingSessionsCache[key(currentUser.id, day)]
 
     trainingSessions.removeAll()
 
@@ -38,7 +42,7 @@ class TrainingSessionViewModel: ObservableObject {
 
     if let order = order {
       //TODO: ensure we are recieving orer from the backend
-      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId && $0.date.dateValue().noon == day.noon })
+      let followingTrainingSessions = trainingSessionsCache.values.filter({ $0.ownerUid != currentUser.id && $0.date.dateValue().noon == day.noon })
 
       for uid in order {
         for session in followingTrainingSessions {
@@ -57,10 +61,18 @@ class TrainingSessionViewModel: ObservableObject {
       }
 
     } else {
-      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUserId }) {
+      for session in trainingSessionsCache.values.filter({ $0.ownerUid != currentUser.id }) {
         guard session.date.dateValue().noon == day.noon else { continue }
         trainingSessions.append(session)
       }
+    }
+
+    if let currentUserTrainingSesssion = currentUserTrainingSesssion {
+      trainingSessions.insert(currentUserTrainingSesssion, at: 0)
+    } else {
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      dummy.user = currentUser
+      trainingSessions.insert(dummy, at: 0)
     }
 
     Task {
@@ -84,7 +96,7 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
   }
 
   @MainActor
@@ -97,10 +109,6 @@ class TrainingSessionViewModel: ObservableObject {
     return userID + "\(date.noon)"
   }
 
-  @Published var shouldShowTime = true
-
-  var isFirstFetch = [Date: Bool]() //TODO: improve to account for the fact this is only being set when a training session IS scheduled for a certain date. In other words, Rest day cells will still take a sec to load (show spinner) because nothing was returned for those days.
-
   @MainActor
   func observeTrainingSessions() async throws {
     try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] (trainingSessions, removedTrainingSessions) in
@@ -112,12 +120,14 @@ class TrainingSessionViewModel: ObservableObject {
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
       }
 
-      for session in trainingSessions {
-        var session = session
-        session.user = UserService.shared.cache[session.ownerUid]
-        trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = session
+      Task {
+        for session in trainingSessions {
+          var session = session
+          session.user = try await UserService.fetchUser(withUid: session.ownerUid)
+          self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session
+        }
+        TrainingSessionService.updateHasBeenFetched()
       }
-      isFirstFetch[day.noon] = false
     }
   }
 
@@ -128,12 +138,12 @@ class TrainingSessionViewModel: ObservableObject {
   var userFollowingTimer: Timer?
 
   func setUserFollowingOrder() {
-    let newOrder = trainingSessions.map({ $0.ownerUid })
-    userfollowingOrderLocal = newOrder
+    let newOrder = trainingSessions.map({ $0.ownerUid }).dropFirst() // dropping first so as not to include current user
+    userfollowingOrderLocal = Array(newOrder)
 
     userFollowingTimer?.invalidate()
     userFollowingTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { timer in
-      Task { await TrainingSessionService.setUserFollowingOrder(newOrder) }
+      Task { await TrainingSessionService.setUserFollowingOrder(self.userfollowingOrderLocal ?? []) }
     }
   }
 
@@ -188,7 +198,8 @@ class TrainingSessionViewModel: ObservableObject {
 
   func defaultDay() -> (Date, Bool) { //account for session scheduled late at night, say 11pm
     if let user = UserService.shared.currentUser, let currUserSession = trainingSessionsCache[key(user.id, Date())] {
-      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(60*60*2)
+      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(60*60*2)     // uncomment
+//      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(-60*60*6)  // comment TEST ONLY
       if Date().timeIntervalSince1970 > workoutEnd.timeIntervalSince1970 {
         return (currUserSession.date.dateValue().addingTimeInterval(60*60*24).noon, true)
       }

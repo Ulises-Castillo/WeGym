@@ -56,7 +56,14 @@ struct MessagesView: View {
           ChatView(user: user)
         }
       }
-      .overlay { if !viewModel.didCompleteInitialLoad { ProgressView() } }
+      .overlay { 
+        if !viewModel.didCompleteInitialLoad {
+          ProgressView()
+        } else if viewModel.recentMessages.isEmpty {
+          Text("No messages yet")
+            .foregroundColor(.secondary)
+        }
+      }
       .navigationTitle("Messages")
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {

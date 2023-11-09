@@ -13,7 +13,7 @@ struct CommentCell: View {
   @StateObject var userService = UserService.shared
 
   private var user: User? {
-    return userService.cache[comment.commentOwnerUid]
+    return comment.user
   }
 
   var body: some View {

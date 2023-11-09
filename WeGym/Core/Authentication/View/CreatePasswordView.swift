@@ -11,7 +11,8 @@ struct CreatePasswordView: View {
   
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: RegistrationViewModel
-  
+  @FocusState var inputFocused: Bool
+
   var body: some View {
     VStack(spacing: 12) {
       Text("Create a password")
@@ -25,12 +26,13 @@ struct CreatePasswordView: View {
         .multilineTextAlignment(.center)
         .padding(.horizontal, 24)
         .padding(.top, 1)
-      
+
       SecureField("Password", text: $viewModel.password)
         .autocapitalization(.none)
         .modifier(WGTextFieldModifier())
         .padding(.top)
-      
+        .focused($inputFocused)
+
       NavigationLink {
         CompleteSignUpView()
           .navigationBarBackButtonHidden()
@@ -43,9 +45,14 @@ struct CreatePasswordView: View {
           .background(Color(.systemBlue))
           .cornerRadius(8)
       }
+      .disabled(!formIsValid)
+      .opacity(formIsValid ? 1.0 : 0.5)
       .padding(.vertical)
       
       Spacer()
+    }
+    .onAppear {
+      inputFocused = true
     }
     .toolbar {
       ToolbarItem(placement: .navigationBarLeading) {
@@ -58,6 +65,12 @@ struct CreatePasswordView: View {
       }
     }
   }
+}
+
+extension CreatePasswordView {
+    var formIsValid: Bool {
+      return viewModel.password.count > 5
+    }
 }
 
 #Preview {

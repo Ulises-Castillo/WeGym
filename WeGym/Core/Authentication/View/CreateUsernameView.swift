@@ -12,7 +12,8 @@ struct CreateUsernameView: View {
   
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: RegistrationViewModel
-  
+  @FocusState var inputFocused: Bool
+
   var body: some View {
     VStack(spacing: 12) {
       Text("Create username")
@@ -28,11 +29,14 @@ struct CreateUsernameView: View {
         .padding(.top, 1)
       
       TextField("Username", text: $viewModel.username)
+        .keyboardType(.alphabet)
+        .textContentType(.oneTimeCode)
         .autocapitalization(.none)
         .modifier(WGTextFieldModifier())
         .padding(.top)
         .autocorrectionDisabled()
-      
+        .focused($inputFocused)
+
       NavigationLink {
         CreatePasswordView()
           .navigationBarBackButtonHidden()
@@ -45,9 +49,14 @@ struct CreateUsernameView: View {
           .background(Color(.systemBlue))
           .cornerRadius(8)
       }
+      .disabled(!formIsValid)
+      .opacity(formIsValid ? 1.0 : 0.5)
       .padding(.vertical)
       
       Spacer()
+    }
+    .onAppear {
+      inputFocused = true
     }
     .toolbar {
       ToolbarItem(placement: .navigationBarLeading) {
@@ -59,6 +68,12 @@ struct CreateUsernameView: View {
       }
     }
   }
+}
+
+extension CreateUsernameView {
+    var formIsValid: Bool {
+      return viewModel.username.count > 3
+    }
 }
 
 #Preview {

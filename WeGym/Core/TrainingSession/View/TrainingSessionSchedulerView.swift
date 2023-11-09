@@ -21,6 +21,7 @@ struct TrainingSessionSchedulerView: View {
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var viewModel: TrainingSessionViewModel
   @StateObject var schedulerViewModel = TrainingSessionSchedulerViewModel()
+  @State var timeTapped = false
 
   let user: User
   let captionLengthLimit = 99
@@ -53,13 +54,15 @@ struct TrainingSessionSchedulerView: View {
 
           DatePicker("",
                      selection: $workoutTime,
-                     in: Date()...,
+                     //                     in: Date()..., // Don't restrict user date selection
                      displayedComponents: .hourAndMinute)
           .padding()
           .font(.headline)
           .fontWeight(.medium)
           .onTapGesture {
-            viewModel.shouldShowTime = true
+            timeTapped = true
+            guard let currentUserId = UserService.shared.currentUser?.id else { return }
+            viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
           }
 
           // set gym / workout location
@@ -128,12 +131,13 @@ struct TrainingSessionSchedulerView: View {
 
                 let newSession = TrainingSession(id: prevSession.id,
                                                  ownerUid: user.id,
-                                                 date: Timestamp(date: workoutTime),
+                                                 date: timeTapped ? Timestamp(date: workoutTime) : prevSession.date, //only set new time if new time was set, otherwise keep previous time
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user,
-                                                 likes: prevSession.likes)
+                                                 likes: prevSession.likes,
+                                                 shouldShowTime: prevSession.shouldShowTime)
 
                 try await viewModel.updateTrainingSession(session: newSession)
 
@@ -145,7 +149,8 @@ struct TrainingSessionSchedulerView: View {
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user,
-                                                 likes: 0)
+                                                 likes: 0,
+                                                 shouldShowTime: timeTapped)
 
                 try await viewModel.addTrainingSession(session: newSession)
               }
@@ -174,7 +179,6 @@ struct TrainingSessionSchedulerView: View {
         guard let location = session.location else { return }
         schedulerViewModel.selectedGym.append(location)
       } else {
-        viewModel.shouldShowTime = false
         if Calendar.current.isDateInToday(viewModel.day) {
           workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day //TODO: time should default to the time user last set for that day of the week (could also count frequncy of that time on that day) [store in userdefaults]
         } else {                                                            // if no previous time for that specific day of the week, set last set time
