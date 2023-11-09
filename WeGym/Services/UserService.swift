@@ -30,7 +30,7 @@ class UserService: ObservableObject {
   }
 
   static func fetchUser(withUid uid: String) async throws -> User {
-    let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument()
+    let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: .cache)
     let user = try snapshot.data(as: User.self)
     return user
   }
