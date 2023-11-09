@@ -138,12 +138,12 @@ class TrainingSessionViewModel: ObservableObject {
   var userFollowingTimer: Timer?
 
   func setUserFollowingOrder() {
-    let newOrder = trainingSessions.map({ $0.ownerUid })
-    userfollowingOrderLocal = newOrder
+    let newOrder = trainingSessions.map({ $0.ownerUid }).dropFirst() // dropping first so as not to include current user
+    userfollowingOrderLocal = Array(newOrder)
 
     userFollowingTimer?.invalidate()
     userFollowingTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { timer in
-      Task { await TrainingSessionService.setUserFollowingOrder(newOrder) }
+      Task { await TrainingSessionService.setUserFollowingOrder(self.userfollowingOrderLocal ?? []) }
     }
   }
 
