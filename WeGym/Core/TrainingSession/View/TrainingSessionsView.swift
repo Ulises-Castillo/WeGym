@@ -27,7 +27,6 @@ struct TrainingSessionsView: View {
   init(path: Binding<[TrainingSessionsNavigation]>, showToday: Binding<Bool>) {
     self._showToday = showToday
     self._path = path
-//    self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel())
   }
 
   var body: some View {
@@ -44,7 +43,8 @@ struct TrainingSessionsView: View {
             .frame(width: 50)
         } else {
           Button {
-              showingEditSheet.toggle()
+            defaultDayTimer?.invalidate()
+            showingEditSheet.toggle()
           } label: {
             if let session = viewModel.currentUserTrainingSesssion {
               TrainingSessionCell(trainingSession: session)
@@ -52,11 +52,14 @@ struct TrainingSessionsView: View {
               RestDayCell(user: user) //CRASH: force unwrap; FIX: added check above
             }
           }.disabled(viewModel.day.timeIntervalSince1970 < Date.now.startOfDay.timeIntervalSince1970)
-          .padding(.top, 12)
-          .padding(.bottom, 15)
-          .sheet(isPresented: $showingEditSheet) {
-            TrainingSessionSchedulerView(user: UserService.shared.currentUser!)
-          }
+            .padding(.top, 12)
+            .padding(.bottom, 15)
+            .sheet(isPresented: $showingEditSheet) {
+              if let user = UserService.shared.currentUser {
+                TrainingSessionSchedulerView(user: user) //TODO: test change
+              }
+            }
+            .transition(AnyTransition.backslide.animation(.easeIn))
         }
 
         ReorderableForEach(items: viewModel.trainingSessions) { session in
@@ -69,7 +72,7 @@ struct TrainingSessionsView: View {
         } moveAction: { from, to in
           viewModel.trainingSessions.move(fromOffsets: from, toOffset: to)
           viewModel.setUserFollowingOrder()
-        }
+        }.transition(AnyTransition.backslide.animation(.easeIn))
       }
       .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
         switch screen {
@@ -174,11 +177,11 @@ struct TrainingSessionsView: View {
       guard !TrainingSessionService.hasBeenFetched(date: Date()) else { return } //TODO: test Date() change (starting at 3Pm [after today's workout])
 
       //TODO: test all cases ensure user always in control – invalidate timer anytime user changes `viewModel.day()`
-      defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-//        print("***** Timer fired !!")
+
+      defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { timer in
         let (date, setTmr) = viewModel.defaultDay()
 
-        withAnimation(.default) {
+        withAnimation(.interactiveSpring(duration: 1.5)) {
           selectedDate = date
           viewModel.day = selectedDate
         }
@@ -191,7 +194,6 @@ struct TrainingSessionsView: View {
     .onDisappear {
       viewModel.removeTrainingSessionListener()
     }
-//    .environmentObject(viewModel)
     .sheet(isPresented: $showComments) {
 
       if trainingSession != nil {
@@ -223,6 +225,13 @@ struct TrainingSessionsView: View {
 
     }
   }
+}
+
+extension AnyTransition {
+  static var backslide: AnyTransition {
+    AnyTransition.asymmetric(
+      insertion: .move(edge: .trailing),
+      removal: .move(edge: .leading))}
 }
 
 #Preview {
