@@ -21,7 +21,7 @@ class InboxViewModel: ObservableObject {
 
     return recentMessages.filter { message in
       guard let user = message.user, currentUser != user else { return false }
-      
+
       if searchText.isEmpty {
         return true
       } else {
@@ -67,16 +67,17 @@ class InboxViewModel: ObservableObject {
   private func loadInitialMessages(fromChanges changes: [DocumentChange]) {
     self.recentMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
 
-    for i in 0 ..< recentMessages.count {
-      let message = recentMessages[i]
-
-      UserService.fetchUser(withUid: message.chatPartnerId) { [weak self] user in
-        guard let self else { return }
-        self.recentMessages[i].user = user //FIXME: this line causes CRASH often //replicate by re-running app, not going to the messages tab (no initial load yet) then tapping new message push notification while on the training sessions tab with a comments view open // quite sure this will be fixed when we just load messages immediately on app startup
+    Task {
+      var i = 0
+      while i < recentMessages.count {  // prevent CRASH w/ while loop: for loop evaluated once and run N number of time
+                                        // crash happedns when new user logs in and recentMessages is changed (esp. made shorter) mid-loop
+        let message = recentMessages[i]
+        self.recentMessages[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
 
         if i == self.recentMessages.count - 1 {
           self.didCompleteInitialLoad = true
         }
+        i += 1
       }
     }
   }
