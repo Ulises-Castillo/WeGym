@@ -56,12 +56,12 @@ struct EditPersonalRecordView: View {
           .accentColor(Color(.systemBlue))
           .padding()
 
-          HStack {
+          HStack(alignment: .lastTextBaseline) {
             Spacer()
             TextField("PR", text: $personalRecordNumber)
               .frame(width: 81)
               .fontWeight(.heavy)
-              .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.rounded))
+              .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.monospaced))
               .keyboardType(.numberPad)
               .focused($isPrInputFocused)
               .multilineTextAlignment(.trailing)
@@ -86,7 +86,7 @@ struct EditPersonalRecordView: View {
             .foregroundColor(.secondary)
 
             Text("X")
-              .font(.system(size: 18, weight: Font.Weight.semibold, design: Font.Design.rounded))
+              .font(.system(size: 18, weight: Font.Weight.semibold, design: Font.Design.monospaced))
 
             
             let reps = [Int](1...20) //TODO: rep range should be 1 - 6 for PWR, 1-50 for BB
@@ -94,8 +94,13 @@ struct EditPersonalRecordView: View {
             Picker("Reps", selection: $selectedNumberOfReps) {
               ForEach(reps, id: \.self) { rep in
                 Text("\(rep)")
-                  .font(.system(size: 24, weight: Font.Weight.heavy, design: Font.Design.rounded))
+                  .font(.system(size: 24, weight: Font.Weight.heavy, design: Font.Design.monospaced))
               }
+            }
+            .alignmentGuide(.lastTextBaseline) { context in
+////              context[.bottom] - 100.0 * context.height
+////              -(context.height * 10)
+              context.height / 1.86 //TODO: integrate `context[.bottom]` if  alignment is off on other screen sizes
             }
             .frame(width: 66)
             .pickerStyle(.wheel)
@@ -112,7 +117,7 @@ struct EditPersonalRecordView: View {
 
           TextField("", text: $notes, prompt: Text("Add Notes...").foregroundColor(.primary), axis: .vertical)
             .padding()
-            .padding(.bottom, 162)
+            .padding(.bottom, UIScreen.main.bounds.height / 9)
             .font(.system(size: 16, weight: Font.Weight.medium, design: Font.Design.rounded))
             .disableAutocorrection(true)
 
