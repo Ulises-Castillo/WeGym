@@ -33,7 +33,7 @@ struct PersonalRecordCell: View {
     } else if personalRecord.reps == 1 {
       return "\(personalRecord.weight ?? 0)"
     } else {
-      return "\(personalRecord.weight ?? 0) x \(personalRecord.reps ?? 0)"
+      return "\(personalRecord.weight ?? 0)x\(personalRecord.reps ?? 0)"
     }
   }
 

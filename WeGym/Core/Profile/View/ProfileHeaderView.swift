@@ -13,6 +13,16 @@ struct ProfileHeaderView: View {
   @State var updatedProfileImageUrl: String?
   @StateObject var userService = UserService.shared
 
+  func prText(_ personalRecord: PersonalRecord) -> String {
+    if personalRecord.category == "Calesthenics" {
+      return "\(personalRecord.reps ?? 0)"
+    } else if personalRecord.reps == 1 {
+      return "\(personalRecord.weight ?? 0)"
+    } else {
+      return "\(personalRecord.weight ?? 0)x\(personalRecord.reps ?? 0)"
+    }
+  }
+
   var body: some View {
     VStack {
       HStack {
@@ -30,7 +40,7 @@ struct ProfileHeaderView: View {
             ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
               HStack() {
                 NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
-                  UserStatView(value: pr.weight ?? 0, title: pr.type)
+                  UserStatView(value: prText(pr), title: pr.type)
                 }
                 .disabled(!viewModel.user.isCurrentUser)
                 .frame(maxWidth: .infinity)
