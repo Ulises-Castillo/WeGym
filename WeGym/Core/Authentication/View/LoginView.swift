@@ -57,6 +57,7 @@ struct LoginView: View {
           Task { 
             try await viewModel.signIn()
             TrainingSessionService.clearFetchedDates()
+            AppNavigation.shared.selectedTab = .TrainingSessions
           }
         } label: {
           Text("Log In")
