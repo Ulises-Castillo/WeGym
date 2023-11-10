@@ -13,7 +13,16 @@ import Combine
 class InboxViewModel: ObservableObject {
   @Published var recentMessages = [Message]()
   @Published var conversations = [Conversation]()
-  @Published var user: User?
+  @Published var user: User? {
+    didSet {
+      print("***** new user set: \(user?.username ?? "nil")")
+      recentMessages = []
+      conversations = []
+      didCompleteInitialLoad = false
+      InboxService.shared.reset() // can prob just go in init()
+    }
+  }
+
   @Published var searchText = ""
 
   var filteredMessages: [Message] {
@@ -65,19 +74,23 @@ class InboxViewModel: ObservableObject {
   }
 
   private func loadInitialMessages(fromChanges changes: [DocumentChange]) {
-    self.recentMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
+//    self.recentMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
+    var messagesTemp = changes.compactMap{ try? $0.document.data(as: Message.self) }
+
+    let userId = self.user?.id
 
     Task {
-      var i = 0
-      while i < recentMessages.count {  // prevent CRASH w/ while loop: for loop evaluated once and run N number of time
-                                        // crash happedns when new user logs in and recentMessages is changed (esp. made shorter) mid-loop
-        let message = recentMessages[i]
-        self.recentMessages[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
 
-        if i == self.recentMessages.count - 1 {
-          self.didCompleteInitialLoad = true
-        }
-        i += 1
+      for i in 0..<messagesTemp.count {
+        let message = messagesTemp[i]
+        messagesTemp[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
+      }
+      
+      if userId == self.user?.id { // set only if same user as start of the loop
+        self.recentMessages = messagesTemp
+        self.didCompleteInitialLoad = true
+      } else {
+        print("***** Nope, not today")
       }
     }
   }
