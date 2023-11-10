@@ -69,8 +69,7 @@ class InboxViewModel: ObservableObject {
     var messagesTemp = changes.compactMap{ try? $0.document.data(as: Message.self) }
 
     Task {
-      for i in 0..<messagesTemp.count {
-        let message = messagesTemp[i]
+      for (i, message) in messagesTemp.enumerated() {
         messagesTemp[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
       }
       self.recentMessages = messagesTemp
