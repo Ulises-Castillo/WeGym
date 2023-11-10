@@ -33,6 +33,10 @@ struct TrainingSessionService {
     self.end = nil
   }
 
+  static func clearFetchedDates() {
+    fetchedDates.removeAll()
+  }
+
   static private var firestoreListener: ListenerRegistration?
 
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {

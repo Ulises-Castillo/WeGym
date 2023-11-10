@@ -54,7 +54,10 @@ struct LoginView: View {
         .frame(maxWidth: .infinity, alignment: .trailing)
 
         Button {
-          Task { try await viewModel.signIn() }
+          Task { 
+            try await viewModel.signIn()
+            TrainingSessionService.clearFetchedDates()
+          }
         } label: {
           Text("Log In")
             .font(.subheadline)
