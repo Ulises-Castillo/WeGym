@@ -13,16 +13,7 @@ import Combine
 class InboxViewModel: ObservableObject {
   @Published var recentMessages = [Message]()
   @Published var conversations = [Conversation]()
-  @Published var user: User? {
-    didSet {
-      print("***** new user set: \(user?.username ?? "nil")")
-      recentMessages = []
-      conversations = []
-      didCompleteInitialLoad = false
-      InboxService.shared.reset() // can prob just go in init()
-    }
-  }
-
+  @Published var user: User?
   @Published var searchText = ""
 
   var filteredMessages: [Message] {
@@ -46,6 +37,7 @@ class InboxViewModel: ObservableObject {
   private var cancellables = Set<AnyCancellable>()
 
   init() {
+    InboxService.shared.reset() //CRASH fix: reset singleton!
     setupSubscribers()
     observeRecentMessages()
   }
@@ -74,24 +66,15 @@ class InboxViewModel: ObservableObject {
   }
 
   private func loadInitialMessages(fromChanges changes: [DocumentChange]) {
-//    self.recentMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
     var messagesTemp = changes.compactMap{ try? $0.document.data(as: Message.self) }
 
-    let userId = self.user?.id
-
     Task {
-
       for i in 0..<messagesTemp.count {
         let message = messagesTemp[i]
         messagesTemp[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
       }
-      
-      if userId == self.user?.id { // set only if same user as start of the loop
-        self.recentMessages = messagesTemp
-        self.didCompleteInitialLoad = true
-      } else {
-        print("***** Nope, not today")
-      }
+      self.recentMessages = messagesTemp
+      self.didCompleteInitialLoad = true
     }
   }
 
