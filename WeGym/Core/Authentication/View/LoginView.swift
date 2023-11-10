@@ -92,7 +92,7 @@ struct LoginView: View {
   }
 }
 
-struct ClearButton: ViewModifier {
+struct ClearButton: ViewModifier { //TODO: move to extensions
   @Binding var text: String
 
   func body(content: Content) -> some View {

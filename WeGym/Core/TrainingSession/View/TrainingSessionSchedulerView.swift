@@ -175,6 +175,7 @@ struct TrainingSessionSchedulerView: View {
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
+//        schedulerViewModel.selectedWorkoutCategory = session.workoutCategory //TODO: add workout Category to Training Session Model
         schedulerViewModel.selectedWorkoutFocuses = session.focus
         guard let location = session.location else { return }
         schedulerViewModel.selectedGym.append(location)

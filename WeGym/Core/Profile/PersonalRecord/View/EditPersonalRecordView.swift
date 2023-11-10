@@ -22,14 +22,27 @@ struct EditPersonalRecordView: View {
   @State private var selectedNumberOfReps = 1
   var personalRecord: PersonalRecord?
 
+  var selectedPersonalRecordCategory: String {
+    return viewModel.selectedPersonalRecordCategory.first ?? ""
+  }
+
+  var isCalethenics: Bool {
+    return selectedPersonalRecordCategory == "Calesthenics"
+  }
+
   init(_ personalRecord: PersonalRecord? = nil) {
     self.personalRecord = personalRecord
   }
 
   func isPrValid() -> Bool {
-    return !viewModel.selectedPersonalRecordCategory.isEmpty &&
-    !viewModel.selectedPersonalRecordType.isEmpty &&
-    !personalRecordNumber.isEmpty
+    if !isCalethenics {
+      return !viewModel.selectedPersonalRecordCategory.isEmpty &&
+      !viewModel.selectedPersonalRecordType.isEmpty &&
+      !personalRecordNumber.isEmpty
+    } else {
+      return !viewModel.selectedPersonalRecordCategory.isEmpty && //TODO: check for calesthenics
+      !viewModel.selectedPersonalRecordType.isEmpty
+    }
   }
 
   var body: some View {
@@ -58,43 +71,45 @@ struct EditPersonalRecordView: View {
 
           HStack(alignment: .lastTextBaseline) {
             Spacer()
-            TextField("PR", text: $personalRecordNumber)
-              .frame(width: 81)
-              .fontWeight(.heavy)
-              .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.monospaced))
-              .keyboardType(.numberPad)
-              .focused($isPrInputFocused)
-              .multilineTextAlignment(.trailing)
-              .onReceive(Just(personalRecordNumber)) { newValue in
-                let filtered = newValue.filter { "0123456789".contains($0) }
-                if filtered != newValue {
-                  self.personalRecordNumber = filtered
+            if !isCalethenics {
+              TextField("PR", text: $personalRecordNumber)
+                .frame(width: 81)
+                .fontWeight(.heavy)
+                .font(.system(size: 33, weight: Font.Weight.heavy, design: Font.Design.monospaced))
+                .keyboardType(.numberPad)
+                .focused($isPrInputFocused)
+                .multilineTextAlignment(.trailing)
+              //              .opacity((selectedPersonalRecordCategory) != "Calesthenics" ? 1.0 : 0)
+                .onReceive(Just(personalRecordNumber)) { newValue in
+                  let filtered = newValue.filter { "0123456789".contains($0) }
+                  if filtered != newValue {
+                    self.personalRecordNumber = filtered
+                  }
                 }
-              }
-              .onReceive(Just(personalRecordNumber)) { _ in
-                if personalRecordNumber.count > 3 {
-                  personalRecordNumber = String(personalRecordNumber.prefix(3))
+                .onReceive(Just(personalRecordNumber)) { _ in
+                  if personalRecordNumber.count > 3 {
+                    personalRecordNumber = String(personalRecordNumber.prefix(3))
+                  }
                 }
+              Button { // make tappability more apparent to user with styling
+                isKgs.toggle()
+              } label: {
+                Text(isKgs ? "kgs" : "lbs")
+                  .font(.system(size: 18, weight: Font.Weight.light, design: Font.Design.rounded))
               }
-            Button { // make tappability more apparent to user with styling
-              isKgs.toggle()
-            } label: {
-              Text(isKgs ? "kgs" : "lbs")
-                .font(.system(size: 18, weight: Font.Weight.light, design: Font.Design.rounded))
+              .padding(1)
+              .foregroundColor(.secondary)
+
+              Text("X")
+                .font(.system(size: 18, weight: Font.Weight.semibold, design: Font.Design.monospaced))
             }
-            .padding(1)
-            .foregroundColor(.secondary)
 
-            Text("X")
-              .font(.system(size: 18, weight: Font.Weight.semibold, design: Font.Design.monospaced))
-
-            
-            let reps = [Int](1...20) //TODO: rep range should be 1 - 6 for PWR, 1-50 for BB
+            let reps = [Int](1...(isCalethenics ? 99 : 21)) //TODO: rep range should be 1 - 6 for PWR, 1-50 for BB
 
             Picker("Reps", selection: $selectedNumberOfReps) {
               ForEach(reps, id: \.self) { rep in
                 Text("\(rep)")
-                  .font(.system(size: 24, weight: Font.Weight.heavy, design: Font.Design.monospaced))
+                  .font(.system(size: isCalethenics ? 39 : 24, weight: Font.Weight.heavy, design: Font.Design.monospaced))
               }
             }
             .alignmentGuide(.lastTextBaseline) { context in
@@ -102,18 +117,18 @@ struct EditPersonalRecordView: View {
 ////              -(context.height * 10)
               context.height / 1.86 //TODO: integrate `context[.bottom]` if  alignment is off on other screen sizes
             }
-            .frame(width: 66)
+            .frame(width: isCalethenics ? 75 : 66)
             .pickerStyle(.wheel)
             .padding(.horizontal, -3)
 
             Text("rep" + (selectedNumberOfReps > 1 ? "s" : ""))
-              .font(.system(size: 18, weight: Font.Weight.light, design: Font.Design.rounded))
+              .font(.system(size: isCalethenics ? 24 : 18, weight: Font.Weight.light, design: Font.Design.rounded))
               .foregroundColor(.secondary)
               .padding(.leading, -3)
           }
           .padding(.top, -(UIScreen.main.bounds.height / 27))
           .padding(.bottom, UIScreen.main.bounds.height / 33)
-          .padding(.horizontal, 12)
+          .padding(.horizontal, isCalethenics ? 27 : 12)
 
           TextField("", text: $notes, prompt: Text("Add Notes...").foregroundColor(.primary), axis: .vertical)
             .padding()
@@ -158,7 +173,7 @@ struct EditPersonalRecordView: View {
               if let pr = personalRecord {
 
                 let updatedPr = PersonalRecord(id: pr.id,
-                                               weight: Int(personalRecordNumber),
+                                               weight: isCalethenics ? nil : Int(personalRecordNumber),
                                                reps: selectedNumberOfReps,
                                                category: viewModel.selectedPersonalRecordCategory.first ?? "",
                                                type: viewModel.selectedPersonalRecordType.first ?? "",
@@ -170,7 +185,7 @@ struct EditPersonalRecordView: View {
 
               } else {
                 let newPr = PersonalRecord(id: "",
-                                           weight: Int(personalRecordNumber),
+                                           weight: isCalethenics ? nil : Int(personalRecordNumber),
                                            reps: selectedNumberOfReps,
                                            category: viewModel.selectedPersonalRecordCategory.first ?? "",
                                            type: viewModel.selectedPersonalRecordType.first ?? "",

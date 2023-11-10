@@ -89,15 +89,18 @@ public struct TagField: View {
             }
             .onAppear {
               if isPersonalRecord {
-                if let initiallySelectedPRCategory = prViewModel.personalRecordCategories.first, isSelector {
+                if let first = prViewModel.selectedPersonalRecordCategory.first {
+                  prViewModel.personalRecordTypes = prViewModel.prCategoryMap[first] ??  []
+                } else if let initiallySelectedPRCategory = prViewModel.personalRecordCategories.first, isSelector {
                   isSelected.append(initiallySelectedPRCategory) //TODO: clean up logic
                   prViewModel.personalRecordTypes = prViewModel.prCategoryMap[initiallySelectedPRCategory] ??  []
                 }
 
                 return
               }
-
-              if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
+              if let first = viewModel.selectedWorkoutCategory.first { //TODO: add workout category to Training Session model
+                viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[first] ?? []
+              } else if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
                 isSelected.append(initiallySelectedWorkoutCategory) //TODO: clean up logic
                 viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
               }

@@ -30,8 +30,8 @@ class UserService: ObservableObject {
   }
 
   static func fetchUser(withUid uid: String) async throws -> User {
-    let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: .cache)
-    let user = try snapshot.data(as: User.self)
+    let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: .cache) //TODO: snapshot listener to ensure data is being updated from server (quite sure this will only get the data from the server the first time)
+    let user = try snapshot.data(as: User.self)                                                          // gets updated on app re-launch, unsure if/when it would get updated otherwise
     return user
   }
 
