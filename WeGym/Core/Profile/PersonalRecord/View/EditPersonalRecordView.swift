@@ -19,6 +19,7 @@ struct EditPersonalRecordView: View {
   @State private var isKgs = false
   @FocusState private var isPrInputFocused: Bool
   @Environment(\.dismiss) var dismiss
+  @State private var selectedNumberOfReps = 1
   var personalRecord: PersonalRecord?
 
   init(_ personalRecord: PersonalRecord? = nil) {
@@ -83,9 +84,31 @@ struct EditPersonalRecordView: View {
             }
             .padding(1)
             .foregroundColor(.secondary)
+
+            Text("X")
+              .font(.system(size: 18, weight: Font.Weight.semibold, design: Font.Design.rounded))
+
+            
+            let reps = [Int](1...20) //TODO: rep range should be 1 - 6 for PWR, 1-50 for BB
+
+            Picker("Reps", selection: $selectedNumberOfReps) {
+              ForEach(reps, id: \.self) { rep in
+                Text("\(rep)")
+                  .font(.system(size: 24, weight: Font.Weight.heavy, design: Font.Design.rounded))
+              }
+            }
+            .frame(width: 66)
+            .pickerStyle(.wheel)
+            .padding(.horizontal, -3)
+
+            Text("rep" + (selectedNumberOfReps > 1 ? "s" : ""))
+              .font(.system(size: 18, weight: Font.Weight.light, design: Font.Design.rounded))
+              .foregroundColor(.secondary)
+              .padding(.leading, -3)
           }
-          .padding(.vertical, 24)
-          .padding(.horizontal, 24)
+          .padding(.top, -(UIScreen.main.bounds.height / 27))
+          .padding(.bottom, UIScreen.main.bounds.height / 33)
+          .padding(.horizontal, 12)
 
           TextField("", text: $notes, prompt: Text("Add Notes...").foregroundColor(.primary), axis: .vertical)
             .padding()
@@ -131,7 +154,7 @@ struct EditPersonalRecordView: View {
 
                 let updatedPr = PersonalRecord(id: pr.id,
                                                weight: Int(personalRecordNumber),
-                                               reps: 1, //TODO: add in reps
+                                               reps: selectedNumberOfReps,
                                                category: viewModel.selectedPersonalRecordCategory.first ?? "",
                                                type: viewModel.selectedPersonalRecordType.first ?? "",
                                                ownerUid: UserService.shared.currentUser?.id ?? "",
@@ -143,7 +166,7 @@ struct EditPersonalRecordView: View {
               } else {
                 let newPr = PersonalRecord(id: "",
                                            weight: Int(personalRecordNumber),
-                                           reps: 1, //TODO: add in reps
+                                           reps: selectedNumberOfReps,
                                            category: viewModel.selectedPersonalRecordCategory.first ?? "",
                                            type: viewModel.selectedPersonalRecordType.first ?? "",
                                            ownerUid: UserService.shared.currentUser?.id ?? "",
@@ -175,6 +198,7 @@ struct EditPersonalRecordView: View {
           notes = pr.notes
           viewModel.selectedPersonalRecordCategory = [pr.category]
           viewModel.selectedPersonalRecordType = [pr.type]
+          selectedNumberOfReps = pr.reps ?? 1
         } else {
           isPrInputFocused = true
         }
