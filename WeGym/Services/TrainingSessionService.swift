@@ -117,7 +117,7 @@ struct TrainingSessionService {
     return trainingSessions
   }
 
-  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool) async throws {
+  static func uploadTrainingSession(date: Timestamp, focus: [String], category: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool) async throws {
 
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let postRef = FirestoreConstants.TrainingSessionsCollection.document()
@@ -126,6 +126,7 @@ struct TrainingSessionService {
                                           ownerUid: uid,
                                           date: date,
                                           focus: focus,
+                                          category: category,
                                           location: location,
                                           caption: caption,
                                           likes: likes,

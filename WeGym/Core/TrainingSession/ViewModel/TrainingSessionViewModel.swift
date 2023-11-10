@@ -70,7 +70,7 @@ class TrainingSessionViewModel: ObservableObject {
     if let currentUserTrainingSesssion = currentUserTrainingSesssion {
       trainingSessions.insert(currentUserTrainingSesssion, at: 0)
     } else {
-      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0)
       dummy.user = currentUser
       trainingSessions.insert(dummy, at: 0)
     }
@@ -96,7 +96,7 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, category: session.category, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
   }
 
   @MainActor

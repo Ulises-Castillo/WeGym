@@ -98,8 +98,9 @@ public struct TagField: View {
 
                 return
               }
-              if let first = viewModel.selectedWorkoutCategory.first { //TODO: add workout category to Training Session model
+              if let first = viewModel.selectedWorkoutCategory.first, isSelector {
                 viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[first] ?? []
+                isSelected = [first] //TODO: clean up logic
               } else if let initiallySelectedWorkoutCategory = viewModel.workoutCategories.first, isSelector {
                 isSelected.append(initiallySelectedWorkoutCategory) //TODO: clean up logic
                 viewModel.workoutFocuses = SchedulerConstants.workoutCategoryFocusesMap[initiallySelectedWorkoutCategory] ??  []
