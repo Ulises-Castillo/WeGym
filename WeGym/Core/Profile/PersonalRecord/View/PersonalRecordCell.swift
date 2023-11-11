@@ -23,6 +23,10 @@ struct PersonalRecordCell: View {
     return profileViewModel.isFav(pr)
   }
 
+  func isMax(_ pr: PersonalRecord) -> Bool {
+    return personalRecordsViewModel.isCategoryMax(pr: pr)
+  }
+
   func setFav(_ pr: PersonalRecord) {
     profileViewModel.setFav(pr)
   }
@@ -48,7 +52,7 @@ struct PersonalRecordCell: View {
           .background(Color(isFav(personalRecord) ? .systemBlue : .systemGray2))
           .cornerRadius(6)
 //          .fontWeight(personalRecord.isCategoryMax ? .bold : .light)  //TODO: implement is Category Max logic
-          .fontWeight(isFav(personalRecord) ? .bold : .light)
+          .fontWeight(isFav(personalRecord) || isMax(personalRecord) ? .bold : .light)
           .foregroundColor(.white)
 
         // PR Type (ex: Bench)
@@ -56,7 +60,7 @@ struct PersonalRecordCell: View {
           .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 32)
           .background(Color(isFav(personalRecord) ? .systemBlue : .systemGray2))
           .cornerRadius(6)
-          .fontWeight(isFav(personalRecord) ? .bold : .light)
+          .fontWeight(isFav(personalRecord) || isMax(personalRecord) ? .bold : .light)
           .foregroundColor(.white)
 
         // PR number (ex: 245)
@@ -65,7 +69,7 @@ struct PersonalRecordCell: View {
           .background(Color(isFav(personalRecord) ? .systemBlue : .systemGray2))
           .cornerRadius(6)
 //          .fontWeight(personalRecord.isCategoryMax ? .bold : .light)  //TODO: implement is Category Max logic
-          .fontWeight(isFav(personalRecord) ? .bold : .light)
+          .fontWeight(isFav(personalRecord) || isMax(personalRecord) ? .bold : .light)
           .foregroundColor(.white)
       }
 
