@@ -12,7 +12,14 @@ class RegistrationViewModel: ObservableObject {
   @Published var username = ""
   @Published var email = ""
   @Published var password = ""
-  
+
+  @Published var emailIsValid = false
+  @Published var usernameIsValid = false
+  @Published var isLoading = false
+
+  @Published var emailValidationFailed = false
+  @Published var usernameValidationFailed = false
+
   
   @MainActor
   func createUser() async throws {
@@ -23,5 +30,34 @@ class RegistrationViewModel: ObservableObject {
     username = ""
     email = ""
     password = ""
+  }
+
+  @MainActor
+  func validateEmail() async throws {
+      self.isLoading = true
+      self.emailValidationFailed = false
+
+      let snapshot = try await FirestoreConstants
+          .UserCollection
+          .whereField("email", isEqualTo: email)
+          .getDocuments()
+
+      self.emailValidationFailed = !snapshot.isEmpty
+      self.emailIsValid = snapshot.isEmpty
+
+      self.isLoading = false
+  }
+
+  @MainActor
+  func validateUsername() async throws {
+      self.isLoading = true
+
+      let snapshot = try await FirestoreConstants
+          .UserCollection
+          .whereField("username", isEqualTo: username)
+          .getDocuments()
+
+      self.usernameIsValid = snapshot.isEmpty
+      self.isLoading = false
   }
 }
