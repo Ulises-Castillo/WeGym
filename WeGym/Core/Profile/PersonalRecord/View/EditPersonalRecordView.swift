@@ -20,6 +20,7 @@ struct EditPersonalRecordView: View {
   @FocusState private var isPrInputFocused: Bool
   @Environment(\.dismiss) var dismiss
   @State private var selectedNumberOfReps = 1
+  @State private var shouldFlex = true
   var personalRecord: PersonalRecord?
 
   var selectedPersonalRecordCategory: String {
@@ -68,9 +69,23 @@ struct EditPersonalRecordView: View {
           .styled(.Modern)
           .accentColor(Color(.systemBlue))
           .padding()
+          .padding(.bottom, 18)
 
           HStack(alignment: .lastTextBaseline) {
-            Spacer()
+            VStack(alignment: .leading) {
+              Toggle(isOn: $shouldFlex) { //TODO: add info tooltip to explain feature to user
+                Text("Flex")
+                  .font(.callout)
+                  .frame(maxWidth: .infinity, alignment: .trailing)
+              }
+              .controlSize(.mini)
+              .tint(Color(.systemBlue))
+              .alignmentGuide(.lastTextBaseline) { context in
+                context.height * 3.3
+              }
+              Spacer()
+            }
+            Spacer(minLength: UIScreen.main.bounds.width / (isCalethenics ? 3.5 : 21))
             if !isCalethenics {
               TextField("PR", text: $personalRecordNumber)
                 .frame(width: 81)
