@@ -39,6 +39,18 @@ struct TrainingSessionCell: View {
     return viewModel.commentsCountCache[trainingSession.id, default: 0]
   }
 
+  private var focusColor: Color {
+    let now = Date.now
+    let numDays = Calendar.current.numberOfDaysBetween(now, and: viewModel.day)
+    let isFuture = viewModel.day.noon.timeIntervalSince1970 >= now.noon.timeIntervalSince1970
+
+    let blue = UIColor.systemBlue
+    var adj = CGFloat(numDays) * 5  // Adjust by 5% per day
+    if adj > 20 { adj = 20 }        // floor: 20%
+
+    return Color(isFuture ? (blue.darker(by: adj) ?? blue) : (blue.lighter(by: adj) ?? blue))
+  }
+
   @StateObject var userService = UserService.shared
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
@@ -77,7 +89,7 @@ struct TrainingSessionCell: View {
         ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
           Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
             .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 32)
-            .background(Color(.systemBlue))
+            .background(focusColor)
             .cornerRadius(6)
         }
       }
