@@ -31,6 +31,7 @@ struct TrainingSessionsView: View {
   }
 
   func animateDayChange(newDate: Date, duration: CGFloat) {
+    guard !showingEditSheet else { return } //Fix: do not change day if user editing a workout
     isAnimationForward = newDate.timeIntervalSince1970 > viewModel.day.timeIntervalSince1970
 
     withAnimation(.interactiveSpring(duration: duration)) {
