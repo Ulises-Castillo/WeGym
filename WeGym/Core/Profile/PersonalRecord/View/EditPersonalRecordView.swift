@@ -22,6 +22,7 @@ struct EditPersonalRecordView: View {
   @State private var selectedNumberOfReps = 1
   @State private var shouldFlex = true
   @EnvironmentObject var trainingSessionViewModel: TrainingSessionViewModel
+  @State private var showFlexToolTip = false
 
   var personalRecord: PersonalRecord?
 
@@ -78,12 +79,22 @@ struct EditPersonalRecordView: View {
           .padding()
           .padding(.bottom, 18)
 
-          HStack(alignment: .lastTextBaseline) {
+          HStack(alignment: .lastTextBaseline) { //TODO: don't show if no workout scheduled
             VStack(alignment: .leading) {
               Toggle(isOn: $shouldFlex) { //TODO: add info tooltip to explain feature to user
-                Text("Flex")
-                  .font(.callout)
+                Image(systemName: "square.and.arrow.up") //TODO: make image bit bigger + align center
+                  .foregroundColor(Color(.systemBlue))
                   .frame(maxWidth: .infinity, alignment: .trailing)
+                  .onTapGesture {
+                    showFlexToolTip = true
+                  }
+
+              }
+              .popover(isPresented: $showFlexToolTip) {
+                Text("Post PR to today's workout")
+                  .font(.footnote)
+                  .padding()
+                  .presentationCompactAdaptation((.popover)) //TODO: add preprocesser check for OS version (16.4)
               }
               .controlSize(.mini)
               .tint(Color(.systemBlue))
@@ -92,7 +103,7 @@ struct EditPersonalRecordView: View {
               }
               Spacer()
             }
-            Spacer(minLength: UIScreen.main.bounds.width / (isCalethenics ? 3.5 : 21))
+            Spacer(minLength: UIScreen.main.bounds.width / (isCalethenics ? 3 : 21))
             if !isCalethenics {
               TextField("PR", text: $personalRecordNumber)
                 .frame(width: 81)
@@ -149,7 +160,7 @@ struct EditPersonalRecordView: View {
               .padding(.leading, -3)
           }
           .padding(.top, -(UIScreen.main.bounds.height / 27))
-          .padding(.bottom, UIScreen.main.bounds.height / 33)
+          .padding(.bottom, UIScreen.main.bounds.height / 39)
           .padding(.horizontal, isCalethenics ? 27 : 12)
 
           TextField("", text: $notes, prompt: Text("Add Notes...").foregroundColor(.primary), axis: .vertical)
