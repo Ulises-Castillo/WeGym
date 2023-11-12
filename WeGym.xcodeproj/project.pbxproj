@@ -62,6 +62,7 @@
 		1C3EEAD92AF6148D00D94C12 /* EditPersonalRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */; };
 		1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
+		1C7348722B00664500884739 /* PersonalRecordFlex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7348712B00664500884739 /* PersonalRecordFlex.swift */; };
 		1CAA9F432AEB853400FB28BC /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
@@ -198,6 +199,7 @@
 		1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordView.swift; sourceTree = "<group>"; };
 		1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordViewModel.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		1C7348712B00664500884739 /* PersonalRecordFlex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordFlex.swift; sourceTree = "<group>"; };
 		1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -967,6 +969,7 @@
 				1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */,
 				1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */,
 				1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */,
+				1C7348712B00664500884739 /* PersonalRecordFlex.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1114,6 +1117,7 @@
 				1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */,
 				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
+				1C7348722B00664500884739 /* PersonalRecordFlex.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */,
 				1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */,
