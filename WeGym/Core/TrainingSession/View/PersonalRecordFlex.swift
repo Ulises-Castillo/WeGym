@@ -35,14 +35,14 @@ struct PersonalRecordFlex: View {
   var body: some View {
     HStack {
       Text(personalRecord.type)
-        .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 24)
+        .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 24)
         .background(Color(.systemGray2))
         .cornerRadius(6)
         .fontWeight(.semibold)
         .foregroundColor(.white)
 
       Text(str)
-        .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 24)
+        .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 24)
         .background(Color(.systemGray2))
         .cornerRadius(6)
         .fontWeight(.semibold)
