@@ -84,9 +84,8 @@ struct TrainingSessionCell: View {
       .foregroundColor(.white)
       .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
 
-      //TODO: PRs here
-      ForEach(0...1, id: \.self) { _ in
-        PersonalRecordFlex()
+      ForEach(trainingSession.personalRecords ?? [], id: \.self) { pr in
+        PersonalRecordFlex(personalRecord: pr)
       }
 
       HStack {

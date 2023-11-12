@@ -10,18 +10,38 @@ import SwiftUI
 struct PersonalRecordFlex: View {
 
   let gold = UIColor(red: 252.0/255.0, green: 194.0/255.0, blue: 0, alpha: 1.0)
+  let personalRecord: PersonalRecord
+
+  var weight: String {
+    guard let weight = personalRecord.weight else { return "" }
+    return "\(weight)"
+  }
+
+  var reps: Int {
+    guard let reps = personalRecord.reps else { return 0 }
+    return reps
+  }
+
+  var str: String {
+    if personalRecord.category == "Calesthenics" {
+      return "\(reps)"
+    } else if reps > 1 {
+      return "\(weight)x\(reps)"
+    } else {
+      return weight
+    }
+  }
 
   var body: some View {
-
     HStack {
-      Text("Bench")
+      Text(personalRecord.type)
         .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 24)
         .background(Color(.systemGray2))
         .cornerRadius(6)
         .fontWeight(.semibold)
         .foregroundColor(.white)
 
-      Text("225x3")
+      Text(str)
         .frame(width: (UIScreen.main.bounds.width/3) - 15, height: 24)
         .background(Color(.systemGray2))
         .cornerRadius(6)
@@ -42,7 +62,7 @@ struct PersonalRecordFlex: View {
   }
 }
 
-#Preview {
-  PersonalRecordFlex()
-}
+//#Preview {
+//  PersonalRecordFlex(personalRecord: PersonalRecord(id: "", category: "", type: "Bench", ownerUid: "", timestamp: Time, notes:))
+//}
 

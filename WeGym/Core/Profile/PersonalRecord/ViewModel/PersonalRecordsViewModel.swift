@@ -10,7 +10,7 @@ import Foundation
 class PersonalRecordsViewModel: ObservableObject {
 
   @Published var personalRecords = [PersonalRecord]()
-  @Published private var personalRecordsCache = [String: PersonalRecord]() {
+  @Published var personalRecordsCache = [String: PersonalRecord]() {
     didSet {
       personalRecords = personalRecordsCache
         .values
@@ -45,8 +45,8 @@ class PersonalRecordsViewModel: ObservableObject {
   }
 
   @MainActor
-  func addPersonalRecord(_ personalRecord: PersonalRecord) async throws {
-    try await PersonalRecordService.uploadPersonalRecord(personalRecord)
+  func addPersonalRecord(_ personalRecord: PersonalRecord, trainingSession: TrainingSession?) async throws {
+    try await PersonalRecordService.uploadPersonalRecord(personalRecord, trainingSession: trainingSession)
   }
 
   @MainActor

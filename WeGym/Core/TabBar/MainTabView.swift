@@ -51,6 +51,7 @@ enum CurrentUserProfileNavigation: Hashable {
 struct MainTabView: View {
 
   @State var shouldShowNotificationBadge = false
+  @StateObject var personalRecordsViewModel = PersonalRecordsViewModel()
   @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
   @StateObject var inboxViewModel = InboxViewModel()
   @StateObject var notificationsViewModel = NotificationsViewModel()
@@ -90,6 +91,9 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(Tab.CurrentUserProfile)
     }
+    .onAppear {
+      trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel
+    }
     .accentColor(Color(.systemBlue))
     .onNotification { userInfo in                                           //TODO: move verbose logic to extension + enum to handle notification types
 
@@ -121,6 +125,7 @@ struct MainTabView: View {
     .environmentObject(notificationsViewModel)
     .environmentObject(searchViewModel)
     .environmentObject(currentUserProfileViewModel)
+    .environmentObject(personalRecordsViewModel)
   }
 }
 

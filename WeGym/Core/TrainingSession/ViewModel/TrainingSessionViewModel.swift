@@ -10,6 +10,8 @@ import Firebase
 
 class TrainingSessionViewModel: ObservableObject {
 
+  var personalRecordsViewModel: PersonalRecordsViewModel?
+
   var day = Date.now {
     didSet {
       reloadTrainingSessions()
@@ -70,9 +72,23 @@ class TrainingSessionViewModel: ObservableObject {
     if let currentUserTrainingSesssion = currentUserTrainingSesssion {
       trainingSessions.insert(currentUserTrainingSesssion, at: 0)
     } else {
-      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0)
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0, personRecordIds: [])
       dummy.user = currentUser
       trainingSessions.insert(dummy, at: 0)
+    }
+
+    if personalRecordsViewModel != nil {
+      for i in 0..<trainingSessions.count {
+        let session = trainingSessions[i]
+
+        for id in session.personRecordIds {
+          guard let pr = personalRecordsViewModel!.personalRecordsCache[id] else { continue }
+
+          if trainingSessions[i].personalRecords?.append(pr) == nil {
+            trainingSessions[i].personalRecords = [pr]
+          }
+        }
+      }
     }
 
     Task {
@@ -96,7 +112,14 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, category: session.category, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date,
+                                                           focus: session.focus,
+                                                           category: session.category,
+                                                           location: session.location,
+                                                           caption: session.caption,
+                                                           likes: session.likes,
+                                                           shouldShowTime: session.shouldShowTime,
+                                                           personalRecordIds: session.personRecordIds)
   }
 
   @MainActor

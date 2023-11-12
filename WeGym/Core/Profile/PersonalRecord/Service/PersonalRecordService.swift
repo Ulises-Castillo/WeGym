@@ -45,7 +45,7 @@ struct PersonalRecordService {
     self.firestoreListener = nil
   }
 
-  static func uploadPersonalRecord(_ personalRecord: PersonalRecord) async throws {
+  static func uploadPersonalRecord(_ personalRecord: PersonalRecord, trainingSession: TrainingSession?) async throws {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
     let postRef = FirestoreConstants.UserCollection
@@ -64,6 +64,10 @@ struct PersonalRecordService {
 
     guard let encodedPersonalRecord = try? Firestore.Encoder().encode(newPr) else { return }
     try await postRef.setData(encodedPersonalRecord)
+
+    guard var trainingSession = trainingSession else { return }
+    trainingSession.personRecordIds.append(newPr.id)
+    try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 
   static func uploadFavoritePersonalRecordIds(_ favPrIds: [String]) async throws {

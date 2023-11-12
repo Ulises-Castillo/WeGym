@@ -21,6 +21,8 @@ struct EditPersonalRecordView: View {
   @Environment(\.dismiss) var dismiss
   @State private var selectedNumberOfReps = 1
   @State private var shouldFlex = true
+  @EnvironmentObject var trainingSessionViewModel: TrainingSessionViewModel
+
   var personalRecord: PersonalRecord?
 
   var selectedPersonalRecordCategory: String {
@@ -33,6 +35,11 @@ struct EditPersonalRecordView: View {
 
   init(_ personalRecord: PersonalRecord? = nil) {
     self.personalRecord = personalRecord
+  }
+
+  var currentTrainingSession: TrainingSession? {
+    guard let currId = UserService.shared.currentUser?.id else { return nil }
+    return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, Date())]
   }
 
   func isPrValid() -> Bool {
@@ -208,7 +215,7 @@ struct EditPersonalRecordView: View {
                                            timestamp: Timestamp(),
                                            notes: notes)
 
-                try await personalRecordsViewModel.addPersonalRecord(newPr)
+                try await personalRecordsViewModel.addPersonalRecord(newPr, trainingSession: shouldFlex ? currentTrainingSession : nil)
               }
             }
             dismiss()
