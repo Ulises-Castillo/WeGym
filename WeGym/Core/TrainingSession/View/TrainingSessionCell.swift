@@ -57,8 +57,10 @@ struct TrainingSessionCell: View {
 
   @State private var showLikes = false
   @State private var showComments = false
+  @State private var showEditPrSheet = false
   @State var commentsViewMode = false
   @State var notificationCellMode = false
+  @State var selectedPR: PersonalRecord?
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -97,7 +99,12 @@ struct TrainingSessionCell: View {
       .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
 
       ForEach(trainingSession.personalRecords ?? [], id: \.self) { pr in
-        PersonalRecordFlex(personalRecord: pr)
+        Button {
+          selectedPR = pr
+          showEditPrSheet.toggle()
+        } label: {
+          PersonalRecordFlex(personalRecord: pr)
+        }
       }
 
       HStack {
@@ -132,12 +139,22 @@ struct TrainingSessionCell: View {
             .imageScale(.medium)
         }
 
-        if let user = trainingSession.user {
+        if let user = trainingSession.user, !user.isCurrentUser {
           NavigationLink(value: TrainingSessionsNavigation.chat(user)) { //TODO: set user on notification cell model
             Image(systemName: "envelope")
               .imageScale(.medium)
           }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
           Spacer()
+        }
+
+        if let user = trainingSession.user, user.isCurrentUser {
+          Button {
+            showEditPrSheet.toggle()
+          } label: {                //TODO: move to computed property "isFutureTrainingSession"
+            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy"
+            Image(systemName: imageName)
+              .imageScale(.medium)
+          }
         }
       }
       .padding(.leading, 8)
@@ -178,6 +195,9 @@ struct TrainingSessionCell: View {
         .presentationDragIndicator(.visible)
         .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
+    .sheet(isPresented: $showEditPrSheet) {
+      EditPersonalRecordView(selectedPR, date: viewModel.day)
+    }
     .sheet(isPresented: $showLikes) {
       VStack {
         Text("Likes")
@@ -205,6 +225,11 @@ struct TrainingSessionCell: View {
       if !showComments {
         commentsViewMode = false
         Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+      }
+    }
+    .onChange(of: showEditPrSheet) { newValue in
+      if !newValue {
+        selectedPR = nil
       }
     }
     .onNotification { userInfo in

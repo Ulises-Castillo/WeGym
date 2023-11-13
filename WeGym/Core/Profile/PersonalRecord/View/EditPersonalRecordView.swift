@@ -25,6 +25,7 @@ struct EditPersonalRecordView: View {
   @State private var showFlexToolTip = false
 
   var personalRecord: PersonalRecord?
+  var trainingSessionDate: Date?
 
   var selectedPersonalRecordCategory: String {
     return viewModel.selectedPersonalRecordCategory.first ?? ""
@@ -34,18 +35,31 @@ struct EditPersonalRecordView: View {
     return selectedPersonalRecordCategory == "Calesthenics"
   }
 
-  init(_ personalRecord: PersonalRecord? = nil) {
+  init(_ personalRecord: PersonalRecord? = nil, date trainingSessionDate: Date? = nil) {
     self.personalRecord = personalRecord
+    self.trainingSessionDate = trainingSessionDate
   }
 
-  var currentTrainingSession: TrainingSession? {
+  func trainingSessionForPr() -> TrainingSession? {     //TODO: test all cases
     guard let currId = UserService.shared.currentUser?.id else { return nil }
-    return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, Date())]
+
+    var date = Date()                                   // pr being added with nothing passed in, find today's training session
+
+    if let trainingSessionDate = trainingSessionDate {  // pr will be added to specific training session, date passed in
+      date = trainingSessionDate
+    } else if let pr = personalRecord {                 // existing pr being edited, passed in, training session chose according to pr date
+      date = pr.timestamp.dateValue()
+    }
+
+    return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, date)]
   }
 
-  func trainingSessionForPr() -> TrainingSession? {
-    guard let currId = UserService.shared.currentUser?.id, let pr = personalRecord else { return nil }
-    return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, pr.timestamp.dateValue())]
+  func prTimestamp() -> Timestamp {
+    if let trainingSessionDate = trainingSessionDate {
+      return Timestamp(date: trainingSessionDate)
+    } else {
+      return Timestamp()
+    }
   }
 
   func isPrValid() -> Bool {
@@ -173,6 +187,7 @@ struct EditPersonalRecordView: View {
             .padding(.bottom, UIScreen.main.bounds.height / 9)
             .font(.system(size: 16, weight: Font.Weight.medium, design: Font.Design.rounded))
             .disableAutocorrection(true)
+            .multilineTextAlignment(.leading)
 
           let slideButtonStyling = SlideButtonStyling(
             indicatorSize: 60,
@@ -196,6 +211,7 @@ struct EditPersonalRecordView: View {
             .padding()
           }
         }
+        .foregroundColor(.primary)
       }
       .scrollDismissesKeyboard(.interactively)
       .keyboardAvoiding()
@@ -228,10 +244,10 @@ struct EditPersonalRecordView: View {
                                            category: viewModel.selectedPersonalRecordCategory.first ?? "",
                                            type: viewModel.selectedPersonalRecordType.first ?? "",
                                            ownerUid: UserService.shared.currentUser?.id ?? "",
-                                           timestamp: Timestamp(),
+                                           timestamp:  prTimestamp(),
                                            notes: notes)
 
-                try await personalRecordsViewModel.addPersonalRecord(newPr, trainingSession: shouldFlex ? currentTrainingSession : nil)
+                try await personalRecordsViewModel.addPersonalRecord(newPr, trainingSession: shouldFlex ? trainingSessionForPr() : nil)
               }
             }
             dismiss()
