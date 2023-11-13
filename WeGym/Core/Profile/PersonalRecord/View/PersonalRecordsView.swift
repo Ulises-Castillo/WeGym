@@ -47,9 +47,6 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
         }
       }
     }
-    .onDisappear {
-      viewModel.removePersonalRecordListener()
-    }
   }
 }
 

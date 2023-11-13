@@ -94,6 +94,9 @@ struct MainTabView: View {
     .onAppear {
       trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel
     }
+    .onDisappear {
+      personalRecordsViewModel.removePersonalRecordListener()
+    }
     .accentColor(Color(.systemBlue))
     .onNotification { userInfo in                                           //TODO: move verbose logic to extension + enum to handle notification types
 
