@@ -145,7 +145,7 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: prevSession.likes,
                                                  shouldShowTime: prevSession.shouldShowTime,
-                                                 personRecordIds: prevSession.personRecordIds)
+                                                 personalRecordIds: prevSession.personalRecordIds)
 
                 try await viewModel.updateTrainingSession(session: newSession)
 
@@ -160,7 +160,7 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: 0,
                                                  shouldShowTime: timeTapped,
-                                                 personRecordIds: [])
+                                                 personalRecordIds: [])
 
                 try await viewModel.addTrainingSession(session: newSession)
               }

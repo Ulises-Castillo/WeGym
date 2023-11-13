@@ -66,7 +66,7 @@ struct PersonalRecordService {
     try await postRef.setData(encodedPersonalRecord)
 
     guard var trainingSession = trainingSession else { return }
-    trainingSession.personRecordIds.append(newPr.id)
+    trainingSession.personalRecordIds.append(newPr.id)
     try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 
@@ -115,9 +115,9 @@ struct PersonalRecordService {
       .delete()
 
     guard var trainingSession = trainingSession,
-            let index = trainingSession.personRecordIds.firstIndex(of: id) else { return }
-    
-    trainingSession.personRecordIds.remove(at: index)
+            let index = trainingSession.personalRecordIds.firstIndex(of: id) else { return }
+
+    trainingSession.personalRecordIds.remove(at: index)
     try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 }

@@ -22,7 +22,7 @@ struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   //  var weekly: Bool = false
   var didLike: Bool? = false
   var shouldShowTime: Bool = false
-  var personRecordIds: [String]
+  var personalRecordIds: [String]
   var personalRecords: [PersonalRecord]?
 }
 

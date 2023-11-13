@@ -131,7 +131,7 @@ struct TrainingSessionService {
                                           caption: caption,
                                           likes: likes,
                                           shouldShowTime: shouldShowTime,
-                                          personRecordIds: personalRecordIds)
+                                          personalRecordIds: personalRecordIds)
 
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await postRef.setData(encodedTrainingSession)

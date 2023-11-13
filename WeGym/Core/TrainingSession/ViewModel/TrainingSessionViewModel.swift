@@ -72,7 +72,7 @@ class TrainingSessionViewModel: ObservableObject {
     if let currentUserTrainingSesssion = currentUserTrainingSesssion {
       trainingSessions.insert(currentUserTrainingSesssion, at: 0)
     } else {
-      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0, personRecordIds: [])
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0, personalRecordIds: [])
       dummy.user = currentUser
       trainingSessions.insert(dummy, at: 0)
     }
@@ -81,7 +81,7 @@ class TrainingSessionViewModel: ObservableObject {
       for i in 0..<trainingSessions.count {
         let session = trainingSessions[i]
 
-        for id in session.personRecordIds {
+        for id in session.personalRecordIds {
           guard let pr = personalRecordsViewModel!.personalRecordsCache[id] else { continue }
 
           if trainingSessions[i].personalRecords?.append(pr) == nil {
@@ -119,7 +119,7 @@ class TrainingSessionViewModel: ObservableObject {
                                                            caption: session.caption,
                                                            likes: session.likes,
                                                            shouldShowTime: session.shouldShowTime,
-                                                           personalRecordIds: session.personRecordIds)
+                                                           personalRecordIds: session.personalRecordIds)
   }
 
   @MainActor
