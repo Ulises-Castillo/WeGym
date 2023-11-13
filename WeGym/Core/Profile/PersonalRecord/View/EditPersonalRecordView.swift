@@ -219,7 +219,7 @@ struct EditPersonalRecordView: View {
                                                timestamp: pr.timestamp,
                                                notes: notes)
 
-                try await personalRecordsViewModel.updatePersonalRecord(updatedPr)
+                try await personalRecordsViewModel.updatePersonalRecord(updatedPr) //TODO: add PR to training session if `shouldFlex`
 
               } else {
                 let newPr = PersonalRecord(id: "",
