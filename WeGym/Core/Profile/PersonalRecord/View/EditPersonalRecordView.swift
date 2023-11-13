@@ -43,6 +43,11 @@ struct EditPersonalRecordView: View {
     return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, Date())]
   }
 
+  func trainingSessionForPr() -> TrainingSession? {
+    guard let currId = UserService.shared.currentUser?.id, let pr = personalRecord else { return nil }
+    return trainingSessionViewModel.trainingSessionsCache[trainingSessionViewModel.key(currId, pr.timestamp.dateValue())]
+  }
+
   func isPrValid() -> Bool {
     if !isCalethenics {
       return !viewModel.selectedPersonalRecordCategory.isEmpty &&
@@ -185,7 +190,7 @@ struct EditPersonalRecordView: View {
 
           if let pr = personalRecord {
             SlideButton("Delete", styling: slideButtonStyling, action: {
-              Task { try await personalRecordsViewModel.deletePersonalRecord(pr) }
+              Task { try await personalRecordsViewModel.deletePersonalRecord(pr, trainingSessionForPr()) }
               dismiss()
             })
             .padding()

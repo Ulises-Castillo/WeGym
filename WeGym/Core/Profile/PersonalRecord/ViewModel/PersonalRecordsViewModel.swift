@@ -50,8 +50,8 @@ class PersonalRecordsViewModel: ObservableObject {
   }
 
   @MainActor
-  func deletePersonalRecord(_ personalRecord: PersonalRecord) async throws {
-    try await PersonalRecordService.deletePersonalRecord(withId: personalRecord.id)
+  func deletePersonalRecord(_ personalRecord: PersonalRecord, _ trainingSession: TrainingSession?) async throws {
+    try await PersonalRecordService.deletePersonalRecord(withId: personalRecord.id, trainingSession)
   }
 
   @MainActor

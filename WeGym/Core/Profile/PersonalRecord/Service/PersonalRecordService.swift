@@ -105,7 +105,7 @@ struct PersonalRecordService {
       .setData(encodedPersonalRecord)
   }
 
-  static func deletePersonalRecord(withId id: String) async throws {
+  static func deletePersonalRecord(withId id: String, _ trainingSession: TrainingSession?) async throws {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
     try await FirestoreConstants.UserCollection
@@ -113,5 +113,11 @@ struct PersonalRecordService {
       .collection("personal-records")
       .document(id)
       .delete()
+
+    guard var trainingSession = trainingSession,
+            let index = trainingSession.personRecordIds.firstIndex(of: id) else { return }
+    
+    trainingSession.personRecordIds.remove(at: index)
+    try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 }
