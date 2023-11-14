@@ -29,7 +29,7 @@ struct ContentView: View {
             .padding(.top, UIScreen.main.bounds.height/7.4)
             .frame(width: 50)
             .onAppear { //FIX: prevent infinite loading spinner caused by user being deleted in the backend, but still logged in locally
-              Timer.scheduledTimer(withTimeInterval: 6.0, repeats: false) { _ in
+              Timer.scheduledTimer(withTimeInterval: 9.0, repeats: false) { _ in
                 guard viewModel.currentUser == nil else { return }
                 AuthService.shared.signOut()
               }
