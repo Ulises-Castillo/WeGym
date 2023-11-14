@@ -12,6 +12,7 @@ struct AddEmailView: View {
   @EnvironmentObject var viewModel: RegistrationViewModel
   @State private var showCreateUsernameView = false
   @FocusState var inputFocused: Bool
+  @State private var emailTemp = ""
 
   var body: some View {
     VStack(spacing: 12) {
@@ -55,7 +56,7 @@ struct AddEmailView: View {
       }
 
       if viewModel.emailValidationFailed {
-        Text("This email is already in use.")
+        Text("\(emailTemp) is already in use.")
           .font(.caption)
           .foregroundColor(Color(.systemRed))
           .frame(maxWidth: .infinity, alignment: .leading)
@@ -64,7 +65,10 @@ struct AddEmailView: View {
 
 
       Button {
-        Task { try await viewModel.validateEmail() }
+        Task {
+          emailTemp = viewModel.email
+          try await viewModel.validateEmail()
+        }
       } label: {
         Text("Next")
           .font(.subheadline)
