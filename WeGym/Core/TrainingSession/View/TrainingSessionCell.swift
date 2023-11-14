@@ -151,8 +151,8 @@ struct TrainingSessionCell: View {
           Button {
             showEditPrSheet.toggle()
           } label: {                //TODO: move to computed property "isFutureTrainingSession"
-            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy"
-            Image(systemName: imageName)
+//            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
+            Image(systemName: "trophy")
               .imageScale(.medium)
           }
         }
