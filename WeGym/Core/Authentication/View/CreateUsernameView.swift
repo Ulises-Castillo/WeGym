@@ -53,6 +53,11 @@ struct CreateUsernameView: View {
             .foregroundColor(Color(.systemRed))
             .padding(.trailing, 40)
             .padding(.top, 14)
+            .onTapGesture {
+              viewModel.username = ""
+              usernameTemp = ""
+              viewModel.usernameValidationFailed = false
+            }
         }
       }
 
@@ -67,6 +72,7 @@ struct CreateUsernameView: View {
 
       Button {
         Task {
+          viewModel.usernameValidationFailed = false
           usernameTemp = viewModel.username
           try await viewModel.validateUsername()
         }

@@ -52,6 +52,11 @@ struct AddEmailView: View {
             .foregroundColor(Color(.systemRed))
             .padding(.trailing, 40)
             .padding(.top, 14)
+            .onTapGesture {
+              viewModel.email = ""
+              emailTemp = ""
+              viewModel.emailValidationFailed = false
+            }
         }
       }
 
@@ -66,6 +71,7 @@ struct AddEmailView: View {
 
       Button {
         Task {
+          viewModel.emailValidationFailed = false
           emailTemp = viewModel.email
           try await viewModel.validateEmail()
         }
