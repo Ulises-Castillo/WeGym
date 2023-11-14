@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C04F2AD2B0326C7003FE05B /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */; };
 		1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */; };
 		1C05E5DA2AE78D2700D53AE6 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D92AE78D2700D53AE6 /* CommentsView.swift */; };
 		1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5DB2AE78D3600D53AE6 /* CommentCell.swift */; };
@@ -257,6 +258,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C04F2AD2B0326C7003FE05B /* ConfettiSwiftUI in Frameworks */,
 				1CDEE2D02AD9D71800F1A2D6 /* FirebaseDatabase in Frameworks */,
 				1CDEE2DE2AD9D71800F1A2D6 /* FirebaseFunctionsCombine-Community in Frameworks */,
 				1CDEE2D62AD9D71800F1A2D6 /* FirebaseFirestore in Frameworks */,
@@ -1036,6 +1038,7 @@
 				1CDEE2F12AD9D71800F1A2D6 /* FirebaseStorageCombine-Community */,
 				1CDEE3112ADA67B400F1A2D6 /* Kingfisher */,
 				1C2FFA502AE1D6A0009CDA2D /* SlideButton */,
+				1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */,
 			);
 			productName = WeGym;
 			productReference = 1CDEE2802AD6621900F1A2D6 /* WeGym.app */;
@@ -1069,6 +1072,7 @@
 				1CDEE2BC2AD9D71800F1A2D6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1CDEE3102ADA67B400F1A2D6 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */,
+				1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 			);
 			productRefGroup = 1CDEE2812AD6621900F1A2D6 /* Products */;
 			projectDirPath = "";
@@ -1411,6 +1415,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/no-comment/SlideButton";
@@ -1438,6 +1450,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
 		1C2FFA502AE1D6A0009CDA2D /* SlideButton */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */;

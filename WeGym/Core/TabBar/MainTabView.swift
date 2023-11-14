@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ConfettiSwiftUI
 
 enum Tab {
   case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
@@ -24,6 +25,7 @@ class AppNavigation: ObservableObject {
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
+  @Published var confettiCounter = 0
 }
 
 enum TrainingSessionsNavigation: Hashable {
@@ -91,6 +93,7 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(Tab.CurrentUserProfile)
     }
+    .confettiCannon(counter: $appNav.confettiCounter, num: 99, rainHeight: UIScreen.main.bounds.height * 1.1, closingAngle: Angle.degrees(150), radius: 450)
     .onAppear {
       trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel
     }
