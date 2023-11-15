@@ -162,10 +162,13 @@ struct TrainingSessionsView: View {
         AppNavigation.shared.showCommentsTrainingSessionID = nil
       }
     }
-    .onChange(of: selectedDate) { _ in
+    .onChange(of: selectedDate) { newDate in
       if showingDateSheet {
         showingDateSheet = false
-        animateDayChange(newDate: selectedDate, duration: 0.39)
+        animateDayChange(newDate: newDate, duration: 0.39)
+        defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 0.39, repeats: false) { timer in // hack to fix infinite loading spinner of far out date selection via calendar // works well enough ✅
+          viewModel.day = newDate
+        }
       }
     }
     .onAppear{
