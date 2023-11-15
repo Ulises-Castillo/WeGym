@@ -34,6 +34,8 @@ class TrainingSessionViewModel: ObservableObject {
 
   var userfollowingOrderLocal: [String]?
 
+  //TODO: experiement with only calling this from observe listener completion instead of from setters (`didSet`) above
+  // `reloadTrainingSessions()` being called too many times in rapid succession, though appears to be working fine for now
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
     guard let currentUser = UserService.shared.currentUser else { return }
     let currentUserTrainingSesssion = trainingSessionsCache[key(currentUser.id, day)]
@@ -153,9 +155,7 @@ class TrainingSessionViewModel: ObservableObject {
             }
           }
         }
-      }
 
-      Task {
         for session in trainingSessions {
           var session = session
           session.user = try await UserService.fetchUser(withUid: session.ownerUid)
