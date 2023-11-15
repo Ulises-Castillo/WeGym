@@ -221,11 +221,15 @@ struct TrainingSessionCell: View {
       Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
     }
     .onChange(of: showComments) { newValue in
+      viewModel.isShowingComment_TrainingSessionCell = newValue
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
       if !showComments {
         commentsViewMode = false
         Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
       }
+    }
+    .onChange(of: showLikes) { newValue in
+      viewModel.isShowingLikes_TrainingSessionCell = newValue
     }
     .onChange(of: showEditPrSheet) { newValue in
       if !newValue {

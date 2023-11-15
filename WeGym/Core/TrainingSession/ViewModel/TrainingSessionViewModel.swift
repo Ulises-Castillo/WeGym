@@ -196,6 +196,9 @@ class TrainingSessionViewModel: ObservableObject {
     }
   }
 
+  @Published var isShowingComment_TrainingSessionCell = false
+  @Published var isShowingLikes_TrainingSessionCell = false
+
   @MainActor
   func like(_ trainingSession: TrainingSession) async { // pass in from cache // across the board deal only with cached session
     do {
