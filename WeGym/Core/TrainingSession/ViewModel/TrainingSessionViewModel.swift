@@ -137,8 +137,6 @@ class TrainingSessionViewModel: ObservableObject {
     try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] (trainingSessions, removedTrainingSessions) in
       guard let self = self else { return }
 
-      print("*** Listener update: \(trainingSessions.count)")
-
       for session in removedTrainingSessions {
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
       }
@@ -146,9 +144,10 @@ class TrainingSessionViewModel: ObservableObject {
       Task { // fetch non-observed (non-current user) PRs
         if self.personalRecordsViewModel != nil {
           for session in trainingSessions {
-            guard let user = session.user, !user.isCurrentUser else { continue }
+            guard UserService.shared.currentUser?.id != session.ownerUid else { continue }
 
             for id in session.personalRecordIds {
+//              guard self.personalRecordsViewModel!.personalRecordsCache[id] == nil else { continue }
               guard let pr = try await PersonalRecordService.fetchPersonalRecord(userId: session.ownerUid, prId: id) else { continue }
               self.personalRecordsViewModel!.personalRecordsCache[id] = pr
             }
