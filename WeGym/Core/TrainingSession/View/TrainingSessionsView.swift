@@ -120,10 +120,6 @@ struct TrainingSessionsView: View {
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
-              .onChange(of: selectedDate) { _ in
-                showingDateSheet.toggle()
-                animateDayChange(newDate: selectedDate, duration: 0.39)
-              }
               .datePickerStyle(.graphical)
               .presentationDetents([.medium])
               .presentationDragIndicator(.hidden)
@@ -166,8 +162,11 @@ struct TrainingSessionsView: View {
         AppNavigation.shared.showCommentsTrainingSessionID = nil
       }
     }
-    .onChange(of: showingDateSheet) { _ in
-      defaultDayTimer?.invalidate()
+    .onChange(of: selectedDate) { _ in
+      if showingDateSheet {
+        showingDateSheet = false
+        animateDayChange(newDate: selectedDate, duration: 0.39)
+      }
     }
     .onAppear{
       guard shouldSetDateOnAppear else {
