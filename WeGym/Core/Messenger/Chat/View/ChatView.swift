@@ -54,11 +54,14 @@ struct ChatView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.messages) { newValue in
+          guard let lastMessage = newValue.last else { return }
           self.proxy = proxy
 
           if isFirstLoad {
             isFirstLoad = false
-            proxy.scrollTo("thwartKeyboard") //Bug: tapping above nav bar to scrollToTop causes jitter, no scrollToTop
+//            proxy.scrollTo("thwartKeyboard") //Bug: tapping above nav bar to scrollToTop causes jitter, no scrollToTop
+            proxy.scrollTo(lastMessage.id)
+            proxy.scrollTo("thwartKeyboard")
 //            withAnimation(.linear(duration: 0.000001)) { //FIX: for some reason using withAnimation prevent bug: tapping above nav bar to scroll to top
 //              proxy.scrollTo("thwartKeyboard")  // likely this issue would be fixed by caching messages locally //TODO: try and have Firestore return these from cache
 //            }
@@ -66,11 +69,13 @@ struct ChatView: View {
           }
 
           withAnimation(.spring()) {
+            proxy.scrollTo(lastMessage.id)
             proxy.scrollTo("thwartKeyboard")
           }
 
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { //TODO: remove hacky code
             withAnimation(.spring()) {
+              proxy.scrollTo(lastMessage.id)
               proxy.scrollTo("thwartKeyboard")
             }
           }
