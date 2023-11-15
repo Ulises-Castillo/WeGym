@@ -143,6 +143,19 @@ class TrainingSessionViewModel: ObservableObject {
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
       }
 
+      Task { // fetch non-observed (non-current user) PRs
+        if self.personalRecordsViewModel != nil {
+          for session in trainingSessions {
+            guard let user = session.user, !user.isCurrentUser else { continue }
+
+            for id in session.personalRecordIds {
+              guard let pr = try await PersonalRecordService.fetchPersonalRecord(userId: session.ownerUid, prId: id) else { continue }
+              self.personalRecordsViewModel!.personalRecordsCache[id] = pr
+            }
+          }
+        }
+      }
+
       Task {
         for session in trainingSessions {
           var session = session

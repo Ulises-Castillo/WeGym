@@ -104,7 +104,7 @@ struct TrainingSessionCell: View {
           showEditPrSheet.toggle()
         } label: {
           PersonalRecordFlex(personalRecord: pr)
-        }
+        }.disabled(trainingSession.user?.isCurrentUser == false)
       }
 
       HStack {
