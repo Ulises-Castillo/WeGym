@@ -55,9 +55,9 @@ struct LoginView: View {
 
         Button {
           Task { 
-            try await viewModel.signIn()
             TrainingSessionService.clearFetchedDates()
-            AppNavigation.shared.selectedTab = .TrainingSessions //FIXME: training session tab not showing on logout then new user regestration
+            AppNavigation.shared.selectedTab = .TrainingSessions
+            try await viewModel.signIn()
           }
         } label: {
           Text("Log In")
