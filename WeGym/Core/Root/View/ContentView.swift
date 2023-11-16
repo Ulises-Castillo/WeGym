@@ -40,11 +40,10 @@ struct ContentView: View {
     }
     .onChange(of: scenePhase) { (phase) in
       switch phase {
-      case .active:
+      case .background:
         UIApplication.shared.applicationIconBadgeNumber = 0
         Task { await NotificationService.resetBadgeCount() }
-      case .background: break
-      case .inactive: break
+      case .active, .inactive: break
       @unknown default: break
       }
     }
