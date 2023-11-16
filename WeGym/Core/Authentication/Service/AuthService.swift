@@ -47,7 +47,7 @@ class AuthService {
   @MainActor
   func loadUserData() async throws {
     userSession = Auth.auth().currentUser
-    guard let currentUid = userSession?.uid else { return }
+    guard let _ = userSession?.uid else { return }
     try await UserService.shared.fetchCurrentUser()
   }
   
