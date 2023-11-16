@@ -12,9 +12,13 @@ import Combine
 @MainActor
 class InboxViewModel: ObservableObject {
   @Published var recentMessages = [Message]()
-  @Published var conversations = [Conversation]()
+  @Published var conversations = [Conversation]() // the fuck is this ?
   @Published var user: User?
   @Published var searchText = ""
+  
+  var unreadMessagesCount: Int {
+    return recentMessages.filter({ !$0.read && !$0.isFromCurrentUser }).count
+  }
 
   var filteredMessages: [Message] {
     guard let currentUser = user else { return [] }
@@ -84,6 +88,12 @@ class InboxViewModel: ObservableObject {
       } else if change.type == .modified {
         self.updateMessagesFromExisitingConversation(fromChange: change)
       }
+    }
+  }
+
+  func updateUserInfo() async throws {
+    for (i, message) in recentMessages.enumerated() {
+      recentMessages[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
     }
   }
 

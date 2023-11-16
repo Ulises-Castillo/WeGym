@@ -95,6 +95,13 @@ class ChatService {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     guard !message.read else { return }
 
+
+    let timeInterval = message.timestamp.dateValue().timeIntervalSince1970 //TODO: send message timestamp in push notificaton to ignore if necessary in AppDel
+
+    if timeInterval > AppNavigation.shared.userIdDate[message.chatPartnerId, default: 0] {
+      AppNavigation.shared.userIdDate[message.chatPartnerId] = timeInterval
+    }
+
     try await FirestoreConstants.MessagesCollection
       .document(uid)
       .collection("recent-messages")
