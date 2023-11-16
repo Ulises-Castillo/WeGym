@@ -31,6 +31,10 @@ struct TrainingSessionsView: View {
   }
 
   func animateDayChange(newDate: Date, duration: CGFloat) {
+    guard !showingEditSheet, !showComments,
+    !viewModel.isShowingComment_TrainingSessionCell,
+    !viewModel.isShowingLikes_TrainingSessionCell else { return } //Fix: do not change day if user editing a workout
+                                                                  // or viewing likes, comments
     isAnimationForward = newDate.timeIntervalSince1970 > viewModel.day.timeIntervalSince1970
 
     withAnimation(.interactiveSpring(duration: duration)) {
@@ -119,10 +123,6 @@ struct TrainingSessionsView: View {
           }
           .sheet(isPresented: $showingDateSheet) {
             DatePicker("", selection: $selectedDate, displayedComponents: .date)
-              .onChange(of: selectedDate) { _ in
-                showingDateSheet.toggle()
-                animateDayChange(newDate: selectedDate, duration: 0.39)
-              }
               .datePickerStyle(.graphical)
               .presentationDetents([.medium])
               .presentationDragIndicator(.hidden)
@@ -165,8 +165,14 @@ struct TrainingSessionsView: View {
         AppNavigation.shared.showCommentsTrainingSessionID = nil
       }
     }
-    .onChange(of: showingDateSheet) { _ in
-      defaultDayTimer?.invalidate()
+    .onChange(of: selectedDate) { newDate in
+      if showingDateSheet {
+        showingDateSheet = false
+        animateDayChange(newDate: newDate, duration: 0.39)
+        defaultDayTimer = Timer.scheduledTimer(withTimeInterval: 0.39, repeats: false) { timer in // hack to fix infinite loading spinner of far out date selection via calendar // works well enough ✅
+          viewModel.day = newDate
+        }
+      }
     }
     .onAppear{
       guard shouldSetDateOnAppear else {

@@ -42,6 +42,11 @@ function getbadgeCount(uid) {
 
 exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-followers/{follower_uid}/", (event) => {
 
+    getFirestore().collection("user_meta").doc(event.params.uid).get().then((doc) => {
+        const count = doc.data().badgeCount;
+
+        const badgeCount = count == null ? 0 : count;
+
     getFirestore().collection("fcmTokens").doc(event.params.uid).get().then((doc) => {
         const token = doc.data().token
 
@@ -55,6 +60,24 @@ exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-f
                 },
                 data: {
                 },
+                // Apple specific settings
+                apns: {
+                    headers: {
+                        'apns-priority': '10',
+                    },
+                    payload: {
+                        aps: {
+                            "content-available": 1,
+                            "badge": (badgeCount + 1),
+                            sound: 'default',
+                            alert: {
+                                title: `${follower}`,
+                                body: "is now following you."
+                            }
+                        },
+                        notificationType: "new_follower"
+                    }
+                },
                 token: token
             };
 
@@ -62,10 +85,18 @@ exports.sendNewFollowerNotification = onDocumentCreated("/followers/{uid}/user-f
                 .then((response) => {
                     console.log("Successfully sent message:", response);
                     console.log("data: ", token)
+
+                    getFirestore().collection("user_meta").doc(event.params.uid).update({ badgeCount: admin.firestore.FieldValue.increment(1) }).then(() => {
+                        console.log("BadgeCount successfully written!");
+                    })
+                        .catch((error) => {
+                            console.log("Error writing BadgeCount: ", error);
+                        });
                 })
                 .catch((error) => {
                     console.log("Error sending message:", error);
                 });
+            });
         });
     });
 });

@@ -54,7 +54,11 @@ struct LoginView: View {
         .frame(maxWidth: .infinity, alignment: .trailing)
 
         Button {
-          Task { try await viewModel.signIn() }
+          Task { 
+            TrainingSessionService.clearFetchedDates()
+            AppNavigation.shared.selectedTab = .TrainingSessions
+            try await viewModel.signIn()
+          }
         } label: {
           Text("Log In")
             .font(.subheadline)
@@ -92,7 +96,7 @@ struct LoginView: View {
   }
 }
 
-struct ClearButton: ViewModifier {
+struct ClearButton: ViewModifier { //TODO: move to extensions
   @Binding var text: String
 
   func body(content: Content) -> some View {

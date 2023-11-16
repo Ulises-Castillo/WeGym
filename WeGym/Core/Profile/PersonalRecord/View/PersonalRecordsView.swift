@@ -11,7 +11,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
 
 
   @State private var showingAddPersonalRecordView = false
-  @StateObject private var viewModel = PersonalRecordsViewModel()
+  @EnvironmentObject private var viewModel: PersonalRecordsViewModel
 
   var body: some View {
     ScrollView(showsIndicators: false) {
@@ -46,9 +46,6 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
           showingAddPersonalRecordView = true
         }
       }
-    }
-    .onDisappear {
-      viewModel.removePersonalRecordListener()
     }
   }
 }

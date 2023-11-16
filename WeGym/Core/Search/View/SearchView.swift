@@ -23,5 +23,8 @@ struct SearchView: View {
           }
         }
     }
+    .onAppear {
+      Task { await preloadedSearchViewModel.fetchUsers() }
+    }
   }
 }

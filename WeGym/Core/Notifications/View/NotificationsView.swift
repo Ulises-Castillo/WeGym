@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NotificationsView: View {
+  @Environment(\.scenePhase) var scenePhase
   @EnvironmentObject var viewModel: NotificationsViewModel
   @Binding var shouldShowNotificationBadge: Bool
   @Binding var path: [NotificationsNavigation]
@@ -39,7 +40,13 @@ struct NotificationsView: View {
           ProfileView(user: user)
         }
       }
+      .onChange(of: scenePhase) { newPhase in
+        if newPhase == .active {
+          Task { try await viewModel.updateNotifications() }
+        }
+      }
       .onAppear {
+        Task { try await viewModel.updateNotifications() }
         shouldShowNotificationBadge = false
       }
       .overlay {

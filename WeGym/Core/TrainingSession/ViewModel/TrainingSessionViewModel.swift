@@ -10,6 +10,8 @@ import Firebase
 
 class TrainingSessionViewModel: ObservableObject {
 
+  var personalRecordsViewModel: PersonalRecordsViewModel?
+
   var day = Date.now {
     didSet {
       reloadTrainingSessions()
@@ -32,6 +34,8 @@ class TrainingSessionViewModel: ObservableObject {
 
   var userfollowingOrderLocal: [String]?
 
+  //TODO: experiement with only calling this from observe listener completion instead of from setters (`didSet`) above
+  // `reloadTrainingSessions()` being called too many times in rapid succession, though appears to be working fine for now
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
     guard let currentUser = UserService.shared.currentUser else { return }
     let currentUserTrainingSesssion = trainingSessionsCache[key(currentUser.id, day)]
@@ -70,9 +74,23 @@ class TrainingSessionViewModel: ObservableObject {
     if let currentUserTrainingSesssion = currentUserTrainingSesssion {
       trainingSessions.insert(currentUserTrainingSesssion, at: 0)
     } else {
-      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], likes: 0)
+      var dummy = TrainingSession(id: dummyId, ownerUid: "", date: Timestamp(), focus: [], category: [], likes: 0, personalRecordIds: [])
       dummy.user = currentUser
       trainingSessions.insert(dummy, at: 0)
+    }
+
+    if personalRecordsViewModel != nil {
+      for i in 0..<trainingSessions.count {
+        let session = trainingSessions[i]
+
+        for id in session.personalRecordIds {
+          guard let pr = personalRecordsViewModel!.personalRecordsCache[id] else { continue }
+
+          if trainingSessions[i].personalRecords?.append(pr) == nil {
+            trainingSessions[i].personalRecords = [pr]
+          }
+        }
+      }
     }
 
     Task {
@@ -96,7 +114,14 @@ class TrainingSessionViewModel: ObservableObject {
 
   @MainActor
   func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date, focus: session.focus, location: session.location, caption: session.caption, likes: session.likes, shouldShowTime: session.shouldShowTime)
+    try await TrainingSessionService.uploadTrainingSession(date: session.date,
+                                                           focus: session.focus,
+                                                           category: session.category,
+                                                           location: session.location,
+                                                           caption: session.caption,
+                                                           likes: session.likes,
+                                                           shouldShowTime: session.shouldShowTime,
+                                                           personalRecordIds: session.personalRecordIds)
   }
 
   @MainActor
@@ -114,16 +139,26 @@ class TrainingSessionViewModel: ObservableObject {
     try await TrainingSessionService.observeUserFollowingTrainingSessionsForDate(date: day) { [weak self] (trainingSessions, removedTrainingSessions) in
       guard let self = self else { return }
 
-      print("*** Listener update: \(trainingSessions.count)")
-
       for session in removedTrainingSessions {
         trainingSessionsCache[key(session.ownerUid, session.date.dateValue())] = nil
       }
 
-      Task {
+      Task { // fetch non-observed (non-current user) PRs
+        if self.personalRecordsViewModel != nil {
+          for session in trainingSessions {
+            guard UserService.shared.currentUser?.id != session.ownerUid else { continue }
+
+            for id in session.personalRecordIds {
+//              guard self.personalRecordsViewModel!.personalRecordsCache[id] == nil else { continue }
+              guard let pr = try await PersonalRecordService.fetchPersonalRecord(userId: session.ownerUid, prId: id) else { continue }
+              self.personalRecordsViewModel!.personalRecordsCache[id] = pr
+            }
+          }
+        }
+
         for session in trainingSessions {
           var session = session
-          session.user = try await UserService.fetchUser(withUid: session.ownerUid)
+          session.user = try await UserService.fetchUser(withUid: session.ownerUid, fromCache: false)
           self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session
         }
         TrainingSessionService.updateHasBeenFetched()
@@ -160,6 +195,9 @@ class TrainingSessionViewModel: ObservableObject {
       print(error)
     }
   }
+
+  @Published var isShowingComment_TrainingSessionCell = false
+  @Published var isShowingLikes_TrainingSessionCell = false
 
   @MainActor
   func like(_ trainingSession: TrainingSession) async { // pass in from cache // across the board deal only with cached session

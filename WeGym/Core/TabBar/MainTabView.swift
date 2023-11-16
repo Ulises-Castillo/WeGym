@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ConfettiSwiftUI
 
 enum Tab {
   case TrainingSessions, Messages, Notifications, Search, CurrentUserProfile
@@ -24,6 +25,7 @@ class AppNavigation: ObservableObject {
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
+  @Published var confettiCounter = 0
 }
 
 enum TrainingSessionsNavigation: Hashable {
@@ -51,6 +53,7 @@ enum CurrentUserProfileNavigation: Hashable {
 struct MainTabView: View {
 
   @State var shouldShowNotificationBadge = false
+  @StateObject var personalRecordsViewModel = PersonalRecordsViewModel()
   @StateObject var trainingSessionsViewModel = TrainingSessionViewModel()
   @StateObject var inboxViewModel = InboxViewModel()
   @StateObject var notificationsViewModel = NotificationsViewModel()
@@ -90,6 +93,13 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(Tab.CurrentUserProfile)
     }
+    .confettiCannon(counter: $appNav.confettiCounter, num: 99, rainHeight: UIScreen.main.bounds.height * 1.1, closingAngle: Angle.degrees(150), radius: 450)
+    .onAppear {
+      trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel
+    }
+    .onDisappear {
+      personalRecordsViewModel.removePersonalRecordListener()
+    }
     .accentColor(Color(.systemBlue))
     .onNotification { userInfo in                                           //TODO: move verbose logic to extension + enum to handle notification types
 
@@ -121,6 +131,7 @@ struct MainTabView: View {
     .environmentObject(notificationsViewModel)
     .environmentObject(searchViewModel)
     .environmentObject(currentUserProfileViewModel)
+    .environmentObject(personalRecordsViewModel)
   }
 }
 

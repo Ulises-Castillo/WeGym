@@ -33,6 +33,10 @@ struct TrainingSessionService {
     self.end = nil
   }
 
+  static func clearFetchedDates() {
+    fetchedDates.removeAll()
+  }
+
   static private var firestoreListener: ListenerRegistration?
 
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
@@ -113,7 +117,7 @@ struct TrainingSessionService {
     return trainingSessions
   }
 
-  static func uploadTrainingSession(date: Timestamp, focus: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool) async throws {
+  static func uploadTrainingSession(date: Timestamp, focus: [String], category: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool, personalRecordIds: [String]) async throws {
 
     guard let uid = Auth.auth().currentUser?.uid else { return }
     let postRef = FirestoreConstants.TrainingSessionsCollection.document()
@@ -122,10 +126,12 @@ struct TrainingSessionService {
                                           ownerUid: uid,
                                           date: date,
                                           focus: focus,
+                                          category: category,
                                           location: location,
                                           caption: caption,
                                           likes: likes,
-                                          shouldShowTime: shouldShowTime)
+                                          shouldShowTime: shouldShowTime,
+                                          personalRecordIds: personalRecordIds)
 
     guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
     try await postRef.setData(encodedTrainingSession)

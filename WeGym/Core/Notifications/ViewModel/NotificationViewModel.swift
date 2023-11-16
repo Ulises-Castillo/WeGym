@@ -43,7 +43,7 @@ class NotificationsViewModel: ObservableObject {
     }
 
     if let trainingSessionId = notification.trainingSessionId {
-      async let trainingSessionSnapshot = await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument()
+      async let trainingSessionSnapshot = await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument(source: .cache) //TODO: test .cache
       self.notifications[indexOfNotification].trainingSession = try? await trainingSessionSnapshot.data(as: TrainingSession.self)
       guard let ownerUid = self.notifications[indexOfNotification].trainingSession?.ownerUid else { return }
       let trainingSessionUser = try? await UserService.fetchUser(withUid: ownerUid)

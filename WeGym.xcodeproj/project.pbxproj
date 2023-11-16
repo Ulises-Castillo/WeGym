@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C04F2AD2B0326C7003FE05B /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */; };
 		1C05E5D12AE7042E00D53AE6 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D02AE7042E00D53AE6 /* NotificationHandler.swift */; };
 		1C05E5DA2AE78D2700D53AE6 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5D92AE78D2700D53AE6 /* CommentsView.swift */; };
 		1C05E5DC2AE78D3600D53AE6 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C05E5DB2AE78D3600D53AE6 /* CommentCell.swift */; };
@@ -62,6 +63,7 @@
 		1C3EEAD92AF6148D00D94C12 /* EditPersonalRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */; };
 		1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */; };
 		1C6BBBC12AE89CE400EA80CB /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */; };
+		1C7348722B00664500884739 /* PersonalRecordFlex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7348712B00664500884739 /* PersonalRecordFlex.swift */; };
 		1CAA9F432AEB853400FB28BC /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */; };
 		1CD4CDCE2ADDC4A400B2BB0D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */; };
 		1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */; };
@@ -198,6 +200,7 @@
 		1C3EEAD82AF6148D00D94C12 /* EditPersonalRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordView.swift; sourceTree = "<group>"; };
 		1C3EEADB2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonalRecordViewModel.swift; sourceTree = "<group>"; };
 		1C6BBBC02AE89CE400EA80CB /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		1C7348712B00664500884739 /* PersonalRecordFlex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalRecordFlex.swift; sourceTree = "<group>"; };
 		1CAA9F422AEB853400FB28BC /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		1CD4CDCD2ADDC4A400B2BB0D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1CD4CDCF2ADDC4A700B2BB0D /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -255,6 +258,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C04F2AD2B0326C7003FE05B /* ConfettiSwiftUI in Frameworks */,
 				1CDEE2D02AD9D71800F1A2D6 /* FirebaseDatabase in Frameworks */,
 				1CDEE2DE2AD9D71800F1A2D6 /* FirebaseFunctionsCombine-Community in Frameworks */,
 				1CDEE2D62AD9D71800F1A2D6 /* FirebaseFirestore in Frameworks */,
@@ -967,6 +971,7 @@
 				1CDEE3342ADB9AE100F1A2D6 /* TrainingSessionCell.swift */,
 				1CDEE3362ADB9B0100F1A2D6 /* TrainingSessionsView.swift */,
 				1CDEE3382ADC61D100F1A2D6 /* TrainingSessionSchedulerView.swift */,
+				1C7348712B00664500884739 /* PersonalRecordFlex.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1033,6 +1038,7 @@
 				1CDEE2F12AD9D71800F1A2D6 /* FirebaseStorageCombine-Community */,
 				1CDEE3112ADA67B400F1A2D6 /* Kingfisher */,
 				1C2FFA502AE1D6A0009CDA2D /* SlideButton */,
+				1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */,
 			);
 			productName = WeGym;
 			productReference = 1CDEE2802AD6621900F1A2D6 /* WeGym.app */;
@@ -1066,6 +1072,7 @@
 				1CDEE2BC2AD9D71800F1A2D6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1CDEE3102ADA67B400F1A2D6 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */,
+				1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 			);
 			productRefGroup = 1CDEE2812AD6621900F1A2D6 /* Products */;
 			projectDirPath = "";
@@ -1114,6 +1121,7 @@
 				1C3EEADC2AF6156B00D94C12 /* EditPersonalRecordViewModel.swift in Sources */,
 				1CD4CDD22ADE2BCD00B2BB0D /* TrainingSession.swift in Sources */,
 				1CDEE2B92AD9CB7D00F1A2D6 /* CurrentUserProfileView.swift in Sources */,
+				1C7348722B00664500884739 /* PersonalRecordFlex.swift in Sources */,
 				1CDEE2AB2AD8EFEE00F1A2D6 /* AddEmailView.swift in Sources */,
 				1C2FFA732AE23EA9009CDA2D /* UserCell.swift in Sources */,
 				1CD4CDD02ADDC4A700B2BB0D /* TagField.swift in Sources */,
@@ -1326,28 +1334,32 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = WeGym/WeGym.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"WeGym/Preview Content\"";
 				DEVELOPMENT_TEAM = 65NB8C7JBQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeGym/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.uac.WeGym;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1358,28 +1370,32 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = WeGym/WeGym.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"WeGym/Preview Content\"";
 				DEVELOPMENT_TEAM = 65NB8C7JBQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeGym/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.uac.WeGym;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1407,6 +1423,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/no-comment/SlideButton";
@@ -1434,6 +1458,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1C04F2AC2B0326C7003FE05B /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C04F2AB2B0326C7003FE05B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
 		1C2FFA502AE1D6A0009CDA2D /* SlideButton */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1C2FFA4F2AE1D6A0009CDA2D /* XCRemoteSwiftPackageReference "SlideButton" */;

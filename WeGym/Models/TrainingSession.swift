@@ -13,6 +13,7 @@ struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   let ownerUid: String
   var date: Timestamp
   var focus: [String]   // disable submit button (green check unless focus selected)
+  var category: [String]
   var location: String? // optional, user may choose not to share location
   var caption: String?
   var user: User?       // left optional for same reason as Post data model
@@ -21,6 +22,8 @@ struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   //  var weekly: Bool = false
   var didLike: Bool? = false
   var shouldShowTime: Bool = false
+  var personalRecordIds: [String]
+  var personalRecords: [PersonalRecord]?
 }
 
 /*

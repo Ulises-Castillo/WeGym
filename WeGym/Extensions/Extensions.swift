@@ -103,3 +103,36 @@ extension String {
   }
 
 }
+
+extension UIColor { //TODO: use these for lighter focus cells in the past, darker focus cells in the future
+
+  func lighter(by percentage: CGFloat = 30.0) -> UIColor? {
+    return self.adjust(by: abs(percentage) )
+  }
+
+  func darker(by percentage: CGFloat = 30.0) -> UIColor? {
+    return self.adjust(by: -1 * abs(percentage) )
+  }
+
+  func adjust(by percentage: CGFloat = 30.0) -> UIColor? {
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+    if self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+      return UIColor(red: min(red + percentage/100, 1.0),
+                     green: min(green + percentage/100, 1.0),
+                     blue: min(blue + percentage/100, 1.0),
+                     alpha: alpha)
+    } else {
+      return nil
+    }
+  }
+}
+
+extension Calendar {
+  func numberOfDaysBetween(_ from: Date, and to: Date) -> Int {
+    let fromDate = startOfDay(for: from) // <1>
+    let toDate = startOfDay(for: to) // <2>
+    let numberOfDays = dateComponents([.day], from: fromDate, to: toDate) // <3>
+
+    return numberOfDays.day ?? 0
+  }
+}

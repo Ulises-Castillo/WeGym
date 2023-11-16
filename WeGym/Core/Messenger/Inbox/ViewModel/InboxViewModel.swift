@@ -21,7 +21,7 @@ class InboxViewModel: ObservableObject {
 
     return recentMessages.filter { message in
       guard let user = message.user, currentUser != user else { return false }
-      
+
       if searchText.isEmpty {
         return true
       } else {
@@ -37,6 +37,7 @@ class InboxViewModel: ObservableObject {
   private var cancellables = Set<AnyCancellable>()
 
   init() {
+    InboxService.shared.reset() //CRASH fix: reset singleton!
     setupSubscribers()
     observeRecentMessages()
   }
@@ -65,19 +66,14 @@ class InboxViewModel: ObservableObject {
   }
 
   private func loadInitialMessages(fromChanges changes: [DocumentChange]) {
-    self.recentMessages = changes.compactMap{ try? $0.document.data(as: Message.self) }
+    var messagesTemp = changes.compactMap{ try? $0.document.data(as: Message.self) }
 
-    for i in 0 ..< recentMessages.count {
-      let message = recentMessages[i]
-
-      UserService.fetchUser(withUid: message.chatPartnerId) { [weak self] user in
-        guard let self else { return }
-        self.recentMessages[i].user = user //FIXME: this line causes CRASH often //replicate by re-running app, not going to the messages tab (no initial load yet) then tapping new message push notification while on the training sessions tab with a comments view open // quite sure this will be fixed when we just load messages immediately on app startup
-
-        if i == self.recentMessages.count - 1 {
-          self.didCompleteInitialLoad = true
-        }
+    Task {
+      for (i, message) in messagesTemp.enumerated() {
+        messagesTemp[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
       }
+      self.recentMessages = messagesTemp
+      self.didCompleteInitialLoad = true
     }
   }
 

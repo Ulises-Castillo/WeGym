@@ -27,7 +27,12 @@ struct CompleteSignUpView: View {
         .padding(.top, 1)
       
       Button {
-        Task { try await viewModel.createUser() }
+        Task { 
+          TrainingSessionService.clearFetchedDates()
+          AppNavigation.shared.selectedTab = .TrainingSessions
+          try await viewModel.createUser()
+        }
+
       } label: {
         Text("Complete Sign Up")
           .font(.subheadline)

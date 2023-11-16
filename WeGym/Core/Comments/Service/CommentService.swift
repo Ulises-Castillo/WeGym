@@ -51,7 +51,7 @@ class CommentService {
 
     self.firestoreListener = query.addSnapshotListener { snapshot, _ in
       guard let changes = snapshot?.documentChanges.filter({ $0.type == .added }) else { return }
-      var comments = changes.compactMap{ try? $0.document.data(as: Comment.self) }
+      let comments = changes.compactMap{ try? $0.document.data(as: Comment.self) }
 
       completion(comments)
     }

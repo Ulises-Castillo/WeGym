@@ -68,8 +68,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
           switch screen {
           case .chat(let user):
             if user.id == fromId {
-              return [] // Don't display push notification if chat already open
+              return [] // Don't display push notification if chat already open // messages tab
             }
+          }
+        }
+      } else if AppNavigation.shared.selectedTab == .TrainingSessions {
+        if let screen = AppNavigation.shared.trainingSessionsNavigationStack.last {
+          switch screen {
+          case .chat(let user):
+            if user.id == fromId {
+              return [] // Don't display push notification if chat already open // training sessions tab
+            }
+          default:
+            return allOptions
           }
         }
       }

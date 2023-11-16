@@ -29,7 +29,7 @@ class PostGridViewModel: ObservableObject {
         switch config {
         case .explore:
             fetchExplorePagePosts()
-        case .profile(let user):
+        case .profile(_):
 //            Task { try await fetchUserPosts(forUser: user) }//TODO: add this
           break
         }

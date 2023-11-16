@@ -35,6 +35,7 @@ struct SchedulerConstants {
       "Lower Body"
     ],
     "ISO":   [
+      "Abs",
       "Biceps",
       "Triceps",
       "Forearms",
@@ -62,8 +63,10 @@ struct SchedulerConstants {
       "Shadowboxing"
     ],
     "MSC":   [
-      "Abs",
-      "Cardio"
+      "Cardio",
+      "Stretch",
+      "Yoga",
+      "Dance"
     ],
   ]
 }

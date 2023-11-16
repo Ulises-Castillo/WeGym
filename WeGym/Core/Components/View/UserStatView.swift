@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct UserStatView: View {
-  let value: Int
+  let value: String
   let title: String
   
   var body: some View {
     VStack {
-      Text("\(value)")
+      Text(value)
         .font(.subheadline)
         .fontWeight(.semibold)
       Text(title)
@@ -24,5 +24,5 @@ struct UserStatView: View {
 }
 
 #Preview {
-  UserStatView(value: 245, title: "Bench")
+  UserStatView(value: "245", title: "Bench")
 }

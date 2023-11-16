@@ -39,6 +39,12 @@ struct TrainingSessionSchedulerView: View {
                    isSelector: true,
                    isPersonalRecord: false)
           .accentColor(Color(.systemBlue))
+          .onAppear {
+            if let session = viewModel.currentUserTrainingSesssion {
+              schedulerViewModel.selectedWorkoutCategory = session.category
+              schedulerViewModel.selectedWorkoutFocuses = session.focus
+            }
+          }
 
           // select workout / body parts
           TagField(tags: $schedulerViewModel.workoutFocuses,
@@ -54,7 +60,7 @@ struct TrainingSessionSchedulerView: View {
 
           DatePicker("",
                      selection: $workoutTime,
-                     //                     in: Date()..., // Don't restrict user date selection
+                     in: viewModel.day.startOfDay...viewModel.day.endOfDay, // only allow date within current day
                      displayedComponents: .hourAndMinute)
           .padding()
           .font(.headline)
@@ -133,11 +139,13 @@ struct TrainingSessionSchedulerView: View {
                                                  ownerUid: user.id,
                                                  date: timeTapped ? Timestamp(date: workoutTime) : prevSession.date, //only set new time if new time was set, otherwise keep previous time
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                 category: schedulerViewModel.selectedWorkoutCategory,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user,
                                                  likes: prevSession.likes,
-                                                 shouldShowTime: prevSession.shouldShowTime)
+                                                 shouldShowTime: prevSession.shouldShowTime,
+                                                 personalRecordIds: prevSession.personalRecordIds)
 
                 try await viewModel.updateTrainingSession(session: newSession)
 
@@ -146,11 +154,13 @@ struct TrainingSessionSchedulerView: View {
                                                  ownerUid: user.id,
                                                  date: Timestamp(date: workoutTime),
                                                  focus: schedulerViewModel.selectedWorkoutFocuses,
+                                                 category: schedulerViewModel.selectedWorkoutCategory,
                                                  location: schedulerViewModel.selectedGym.first,
                                                  caption: workoutCaption,
                                                  user: user,
                                                  likes: 0,
-                                                 shouldShowTime: timeTapped)
+                                                 shouldShowTime: timeTapped,
+                                                 personalRecordIds: [])
 
                 try await viewModel.addTrainingSession(session: newSession)
               }
@@ -175,11 +185,10 @@ struct TrainingSessionSchedulerView: View {
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""
-        schedulerViewModel.selectedWorkoutFocuses = session.focus
         guard let location = session.location else { return }
         schedulerViewModel.selectedGym.append(location)
       } else {
-        if Calendar.current.isDateInToday(viewModel.day) {
+        if Calendar.current.isDateInToday(viewModel.day.advanced(by: 60*60*1.2)) { // prevent advancing to next day //TODO: test late at night
           workoutTime = viewModel.day.advancedToNextHour() ?? viewModel.day //TODO: time should default to the time user last set for that day of the week (could also count frequncy of that time on that day) [store in userdefaults]
         } else {                                                            // if no previous time for that specific day of the week, set last set time
           workoutTime = viewModel.day.noon                                  // if none then default to noon

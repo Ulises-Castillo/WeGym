@@ -70,8 +70,12 @@ struct EditProfileView: View {
           Button("Done") {
             isUploading = true
             Task {
-              UserService.shared.currentUser?.fullName = viewModel.fullName
-              UserService.shared.currentUser?.bio = viewModel.bio
+              if !viewModel.fullName.isEmpty { //FIX: do not allow `fullName` to be set to empty string
+                UserService.shared.currentUser?.fullName = viewModel.fullName
+              }
+              if !viewModel.bio.isEmpty {     //FIX: do not allow `bio` to be set to empty string
+                UserService.shared.currentUser?.bio = viewModel.bio
+              }
               if viewModel.profileImage != nil { //FIX: line below was clearing profile image even if none was selected
                 UserService.shared.currentUser?.profileImageUrl = nil
               }

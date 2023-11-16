@@ -45,7 +45,20 @@ struct PersonalRecordService {
     self.firestoreListener = nil
   }
 
-  static func uploadPersonalRecord(_ personalRecord: PersonalRecord) async throws {
+  static func fetchPersonalRecord(userId: String, prId: String) async throws -> PersonalRecord? {
+
+    let query = FirestoreConstants.UserCollection
+      .document(userId)
+      .collection("personal-records")
+      .document(prId)
+
+//    let snapshot = try await query.getDocument(source: .cache)
+    let snapshot = try await query.getDocument()
+
+    return try snapshot.data(as: PersonalRecord.self)
+  }
+
+  static func uploadPersonalRecord(_ personalRecord: PersonalRecord, trainingSession: TrainingSession?) async throws {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
     let postRef = FirestoreConstants.UserCollection
@@ -64,6 +77,10 @@ struct PersonalRecordService {
 
     guard let encodedPersonalRecord = try? Firestore.Encoder().encode(newPr) else { return }
     try await postRef.setData(encodedPersonalRecord)
+
+    guard var trainingSession = trainingSession else { return }
+    trainingSession.personalRecordIds.append(newPr.id)
+    try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 
   static func uploadFavoritePersonalRecordIds(_ favPrIds: [String]) async throws {
@@ -101,7 +118,7 @@ struct PersonalRecordService {
       .setData(encodedPersonalRecord)
   }
 
-  static func deletePersonalRecord(withId id: String) async throws {
+  static func deletePersonalRecord(withId id: String, _ trainingSession: TrainingSession?) async throws {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
     try await FirestoreConstants.UserCollection
@@ -109,5 +126,11 @@ struct PersonalRecordService {
       .collection("personal-records")
       .document(id)
       .delete()
+
+    guard var trainingSession = trainingSession,
+            let index = trainingSession.personalRecordIds.firstIndex(of: id) else { return }
+
+    trainingSession.personalRecordIds.remove(at: index)
+    try await TrainingSessionService.updateTrainingSession(trainingSession: trainingSession)
   }
 }

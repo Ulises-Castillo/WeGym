@@ -39,14 +39,28 @@ struct TrainingSessionCell: View {
     return viewModel.commentsCountCache[trainingSession.id, default: 0]
   }
 
+  private var focusColor: Color {
+    let now = Date.now
+    let numDays = Calendar.current.numberOfDaysBetween(now, and: viewModel.day)
+    let isFuture = viewModel.day.noon.timeIntervalSince1970 >= now.noon.timeIntervalSince1970
+
+    let blue = UIColor.systemBlue
+    var adj = CGFloat(numDays) * 5  // Adjust by 5% per day
+    if adj > 20 { adj = 20 }        // floor: 20%
+
+    return Color(isFuture ? (blue.darker(by: adj) ?? blue) : (blue.lighter(by: adj) ?? blue))
+  }
+
   @StateObject var userService = UserService.shared
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
   @State private var showLikes = false
   @State private var showComments = false
+  @State private var showEditPrSheet = false
   @State var commentsViewMode = false
   @State var notificationCellMode = false
+  @State var selectedPR: PersonalRecord?
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -77,12 +91,21 @@ struct TrainingSessionCell: View {
         ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
           Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
             .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 32)
-            .background(Color(.systemBlue))
+            .background(focusColor)
             .cornerRadius(6)
         }
       }
       .foregroundColor(.white)
       .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
+
+      ForEach(trainingSession.personalRecords ?? [], id: \.self) { pr in
+        Button {
+          selectedPR = pr
+          showEditPrSheet.toggle()
+        } label: {
+          PersonalRecordFlex(personalRecord: pr)
+        }.disabled(trainingSession.user?.isCurrentUser == false)
+      }
 
       HStack {
         if trainingSession.shouldShowTime {
@@ -116,12 +139,22 @@ struct TrainingSessionCell: View {
             .imageScale(.medium)
         }
 
-        if let user = trainingSession.user {
+        if let user = trainingSession.user, !user.isCurrentUser {
           NavigationLink(value: TrainingSessionsNavigation.chat(user)) { //TODO: set user on notification cell model
             Image(systemName: "envelope")
               .imageScale(.medium)
           }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
           Spacer()
+        }
+
+        if let user = trainingSession.user, user.isCurrentUser {
+          Button {
+            showEditPrSheet.toggle()
+          } label: {                //TODO: move to computed property "isFutureTrainingSession"
+//            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
+            Image(systemName: "trophy")
+              .imageScale(.medium)
+          }
         }
       }
       .padding(.leading, 8)
@@ -162,6 +195,9 @@ struct TrainingSessionCell: View {
         .presentationDragIndicator(.visible)
         .presentationDetents(commentsViewMode ? [PresentationDetent.fraction(0.75), .large] : [.large])
     }
+    .sheet(isPresented: $showEditPrSheet) {
+      EditPersonalRecordView(selectedPR, date: viewModel.day)
+    }
     .sheet(isPresented: $showLikes) {
       VStack {
         Text("Likes")
@@ -185,10 +221,19 @@ struct TrainingSessionCell: View {
       Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
     }
     .onChange(of: showComments) { newValue in
+      viewModel.isShowingComment_TrainingSessionCell = newValue
       AppNavigation.shared.showCommentsTrainingSessionID = newValue ? trainingSession.id : nil
       if !showComments {
         commentsViewMode = false
         Task { await viewModel.updateCommentsCountCache(trainingSessionId: trainingSession.id) }
+      }
+    }
+    .onChange(of: showLikes) { newValue in
+      viewModel.isShowingLikes_TrainingSessionCell = newValue
+    }
+    .onChange(of: showEditPrSheet) { newValue in
+      if !newValue {
+        selectedPR = nil
       }
     }
     .onNotification { userInfo in
