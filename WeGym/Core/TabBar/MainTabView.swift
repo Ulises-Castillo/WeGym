@@ -61,7 +61,7 @@ struct MainTabView: View {
   @StateObject var currentUserProfileViewModel = ProfileViewModel(user: UserService.shared.currentUser!) //FIXME: unwrap
 
   init(user: User) {
-    UITabBarItem.appearance().badgeColor = .systemBlue
+    UITabBarItem.appearance().badgeColor = .systemRed
   }
 
   @State private var showToday = false
@@ -77,6 +77,8 @@ struct MainTabView: View {
         .tabItem {
           Image(systemName: "envelope")
         }.tag(Tab.Messages)
+        .badge(inboxViewModel.unreadMessagesCount)
+        .decreaseBadgeProminence()
       NotificationsView(path: $appNav.notificationsNavigationStack, $shouldShowNotificationBadge)
         .tabItem {
           Image(systemName: "bell")
