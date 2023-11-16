@@ -26,6 +26,10 @@ class AppNavigation: ObservableObject {
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
   @Published var confettiCounter = 0
+
+  // store userID mapped to lastReadMessageDate
+  //TODO: make sure to clear periodically (not hugely important because its just one time interval per chatPartner)
+  @Published var userIdDate = [String : TimeInterval]()
 }
 
 enum TrainingSessionsNavigation: Hashable {
