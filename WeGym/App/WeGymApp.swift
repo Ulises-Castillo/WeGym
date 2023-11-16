@@ -63,9 +63,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     let date = userInfo["date"] as? String
 
     switch notificationType {
-    case "new_direct_message":
+    case "new_direct_message":                                //Answer: likely yes, however leaving it for now
       if let date = date?.parsedDate(), let fromId = fromId { //TODO: does this negate the need for all the below conditions?
-        if date.timeIntervalSince1970 <= AppNavigation.shared.userIdDate[fromId, default: TimeInterval.infinity] {
+        if date.timeIntervalSince1970 <= AppNavigation.shared.userIdDate[fromId, default: 0] {
           return [] // Don't display push notification for messages older than last read message from certain user
         }
       }
