@@ -91,6 +91,12 @@ class InboxViewModel: ObservableObject {
     }
   }
 
+  func updateUserInfo() async throws {
+    for (i, message) in recentMessages.enumerated() {
+      recentMessages[i].user = try await UserService.fetchUser(withUid: message.chatPartnerId)
+    }
+  }
+
   private func createNewConversation(fromChange change: DocumentChange) {
     guard var message = try? change.document.data(as: Message.self) else { return }
 

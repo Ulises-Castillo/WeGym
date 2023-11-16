@@ -110,6 +110,7 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
     const toId = data.toId;
     const fromId = data.fromId;
     const messageText = data.text;
+    const timestamp = data.timestamp;
 
     // prevent dup notifications
     // two message documents created
@@ -156,7 +157,8 @@ exports.sendNewMessageNotification = onDocumentCreated("/messages/{uid1}/{uid2}/
                                 }
                             },
                             notificationType: "new_direct_message",
-                            "fromId": `${fromId}`
+                            "fromId": `${fromId}`,
+                            date: `${timestamp.toDate()}`
                         }
                     },
                     token: token

@@ -64,6 +64,9 @@ struct MessagesView: View {
             .foregroundColor(.secondary)
         }
       }
+      .onAppear {
+        Task { try await viewModel.updateUserInfo() }
+      }
       .navigationTitle("Messages")
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
