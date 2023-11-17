@@ -24,7 +24,7 @@ struct LoginView: View {
 
         // text fields
         VStack {
-          TextField("Enter your email", text: $viewModel.email)
+          TextField("Enter your email or username", text: $viewModel.email)
             .autocapitalization(.none)
             .modifier(WGTextFieldModifier())
             .clearButton(text: $viewModel.email)
