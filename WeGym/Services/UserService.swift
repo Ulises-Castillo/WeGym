@@ -190,7 +190,7 @@ extension UserService {
 
     var following = [User]()
     for uid in uids {
-      async let followee = try await UserService.fetchUser(withUid: uid)
+      async let followee = try await UserService.fetchUser(withUid: uid, fromCache: false)
       try await following.append(followee)
 
     }

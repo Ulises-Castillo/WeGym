@@ -91,7 +91,7 @@ struct PersonalRecordCell: View {
     }
     .font(.system(size: 12, weight: .regular, design: .rounded))
     .sheet(isPresented: $showingEditPersonalRecordView) {
-      EditPersonalRecordView(personalRecord)
+      EditPersonalRecordView(personalRecord, shouldFlex: false)
     }
   }
 }

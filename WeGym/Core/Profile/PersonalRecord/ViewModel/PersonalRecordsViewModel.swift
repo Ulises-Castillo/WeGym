@@ -14,6 +14,7 @@ class PersonalRecordsViewModel: ObservableObject {
     didSet {
       personalRecords = personalRecordsCache
         .values
+        .filter({ $0.ownerUid == UserService.shared.currentUser?.id })
         .sorted(by: {
           $0.timestamp.dateValue().timeIntervalSince1970 > $1.timestamp.dateValue().timeIntervalSince1970
         })
