@@ -47,8 +47,8 @@ struct TrainingSessionService {
     var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: cache users
     userFollowing.append(currentUser)
 
-    var userFollowingIds: [String] = userFollowing.map({ $0.id })
-    userFollowingIds.append(currentUser.id)
+    let userFollowingIds: [String] = userFollowing.map({ $0.id })
+//    userFollowingIds.append(currentUser.id)
 
     guard let prevWeek = Calendar.current.date(byAdding: .day, value: -7, to: date),
           let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: date) else { return }
