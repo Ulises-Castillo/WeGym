@@ -249,8 +249,8 @@ struct EditPersonalRecordView: View {
                                            timestamp:  prTimestamp(),
                                            notes: notes)
 
-                try await personalRecordsViewModel.addPersonalRecord(newPr, trainingSession: shouldFlex ? trainingSessionForPr() : nil)
                 AppNavigation.shared.confettiCounter += 1 // let's celebrate
+                try await personalRecordsViewModel.addPersonalRecord(newPr, trainingSession: shouldFlex ? trainingSessionForPr() : nil)
               }
             }
             dismiss()
