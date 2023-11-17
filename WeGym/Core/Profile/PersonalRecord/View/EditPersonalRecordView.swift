@@ -35,9 +35,10 @@ struct EditPersonalRecordView: View {
     return selectedPersonalRecordCategory == "Calesthenics"
   }
 
-  init(_ personalRecord: PersonalRecord? = nil, date trainingSessionDate: Date? = nil) {
+  init(_ personalRecord: PersonalRecord? = nil, date trainingSessionDate: Date? = nil, shouldFlex: Bool = true) {
     self.personalRecord = personalRecord
     self.trainingSessionDate = trainingSessionDate
+    self._shouldFlex = State(initialValue: shouldFlex)
   }
 
   func trainingSessionForPr() -> TrainingSession? {     //TODO: test all cases

@@ -22,7 +22,7 @@ struct PersonalRecordsView: View { //TODO: personal record blue color should be 
         Spacer()
       }
       .sheet(isPresented: $showingAddPersonalRecordView) {
-        EditPersonalRecordView()
+        EditPersonalRecordView(shouldFlex: false)
       }
       .environmentObject(viewModel)
       .padding(.top, 21)
