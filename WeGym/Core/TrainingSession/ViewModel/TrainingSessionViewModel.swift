@@ -155,7 +155,9 @@ class TrainingSessionViewModel: ObservableObject {
             }
           }
         }
+      }
 
+      Task {
         for session in trainingSessions {
           var session = session
           session.user = try await UserService.fetchUser(withUid: session.ownerUid, fromCache: false)
