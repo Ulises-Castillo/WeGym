@@ -25,7 +25,25 @@ struct CurrentUserProfileView: View {
         VStack(spacing: 24) {
           ProfileHeaderView(viewModel: viewModel)
 
-//          PostGridView(config: .profile(UserService.shared.currentUser!))
+          //          PostGridView(config: .profile(UserService.shared.currentUser!))
+
+          HStack(spacing: 16) {
+            NavigationLink(value: CurrentUserProfileNavigation.settings) {
+              UserStatView(value: String(33), title: "Workouts")
+            }
+
+            NavigationLink(value: CurrentUserProfileNavigation.settings) {
+              UserStatView(value: String(15), title: "Followers")
+            }
+//            .disabled(viewModel.user.stats?.followers == 0)
+
+            NavigationLink(value: CurrentUserProfileNavigation.settings) {
+              UserStatView(value: String(9), title: "Following")
+            }
+//            .disabled(viewModel.user.stats?.following == 0)
+          }
+          .padding(.trailing)
+          .foregroundColor(.primary)
         }
       }
       .navigationTitle(UserService.shared.currentUser?.username ?? "")
@@ -35,7 +53,7 @@ struct CurrentUserProfileView: View {
         case .personalRecords:
           PersonalRecordsView()
         default:
-          Text(selectedSettingsOption?.title ?? "")
+          Text(selectedSettingsOption?.title ?? "Followers")
         }
       }
       .sheet(isPresented: $showSettingsSheet) {

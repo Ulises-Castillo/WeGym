@@ -27,7 +27,7 @@ class PersonalRecordsViewModel: ObservableObject {
 
   @MainActor
   func observePersonalRecords() async throws {
-    PersonalRecordService.observePersonalRecords { [weak self] personalRecords, removedPersonalRecords in
+    try await PersonalRecordService.observePersonalRecords { [weak self] personalRecords, removedPersonalRecords in
       guard let self = self else { return }
 
       for pr in removedPersonalRecords {    //TODO: if a category max is removed must determine new category max
