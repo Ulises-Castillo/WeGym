@@ -150,7 +150,7 @@ class TrainingSessionViewModel: ObservableObject {
 
             for id in session.personalRecordIds {
 //              guard self.personalRecordsViewModel!.personalRecordsCache[id] == nil else { continue }
-              guard let pr = try await PersonalRecordService.fetchPersonalRecord(userId: session.ownerUid, prId: id) else { continue }
+              guard let pr = try await PersonalRecordService.fetchPersonalRecord(prId: id) else { continue }
               self.personalRecordsViewModel!.personalRecordsCache[id] = pr
             }
             self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session //FIX: update cache after (done due to the fact that the Task below may finish first)

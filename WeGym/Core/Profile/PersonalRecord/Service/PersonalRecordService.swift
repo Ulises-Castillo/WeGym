@@ -15,10 +15,9 @@ struct PersonalRecordService {
   static func observePersonalRecords(completion: @escaping([PersonalRecord], [PersonalRecord]) -> Void) {
     guard let uid = Auth.auth().currentUser?.uid else { return }
 
-    let query = FirestoreConstants.UserCollection
-      .document(uid)
-      .collection("personal-records")
-      .order(by: "timestamp", descending: true)
+    let query = FirestoreConstants
+      .PersonalRecordsCollection
+      .whereField("ownerUid", isEqualTo: uid)
 
     self.firestoreListener = query.addSnapshotListener { snapshot, _ in
 
@@ -45,25 +44,21 @@ struct PersonalRecordService {
     self.firestoreListener = nil
   }
 
-  static func fetchPersonalRecord(userId: String, prId: String) async throws -> PersonalRecord? {
+  static func fetchPersonalRecord(prId: String) async throws -> PersonalRecord? {
 
-    let query = FirestoreConstants.UserCollection
-      .document(userId)
-      .collection("personal-records")
+    let query = FirestoreConstants
+      .PersonalRecordsCollection
       .document(prId)
 
-//    let snapshot = try await query.getDocument(source: .cache)
     let snapshot = try await query.getDocument()
 
     return try snapshot.data(as: PersonalRecord.self)
   }
 
   static func uploadPersonalRecord(_ personalRecord: PersonalRecord, trainingSession: TrainingSession?) async throws {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
 
-    let postRef = FirestoreConstants.UserCollection
-      .document(uid)
-      .collection("personal-records")
+    let postRef = FirestoreConstants
+      .PersonalRecordsCollection
       .document()
 
     let newPr = PersonalRecord(id: postRef.documentID,
@@ -97,9 +92,8 @@ struct PersonalRecordService {
 
     print("*** favPrIds: \(favPrIds)")
 
-    let query = FirestoreConstants.UserCollection
-      .document(userId)
-      .collection("personal-records")
+    let query = FirestoreConstants
+      .PersonalRecordsCollection
       .whereField("id", in: favPrIds)
 
     guard let snapshot = try? await query.getDocuments() else { return [] }
@@ -108,22 +102,18 @@ struct PersonalRecordService {
   }
 
   static func updatePersonalRecord(_ personalRecord: PersonalRecord) async throws {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
     guard let encodedPersonalRecord = try? Firestore.Encoder().encode(personalRecord) else { return }
 
-    try await FirestoreConstants.UserCollection
-      .document(uid)
-      .collection("personal-records")
+    try await FirestoreConstants
+      .PersonalRecordsCollection
       .document(personalRecord.id)
       .setData(encodedPersonalRecord)
   }
 
   static func deletePersonalRecord(withId id: String, _ trainingSession: TrainingSession?) async throws {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
 
-    try await FirestoreConstants.UserCollection
-      .document(uid)
-      .collection("personal-records")
+    try await FirestoreConstants
+      .PersonalRecordsCollection
       .document(id)
       .delete()
 
