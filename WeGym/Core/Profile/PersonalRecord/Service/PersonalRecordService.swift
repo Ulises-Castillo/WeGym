@@ -12,12 +12,18 @@ struct PersonalRecordService {
 
   static private var firestoreListener: ListenerRegistration?
 
-  static func observePersonalRecords(completion: @escaping([PersonalRecord], [PersonalRecord]) -> Void) {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
+  static func observePersonalRecords(completion: @escaping([PersonalRecord], [PersonalRecord]) -> Void) async throws {
+
+    // get user following + add current user
+    guard let currentUser = UserService.shared.currentUser else { return }
+    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: consider efficiency of double fetch (same call to observe training sessions)
+    userFollowing.append(currentUser)
+
+    let userFollowingIds: [String] = userFollowing.map({ $0.id })
 
     let query = FirestoreConstants
       .PersonalRecordsCollection
-      .whereField("ownerUid", isEqualTo: uid)
+      .whereField("ownerUid", in: userFollowingIds)
 
     self.firestoreListener = query.addSnapshotListener { snapshot, _ in
 
