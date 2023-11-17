@@ -160,7 +160,7 @@ class TrainingSessionViewModel: ObservableObject {
       Task {
         for session in trainingSessions {
           var session = session
-          session.user = try await UserService.fetchUser(withUid: session.ownerUid, fromCache: false)
+          session.user = try await UserService.fetchUser(withUid: session.ownerUid, fromCache: true)
           self.trainingSessionsCache[self.key(session.ownerUid, session.date.dateValue())] = session
         }
         TrainingSessionService.updateHasBeenFetched()
