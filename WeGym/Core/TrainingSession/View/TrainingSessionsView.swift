@@ -61,7 +61,8 @@ struct TrainingSessionsView: View {
           Button {
             defaultDayTimer?.invalidate()
 
-            if let user = session.user {
+            // prevent locally set session (not yet set from Firestore Listener) from being edited (no ID yet)
+            if let user = session.user, !session.id.isEmpty {
               if user.isCurrentUser {
                 if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
                   showingEditSheet.toggle()
