@@ -189,10 +189,6 @@ struct TrainingSessionsView: View {
         return
       }
 
-      NotificationCenter.default.addObserver(forName: .followingCountDidChange, object: nil, queue: .main) { notification in
-        viewModel.day = viewModel.day // reload view on follow/unfollow
-      }
-
       let (date, _) = viewModel.defaultDay()
       selectedDate = date
       viewModel.day = selectedDate
