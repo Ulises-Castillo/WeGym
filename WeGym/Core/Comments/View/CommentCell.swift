@@ -29,7 +29,7 @@ struct CommentCell: View {
           Text(comment.timestamp.timestampString())
             .foregroundColor(.secondary)
         }
-        Text(comment.commentText)
+        Text(attributedString(from: comment.commentText))
           .foregroundColor(.primary)
       }
       .font(.caption)
@@ -44,3 +44,5 @@ struct CommentCell_Previews: PreviewProvider {
     CommentCell(comment: dev.comment)
   }
 }
+
+

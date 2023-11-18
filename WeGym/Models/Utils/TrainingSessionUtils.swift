@@ -5,7 +5,7 @@
 //  Created by Ulises Castillo on 11/2/23.
 //
 
-import Foundation
+import UIKit
 
 func beautifyWorkoutFocuses(focuses: [String]) -> [String] {
   var beautifiedFocuses = focuses
@@ -74,3 +74,43 @@ func relativeDay(_ date: Date) -> String {
   }
 }
 
+let dataDetector: NSDataDetector = {
+  let types: NSTextCheckingResult.CheckingType = [.allTypes]
+  return try! .init(types: types.rawValue)
+}()
+
+func attributedString(from text: String, isWhiteColor: Bool = false) -> AttributedString {
+  var attributed = AttributedString(text)
+  let fullRange = NSMakeRange(0, text.count)
+  let matches = dataDetector.matches(in: text, options: [], range: fullRange)
+  guard !matches.isEmpty else { return AttributedString(text) }
+
+  for result in matches {
+    guard let range = Range<AttributedString.Index>(result.range, in: attributed) else {
+      continue
+    }
+
+    switch result.resultType {
+    case .phoneNumber:
+      guard
+        let phoneNumber = result.phoneNumber,
+        let url = URL(string: "sms://\(phoneNumber)")
+      else {
+        break
+      }
+      attributed[range].link = url
+
+    case .link:
+      guard let url = result.url else { break }
+      attributed[range].link = url
+    default:
+      break
+    }
+    if isWhiteColor {
+      attributed[range].foregroundColor = .white
+      attributed[range].underlineStyle = .single
+    }
+  }
+
+  return attributed
+}

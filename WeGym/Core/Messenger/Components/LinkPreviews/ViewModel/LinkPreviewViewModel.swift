@@ -22,6 +22,11 @@ class LinkPreviewViewModel: ObservableObject {
   }
   
   private func fetchLinkMetadata(urlString: String)  async throws {
+    var urlString = urlString
+
+    if !urlString.hasPrefix("http") {
+      urlString = "https://" + urlString
+    }
     guard let url = URL(string: urlString) else { return }
     
     let metadata = try await metadataProvider.startFetchingMetadata(for: url)
