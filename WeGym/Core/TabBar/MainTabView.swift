@@ -19,9 +19,9 @@ class AppNavigation: ObservableObject {
 
   @Published var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
   @Published var messagesNavigationStack = [MessagesNavigation]()
-  @Published var notificationsNavigationStack = [NotificationsNavigation]()
-  @Published var searchNavigationStack = [CurrentUserProfileNavigation]()
-  @Published var currentUserProfileNavigationStack = [CurrentUserProfileNavigation]()
+  @Published var notificationsNavigationStack = [ProfileNavigation]()
+  @Published var searchNavigationStack = [ProfileNavigation]()
+  @Published var currentUserProfileNavigationStack = [ProfileNavigation]()
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
@@ -41,11 +41,7 @@ enum MessagesNavigation: Hashable {
   case chat(User)
 }
 
-enum NotificationsNavigation: Hashable {
-  case profile(User)
-}
-
-enum CurrentUserProfileNavigation: Hashable {
+enum ProfileNavigation: Hashable {
   case personalRecords
   case settings
   case trainingSessions

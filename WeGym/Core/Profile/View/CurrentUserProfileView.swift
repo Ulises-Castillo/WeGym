@@ -13,9 +13,9 @@ struct CurrentUserProfileView: View {
   @State private var showSettingsSheet = false
   @State private var selectedSettingsOption: SettingsItemModel?
   @State private var showDetail = false
-  @Binding var path: [CurrentUserProfileNavigation]
+  @Binding var path: [ProfileNavigation]
 
-  init(path: Binding<[CurrentUserProfileNavigation]>) {
+  init(path: Binding<[ProfileNavigation]>) {
     self._path = path
   }
 
@@ -32,7 +32,7 @@ struct CurrentUserProfileView: View {
       }
       .navigationTitle(UserService.shared.currentUser?.username ?? "")
       .navigationBarTitleDisplayMode(.inline)
-      .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+      .navigationDestination(for: ProfileNavigation.self) { screen in
         switch screen {
         case .personalRecords:
           PersonalRecordsView()
