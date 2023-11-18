@@ -60,6 +60,9 @@ struct ProfileActionButtonView: View {
       Divider()
         .padding(.top, 4)
     }
+    .task {
+      viewModel.loadUserData()
+    }
     .onNotification { _ in
         showEditProfile = false
     }

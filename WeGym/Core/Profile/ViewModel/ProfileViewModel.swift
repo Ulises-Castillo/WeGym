@@ -15,7 +15,6 @@ class ProfileViewModel: ObservableObject {
 
   init(user: User) {
     self.user = user
-    loadUserData()
     fetchFavoritePersonalRecords(user.id)
   }
 
