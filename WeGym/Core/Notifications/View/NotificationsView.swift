@@ -11,9 +11,9 @@ struct NotificationsView: View {
   @Environment(\.scenePhase) var scenePhase
   @EnvironmentObject var viewModel: NotificationsViewModel
   @Binding var shouldShowNotificationBadge: Bool
-  @Binding var path: [ProfileNavigation]
+  @Binding var path: [WGNavigation]
 
-  init(path: Binding<[ProfileNavigation]>, _ shouldShowNotificationBadge: Binding<Bool>) {
+  init(path: Binding<[WGNavigation]>, _ shouldShowNotificationBadge: Binding<Bool>) {
     self._path = path
     self._shouldShowNotificationBadge = shouldShowNotificationBadge
   }
@@ -34,7 +34,7 @@ struct NotificationsView: View {
         }
         .navigationTitle("Notifications")
       }
-      .navigationDestination(for: ProfileNavigation.self) { screen in
+      .navigationDestination(for: WGNavigation.self) { screen in
         switch screen {
         case .profile(let user):
           ProfileView(user: user)

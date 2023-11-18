@@ -39,7 +39,7 @@ struct ProfileHeaderView: View {
         } else if !viewModel.favoritePersonalRecords.isEmpty {
           ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
             HStack() {
-              NavigationLink(value: ProfileNavigation.personalRecords) {
+              NavigationLink(value: WGNavigation.personalRecords) {
                 UserStatView(value: prText(pr), title: pr.type)
               }
               .disabled(!viewModel.user.isCurrentUser)
@@ -49,7 +49,7 @@ struct ProfileHeaderView: View {
           .foregroundColor(.primary)
           .padding(.trailing)
         } else if viewModel.user.isCurrentUser {
-          NavigationLink(value: ProfileNavigation.personalRecords) {
+          NavigationLink(value: WGNavigation.personalRecords) {
             HStack {
               Image(systemName: "trophy")
               Text("Add Personal Records")
@@ -85,7 +85,7 @@ struct ProfileHeaderView: View {
       ProfileActionButtonView(viewModel: viewModel)
         .padding(.top)
     }
-    .navigationDestination(for: ProfileNavigation.self) { screen in
+    .navigationDestination(for: WGNavigation.self) { screen in
       switch screen {
       case .personalRecords:
         if viewModel.user.isCurrentUser {
@@ -104,6 +104,8 @@ struct ProfileHeaderView: View {
         UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
       case .profile(let user):
         ProfileView(user: user)
+      default:
+        Text("default")
       }
     }
   }

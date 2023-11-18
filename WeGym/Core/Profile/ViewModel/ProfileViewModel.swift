@@ -96,6 +96,7 @@ extension ProfileViewModel {
       try await UserService.follow(uid: user.id)
       user.isFollowed = true
       //            user.stats?.followers += 1
+      NotificationCenter.default.post(name: .followingCountDidChange, object: nil)
       NotificationService.uploadNotification(toUid: user.id, type: .follow) //TODO: bring this in
     }
   }
@@ -104,6 +105,7 @@ extension ProfileViewModel {
     Task {
       try await UserService.unfollow(uid: user.id)
       user.isFollowed = false
+      NotificationCenter.default.post(name: .followingCountDidChange, object: nil)
       //            user.stats?.followers -= 1 //
     }
   }
@@ -112,5 +114,9 @@ extension ProfileViewModel {
     guard !user.isCurrentUser else { return false }
     return await UserService.checkIfUserIsFollowed(uid: user.id)
   }
+}
+
+extension Notification.Name {
+  static let followingCountDidChange = Notification.Name("followingCountDidChange")
 }
 

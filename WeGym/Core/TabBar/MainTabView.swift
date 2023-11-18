@@ -17,11 +17,11 @@ class AppNavigation: ObservableObject {
 
   @Published var selectedTab: Tab = .TrainingSessions
 
-  @Published var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
-  @Published var messagesNavigationStack = [MessagesNavigation]()
-  @Published var notificationsNavigationStack = [ProfileNavigation]()
-  @Published var searchNavigationStack = [ProfileNavigation]()
-  @Published var currentUserProfileNavigationStack = [ProfileNavigation]()
+  @Published var trainingSessionsNavigationStack = [WGNavigation]()
+  @Published var messagesNavigationStack = [WGNavigation]()
+  @Published var notificationsNavigationStack = [WGNavigation]()
+  @Published var searchNavigationStack = [WGNavigation]()
+  @Published var currentUserProfileNavigationStack = [WGNavigation]()
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
@@ -32,16 +32,8 @@ class AppNavigation: ObservableObject {
   @Published var userIdDate = [String : TimeInterval]()
 }
 
-enum TrainingSessionsNavigation: Hashable {
-  case profile(User)
+enum WGNavigation: Hashable {
   case chat(User)
-}
-
-enum MessagesNavigation: Hashable {
-  case chat(User)
-}
-
-enum ProfileNavigation: Hashable {
   case personalRecords
   case settings
   case trainingSessions

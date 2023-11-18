@@ -26,7 +26,7 @@ struct NotificationCell: View {
   var body: some View {
     HStack {
       if let user = notification.user {
-        NavigationLink(value: ProfileNavigation.profile(user)) {
+        NavigationLink(value: WGNavigation.profile(user)) {
           CircularProfileImageView(user: user, size: .xSmall)
 
           HStack {

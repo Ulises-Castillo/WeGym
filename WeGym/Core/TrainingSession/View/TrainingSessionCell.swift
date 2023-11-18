@@ -140,7 +140,7 @@ struct TrainingSessionCell: View {
         }
 
         if let user = trainingSession.user, !user.isCurrentUser {
-          NavigationLink(value: TrainingSessionsNavigation.chat(user)) { //TODO: set user on notification cell model
+          NavigationLink(value: WGNavigation.chat(user)) { //TODO: set user on notification cell model
             Image(systemName: "envelope")
               .imageScale(.medium)
           }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
