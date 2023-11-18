@@ -119,23 +119,6 @@ extension UserService {
   }
 }
 
-// MARK: - User Stats
-
-extension UserService {
-  //    static func fetchUserStats(uid: String) async throws -> UserStats { //TODO: bring this in
-  //        async let followingSnapshot = try await FirestoreConstants.FollowingCollection.document(uid).collection("user-following").getDocuments()
-  //        let following = try await followingSnapshot.count
-  //
-  //        async let followerSnapshot = try await FirestoreConstants.FollowersCollection.document(uid).collection("user-followers").getDocuments()
-  //        let followers = try await followerSnapshot.count
-  //
-  //        async let postSnapshot = try await FirestoreConstants.PostsCollection.whereField("ownerUid", isEqualTo: uid).getDocuments()
-  //        let posts = try await postSnapshot.count
-  //
-  //        return .init(following: following, posts: posts, followers: followers)
-  //    }
-}
-
 // MARK: Feed Updates
 
 extension UserService {
@@ -195,5 +178,22 @@ extension UserService {
 
     }
     return following
+  }
+}
+
+// MARK: - User Stats
+
+extension UserService {
+  static func fetchUserStats(uid: String) async throws -> UserStats {
+    async let followingSnapshot = try await FirestoreConstants.FollowingCollection.document(uid).collection("user-following").getDocuments()
+    let following = try await followingSnapshot.count
+
+    async let followerSnapshot = try await FirestoreConstants.FollowersCollection.document(uid).collection("user-followers").getDocuments()
+    let followers = try await followerSnapshot.count
+
+    async let trainingSessionsSnapshot = try await FirestoreConstants.TrainingSessionsCollection.whereField("ownerUid", isEqualTo: uid).getDocuments()
+    let trainingSessions = try await trainingSessionsSnapshot.count
+
+    return .init(following: following, trainingSessions: trainingSessions, followers: followers)
   }
 }

@@ -34,6 +34,13 @@ class TrainingSessionViewModel: ObservableObject {
 
   var userfollowingOrderLocal: [String]?
 
+  init() {
+    NotificationCenter.default.addObserver(forName: .followingCountDidChange, object: nil, queue: .main) { notification in
+      self.trainingSessionsCache.removeAll()
+      Task { try await self.observeTrainingSessions() }
+    }
+  }
+
   //TODO: experiement with only calling this from observe listener completion instead of from setters (`didSet`) above
   // `reloadTrainingSessions()` being called too many times in rapid succession, though appears to be working fine for now
   func reloadTrainingSessions() { //TODO: consider how unfollowing would affect this flow
@@ -225,7 +232,7 @@ class TrainingSessionViewModel: ObservableObject {
   func defaultDay() -> (Date, Bool) { //account for session scheduled late at night, say 11pm
     if let user = UserService.shared.currentUser, let currUserSession = trainingSessionsCache[key(user.id, Date())] {
       let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(60*60*2)     // uncomment
-//      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(-60*60*6)  // comment TEST ONLY
+      //      let workoutEnd = currUserSession.date.dateValue().addingTimeInterval(-60*60*6)  // comment TEST ONLY
       if Date().timeIntervalSince1970 > workoutEnd.timeIntervalSince1970 {
         return (currUserSession.date.dateValue().addingTimeInterval(60*60*24).noon, true)
       }

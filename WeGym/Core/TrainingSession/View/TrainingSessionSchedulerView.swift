@@ -22,6 +22,7 @@ struct TrainingSessionSchedulerView: View {
   @EnvironmentObject var viewModel: TrainingSessionViewModel
   @StateObject var schedulerViewModel = TrainingSessionSchedulerViewModel()
   @State var timeTapped = false
+  @State var isSubmitted = false
 
   let user: User
   let captionLengthLimit = 99
@@ -112,7 +113,14 @@ struct TrainingSessionSchedulerView: View {
 
           if let session = viewModel.currentUserTrainingSesssion {
             SlideButton("Delete", styling: slideButtonStyling, action: {
+
+              guard let currUserId = UserService.shared.currentUser?.id else { return }
+              guard !isSubmitted else { return }
+              isSubmitted = true
+
+              //TODO: delete training session from local cache immediately
               Task {
+                viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = nil
                 try await viewModel.deleteTrainingSession(session: session)
               }
               dismiss()
@@ -130,7 +138,10 @@ struct TrainingSessionSchedulerView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
+            guard let currUserId = UserService.shared.currentUser?.id else { return }
             guard !schedulerViewModel.selectedWorkoutFocuses.isEmpty else { return }
+            guard !isSubmitted else { return }
+            isSubmitted = true
 
             Task {
               if let prevSession = viewModel.currentUserTrainingSesssion {
@@ -147,6 +158,7 @@ struct TrainingSessionSchedulerView: View {
                                                  shouldShowTime: prevSession.shouldShowTime,
                                                  personalRecordIds: prevSession.personalRecordIds)
 
+                viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
                 try await viewModel.updateTrainingSession(session: newSession)
 
               } else {
@@ -162,6 +174,7 @@ struct TrainingSessionSchedulerView: View {
                                                  shouldShowTime: timeTapped,
                                                  personalRecordIds: [])
 
+                viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
                 try await viewModel.addTrainingSession(session: newSession)
               }
             }

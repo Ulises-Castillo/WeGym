@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import ImageViewer
+import ImageViewerRemote
 import ConfettiSwiftUI
 
 enum Tab {
@@ -17,11 +19,11 @@ class AppNavigation: ObservableObject {
 
   @Published var selectedTab: Tab = .TrainingSessions
 
-  @Published var trainingSessionsNavigationStack = [TrainingSessionsNavigation]()
-  @Published var messagesNavigationStack = [MessagesNavigation]()
-  @Published var notificationsNavigationStack = [NotificationsNavigation]()
-  @Published var searchNavigationStack = [SearchNavigation]()
-  @Published var currentUserProfileNavigationStack = [CurrentUserProfileNavigation]()
+  @Published var trainingSessionsNavigationStack = [WGNavigation]()
+  @Published var messagesNavigationStack = [WGNavigation]()
+  @Published var notificationsNavigationStack = [WGNavigation]()
+  @Published var searchNavigationStack = [WGNavigation]()
+  @Published var currentUserProfileNavigationStack = [WGNavigation]()
 
 //  @Published var showComments = false
   @Published var showCommentsTrainingSessionID: String?
@@ -30,28 +32,22 @@ class AppNavigation: ObservableObject {
   // store userID mapped to lastReadMessageDate
   //TODO: make sure to clear periodically (not hugely important because its just one time interval per chatPartner)
   @Published var userIdDate = [String : TimeInterval]()
+
+  @Published var imageUrl = ""
+  @Published var showImageViewer = false
+
+  @Published var image = Image(systemName: "person.circle.fill")
+  @Published var showImageViewerLocal = false
 }
 
-enum TrainingSessionsNavigation: Hashable {
-  case profile(User)
+enum WGNavigation: Hashable {
   case chat(User)
-}
-
-enum MessagesNavigation: Hashable {
-  case chat(User)
-}
-
-enum NotificationsNavigation: Hashable {
-  case profile(User)
-}
-
-enum SearchNavigation: Hashable {
-  case profile(User)
-}
-
-enum CurrentUserProfileNavigation: Hashable {
   case personalRecords
   case settings
+  case trainingSessions
+  case followers(String)
+  case following(String)
+  case profile(User)
 }
 
 struct MainTabView: View {
@@ -99,6 +95,8 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(Tab.CurrentUserProfile)
     }
+    .overlay(ImageViewerRemote(imageURL: $appNav.imageUrl, viewerShown: $appNav.showImageViewer))
+    .overlay(ImageViewer(image: $appNav.image, viewerShown: $appNav.showImageViewerLocal))
     .confettiCannon(counter: $appNav.confettiCounter, num: 99, rainHeight: UIScreen.main.bounds.height * 1.1, closingAngle: Angle.degrees(150), radius: 450)
     .onAppear {
       trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel

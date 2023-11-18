@@ -30,35 +30,35 @@ struct ProfileHeaderView: View {
           .padding(.leading)
 
         Spacer()
-          if viewModel.isLoading {
-            ProgressView()
-              .scaleEffect(1, anchor: .center)
-              .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
-              .padding(.top, 15)
-              .frame(maxWidth: .infinity)
-          } else if !viewModel.favoritePersonalRecords.isEmpty {
-            ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
-              HStack() {
-                NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
-                  UserStatView(value: prText(pr), title: pr.type)
-                }
-                .disabled(!viewModel.user.isCurrentUser)
-                .frame(maxWidth: .infinity)
+        if viewModel.isLoading {
+          ProgressView()
+            .scaleEffect(1, anchor: .center)
+            .progressViewStyle(CircularProgressViewStyle(tint: Color(.systemBlue)))
+            .padding(.top, 15)
+            .frame(maxWidth: .infinity)
+        } else if !viewModel.favoritePersonalRecords.isEmpty {
+          ForEach(viewModel.favoritePersonalRecords, id: \.self) { pr in
+            HStack() {
+              NavigationLink(value: WGNavigation.personalRecords) {
+                UserStatView(value: prText(pr), title: pr.type)
               }
+              .disabled(!viewModel.user.isCurrentUser)
+              .frame(maxWidth: .infinity)
             }
-            .foregroundColor(.primary)
-            .padding(.trailing)
-          } else if viewModel.user.isCurrentUser {
-            NavigationLink(value: CurrentUserProfileNavigation.personalRecords) {
-              HStack {
-                Image(systemName: "trophy")
-                Text("Add Personal Records")
-                  .font(.footnote)
-              }
-              .frame(maxWidth: .infinity)
+          }
+          .foregroundColor(.primary)
+          .padding(.trailing)
+        } else if viewModel.user.isCurrentUser {
+          NavigationLink(value: WGNavigation.personalRecords) {
+            HStack {
+              Image(systemName: "trophy")
+              Text("Add Personal Records")
+                .font(.footnote)
+            }
+            .frame(maxWidth: .infinity)
 
-            }
-            Spacer()
+          }
+          Spacer()
         }
       }
       .onAppear {
@@ -85,7 +85,7 @@ struct ProfileHeaderView: View {
       ProfileActionButtonView(viewModel: viewModel)
         .padding(.top)
     }
-    .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+    .navigationDestination(for: WGNavigation.self) { screen in
       switch screen {
       case .personalRecords:
         if viewModel.user.isCurrentUser {
@@ -96,6 +96,16 @@ struct ProfileHeaderView: View {
         }
       case .settings:
         Text("Settings")
+      case .trainingSessions:
+        Text("Workouts")
+      case .followers(let userId):
+        UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.followers(userId)))
+      case .following(let userId):
+        UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
+      case .profile(let user):
+        ProfileView(user: user)
+      default:
+        Text("default")
       }
     }
   }

@@ -77,6 +77,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             if user.id == fromId {
               return [] // Don't display push notification if chat already open // messages tab
             }
+          default:
+            return allOptions
           }
         }
       } else if AppNavigation.shared.selectedTab == .TrainingSessions {

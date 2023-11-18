@@ -23,6 +23,7 @@ struct EditPersonalRecordView: View {
   @State private var shouldFlex = true
   @EnvironmentObject var trainingSessionViewModel: TrainingSessionViewModel
   @State private var showFlexToolTip = false
+  @State var isSubmitted = false
 
   var personalRecord: PersonalRecord?
   var trainingSessionDate: Date?
@@ -206,6 +207,10 @@ struct EditPersonalRecordView: View {
 
           if let pr = personalRecord {
             SlideButton("Delete", styling: slideButtonStyling, action: {
+              guard !isSubmitted else { return }
+              isSubmitted = true
+
+              personalRecordsViewModel.personalRecordsCache[pr.id] = nil
               Task { try await personalRecordsViewModel.deletePersonalRecord(pr, trainingSessionForPr()) }
               dismiss()
             })
@@ -223,6 +228,8 @@ struct EditPersonalRecordView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
             guard isPrValid() else { return }
+            guard !isSubmitted else { return }
+            isSubmitted = true
 
             Task {
               if let pr = personalRecord {
@@ -236,6 +243,7 @@ struct EditPersonalRecordView: View {
                                                timestamp: pr.timestamp,
                                                notes: notes)
 
+                personalRecordsViewModel.personalRecordsCache[pr.id] = updatedPr
                 try await personalRecordsViewModel.updatePersonalRecord(updatedPr) //TODO: add PR to training session if `shouldFlex`
                 trainingSessionViewModel.reloadTrainingSessions()
 

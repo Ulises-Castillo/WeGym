@@ -13,9 +13,9 @@ struct CurrentUserProfileView: View {
   @State private var showSettingsSheet = false
   @State private var selectedSettingsOption: SettingsItemModel?
   @State private var showDetail = false
-  @Binding var path: [CurrentUserProfileNavigation]
+  @Binding var path: [WGNavigation]
 
-  init(path: Binding<[CurrentUserProfileNavigation]>) {
+  init(path: Binding<[WGNavigation]>) {
     self._path = path
   }
 
@@ -27,33 +27,21 @@ struct CurrentUserProfileView: View {
 
           //          PostGridView(config: .profile(UserService.shared.currentUser!))
 
-          HStack(spacing: 16) {
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(33), title: "Workouts")
-            }
-
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(15), title: "Followers")
-            }
-//            .disabled(viewModel.user.stats?.followers == 0)
-
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(9), title: "Following")
-            }
-//            .disabled(viewModel.user.stats?.following == 0)
-          }
-          .padding(.trailing)
-          .foregroundColor(.primary)
+          UserStatsHStackView(viewModel: viewModel)
         }
       }
       .navigationTitle(UserService.shared.currentUser?.username ?? "")
       .navigationBarTitleDisplayMode(.inline)
-      .navigationDestination(for: CurrentUserProfileNavigation.self) { screen in
+      .navigationDestination(for: WGNavigation.self) { screen in
         switch screen {
         case .personalRecords:
           PersonalRecordsView()
+        case .followers(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.followers(userId)))
+        case .following(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
         default:
-          Text(selectedSettingsOption?.title ?? "Followers")
+          Text(selectedSettingsOption?.title ?? "Workouts")
         }
       }
       .sheet(isPresented: $showSettingsSheet) {

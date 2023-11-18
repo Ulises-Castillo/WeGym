@@ -16,7 +16,7 @@ struct TrainingSessionsView: View {
   @State private var showingEditSheet = false
   @State private var selectedUser: User?
   @State private var shouldSetDateOnAppear = true
-  @Binding var path: [TrainingSessionsNavigation]
+  @Binding var path: [WGNavigation]
   @Binding var showToday: Bool
   @State private var showComments = false
   @State private var trainingSession: TrainingSession?
@@ -25,16 +25,16 @@ struct TrainingSessionsView: View {
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
-  init(path: Binding<[TrainingSessionsNavigation]>, showToday: Binding<Bool>) {
+  init(path: Binding<[WGNavigation]>, showToday: Binding<Bool>) {
     self._showToday = showToday
     self._path = path
   }
 
   func animateDayChange(newDate: Date, duration: CGFloat) {
     guard !showingEditSheet, !showComments,
-    !viewModel.isShowingComment_TrainingSessionCell,
-    !viewModel.isShowingLikes_TrainingSessionCell else { return } //Fix: do not change day if user editing a workout
-                                                                  // or viewing likes, comments
+          !viewModel.isShowingComment_TrainingSessionCell,
+          !viewModel.isShowingLikes_TrainingSessionCell else { return } //Fix: do not change day if user editing a workout
+    // or viewing likes, comments
     isAnimationForward = newDate.timeIntervalSince1970 > viewModel.day.timeIntervalSince1970
 
     withAnimation(.interactiveSpring(duration: duration)) {
@@ -56,12 +56,13 @@ struct TrainingSessionsView: View {
             .padding(.top, 15)
             .frame(width: 50)
         }
-        
+
         ReorderableForEach(items: viewModel.trainingSessions) { session in
           Button {
             defaultDayTimer?.invalidate()
 
-            if let user = session.user {
+            // prevent locally set session (not yet set from Firestore Listener) from being edited (no ID yet)
+            if let user = session.user, !session.id.isEmpty {
               if user.isCurrentUser {
                 if viewModel.day.timeIntervalSince1970 > Date.now.startOfDay.timeIntervalSince1970 {
                   showingEditSheet.toggle()
@@ -91,12 +92,20 @@ struct TrainingSessionsView: View {
           viewModel.setUserFollowingOrder()
         }.transition(.asymmetric(insertion: .move(edge: isAnimationForward ? .trailing : .leading), removal: .move(edge: isAnimationForward ? .leading : .trailing)))
       }
-      .navigationDestination(for: TrainingSessionsNavigation.self) { screen in
+      .navigationDestination(for: WGNavigation.self) { screen in
         switch screen {
         case .chat(let user):
           ChatView(user: user)
         case .profile(let user):
           ProfileView(user: user)
+        case .trainingSessions:
+          Text("Workouts")
+        case .followers(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.followers(userId)))
+        case .following(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
+        default:
+          Text("default")
         }
       }
       .foregroundColor(.black)
@@ -242,6 +251,6 @@ extension AnyTransition {
 }
 
 #Preview {
-  TrainingSessionsView(path: .constant([TrainingSessionsNavigation]()), showToday: .constant(false))
+  TrainingSessionsView(path: .constant([WGNavigation]()), showToday: .constant(false))
 }
 

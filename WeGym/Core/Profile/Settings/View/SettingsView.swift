@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
   @Binding var selectedOption: SettingsItemModel?
   @Environment(\.dismiss) var dismiss
-  @Binding var path: [CurrentUserProfileNavigation]
+  @Binding var path: [WGNavigation]
 
   var body: some View {
     NavigationStack(path: $path) {

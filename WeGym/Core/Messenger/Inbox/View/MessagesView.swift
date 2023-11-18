@@ -12,17 +12,17 @@ struct MessagesView: View {
   @EnvironmentObject var viewModel: InboxViewModel
   @State private var selectedUser: User?
   @Environment(\.colorScheme) var colorScheme
-  @Binding var path: [MessagesNavigation]
-
+  @Binding var path: [WGNavigation]
+  
   var body: some View {
     NavigationStack(path: $path) {
       List {
         ForEach(viewModel.filteredMessages) { recentMessage in
           ZStack {
-            NavigationLink(value: MessagesNavigation.chat(recentMessage.user!)) {
+            NavigationLink(value: WGNavigation.chat(recentMessage.user!)) {
               EmptyView()
             }.opacity(0.0).disabled(recentMessage.user == nil)
-
+            
             MessageRowView(message: recentMessage, viewModel: viewModel)
               .onAppear {
                 if recentMessage == viewModel.recentMessages.last {
@@ -41,7 +41,7 @@ struct MessagesView: View {
       .autocapitalization(.none)
       .listStyle(PlainListStyle())
       .onNotification { _ in
-          showNewMessageView = false
+        showNewMessageView = false
       }
       .onChange(of: selectedUser, perform: { newValue in
         guard let user = newValue else { return }
@@ -50,10 +50,20 @@ struct MessagesView: View {
       .sheet(isPresented: $showNewMessageView) {
         NewMessageView(selectedUser: $selectedUser)
       }
-      .navigationDestination(for: MessagesNavigation.self) { screen in
+      .navigationDestination(for: WGNavigation.self) { screen in
         switch screen {
         case .chat(let user):
           ChatView(user: user)
+        case .trainingSessions:
+          Text("Workouts")
+        case .followers(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.followers(userId)))
+        case .following(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
+        case .profile(let user):
+          ProfileView(user: user)
+        default:
+          Text("default")
         }
       }
       .overlay { 
@@ -86,6 +96,6 @@ struct MessagesView: View {
 
 struct InboxView_Previews: PreviewProvider {
   static var previews: some View {
-    MessagesView(path: .constant([MessagesNavigation]()))
+    MessagesView(path: .constant([WGNavigation]()))
   }
 }
