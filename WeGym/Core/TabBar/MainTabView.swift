@@ -52,6 +52,10 @@ enum SearchNavigation: Hashable {
 enum CurrentUserProfileNavigation: Hashable {
   case personalRecords
   case settings
+  case trainingSessions
+  case followers(String)
+  case following(String)
+  case profile(User)
 }
 
 struct MainTabView: View {

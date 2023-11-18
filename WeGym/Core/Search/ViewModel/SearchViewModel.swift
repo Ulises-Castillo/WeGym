@@ -34,7 +34,7 @@ enum SearchViewModelConfig: Hashable {
 @MainActor
 class SearchViewModel: ObservableObject {
     @Published var users = [User]()
-    private let config: SearchViewModelConfig
+    let config: SearchViewModelConfig
     private var lastDoc: QueryDocumentSnapshot?
 
     init(config: SearchViewModelConfig) {

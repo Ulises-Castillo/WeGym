@@ -24,7 +24,7 @@ struct UserListView: View {
     ScrollView {
       LazyVStack {
         ForEach(users) { user in
-          NavigationLink(value: SearchNavigation.profile(user)) {
+          NavigationLink(value: CurrentUserProfileNavigation.profile(user)) {
             UserCell(user: user)
               .padding(.leading)
               .onAppear {
@@ -37,5 +37,6 @@ struct UserListView: View {
       }
     }
     .searchable(text: $searchText, placement: .navigationBarDrawer)
+    .navigationTitle(viewModel.config.navigationTitle)
   }
 }

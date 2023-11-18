@@ -16,11 +16,18 @@ struct User: Identifiable, Hashable, Codable {
   var bio: String?
   var isFollowed: Bool? = false
   var userFollowingOrder: [String]?
+  var stats: UserStats?
 
   var isCurrentUser: Bool {
     guard let currentUid = Auth.auth().currentUser?.uid else { return false }
     return currentUid == id
   }
+}
+
+struct UserStats: Codable, Equatable, Hashable {
+    var following: Int
+    var trainingSessions: Int
+    var followers: Int
 }
 
 //MARK: Bug – conforming to Equatable will cause the Current User Singleton to break–No idea why

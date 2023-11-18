@@ -27,18 +27,18 @@ struct CurrentUserProfileView: View {
 
           //          PostGridView(config: .profile(UserService.shared.currentUser!))
 
-          HStack(spacing: 16) {
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(33), title: "Workouts")
+          HStack(spacing: 24) {
+            NavigationLink(value: CurrentUserProfileNavigation.trainingSessions) {
+              UserStatView(value: String(viewModel.user.stats?.trainingSessions ?? 0), title: "Workouts")
             }
 
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(15), title: "Followers")
+            NavigationLink(value: CurrentUserProfileNavigation.followers(viewModel.user.id)) {
+              UserStatView(value: String(viewModel.user.stats?.followers ?? 0), title: "Followers")
             }
 //            .disabled(viewModel.user.stats?.followers == 0)
 
-            NavigationLink(value: CurrentUserProfileNavigation.settings) {
-              UserStatView(value: String(9), title: "Following")
+            NavigationLink(value: CurrentUserProfileNavigation.following(viewModel.user.id)) {
+              UserStatView(value: String(viewModel.user.stats?.following ?? 0), title: "Following")
             }
 //            .disabled(viewModel.user.stats?.following == 0)
           }
@@ -52,8 +52,12 @@ struct CurrentUserProfileView: View {
         switch screen {
         case .personalRecords:
           PersonalRecordsView()
+        case .followers(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.followers(userId)))
+        case .following(let userId):
+          UserListView(viewModel: SearchViewModel(config: SearchViewModelConfig.following(userId)))
         default:
-          Text(selectedSettingsOption?.title ?? "Followers")
+          Text(selectedSettingsOption?.title ?? "Workouts")
         }
       }
       .sheet(isPresented: $showSettingsSheet) {
