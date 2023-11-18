@@ -12,7 +12,7 @@ struct SearchView: View {
   @State var inSearchMode = false
   @Binding var path: [CurrentUserProfileNavigation]
   @EnvironmentObject var preloadedSearchViewModel: SearchViewModel
-  
+
   var body: some View {
     NavigationStack(path: $path) {
       UserListView(viewModel: preloadedSearchViewModel)
