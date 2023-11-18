@@ -48,12 +48,20 @@ struct CircularProfileImageView: View {
         .scaledToFill()
         .frame(width: size.dimension, height: size.dimension)
         .clipShape(Circle())
+        .onTapGesture {
+          AppNavigation.shared.image = Image(uiImage: profileImage)
+          AppNavigation.shared.showImageViewerLocal.toggle()
+        }
     } else if let imageUrl = user?.profileImageUrl {
       KFImage(URL(string: imageUrl))
         .resizable()
         .scaledToFill()
         .frame(width: size.dimension, height: size.dimension)
         .clipShape(Circle())
+        .onTapGesture {
+          AppNavigation.shared.imageUrl = imageUrl
+          AppNavigation.shared.showImageViewer.toggle()
+        }
     } else {
       Image(systemName: "person.circle.fill")
         .resizable()

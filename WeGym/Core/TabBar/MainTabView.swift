@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import ImageViewer
+import ImageViewerRemote
 import ConfettiSwiftUI
 
 enum Tab {
@@ -30,6 +32,12 @@ class AppNavigation: ObservableObject {
   // store userID mapped to lastReadMessageDate
   //TODO: make sure to clear periodically (not hugely important because its just one time interval per chatPartner)
   @Published var userIdDate = [String : TimeInterval]()
+
+  @Published var imageUrl = ""
+  @Published var showImageViewer = false
+
+  @Published var image = Image(systemName: "person.circle.fill")
+  @Published var showImageViewerLocal = false
 }
 
 enum WGNavigation: Hashable {
@@ -87,6 +95,8 @@ struct MainTabView: View {
           Image(systemName: "person")
         }.tag(Tab.CurrentUserProfile)
     }
+    .overlay(ImageViewerRemote(imageURL: $appNav.imageUrl, viewerShown: $appNav.showImageViewer))
+    .overlay(ImageViewer(image: $appNav.image, viewerShown: $appNav.showImageViewerLocal))
     .confettiCannon(counter: $appNav.confettiCounter, num: 99, rainHeight: UIScreen.main.bounds.height * 1.1, closingAngle: Angle.degrees(150), radius: 450)
     .onAppear {
       trainingSessionsViewModel.personalRecordsViewModel = personalRecordsViewModel
