@@ -33,7 +33,7 @@ struct ChatMessageCell: View {
         case .image(let imageUrl):
           MessageImageView(imageUrlString: imageUrl)
         case .text(let messageText):
-          Text(messageText)
+          Text(attributedString(from: messageText, isWhiteColor: true))
             .font(.subheadline)
             .padding(12)
             .background(Color(.systemBlue))
@@ -56,7 +56,7 @@ struct ChatMessageCell: View {
             MessageImageView(imageUrlString: imageUrl)
               .padding(.leading, shouldShowChatPartnerImage ? 0 : 32)
           case .text(let messageText):
-            Text(messageText)
+            Text(attributedString(from: messageText))
               .font(.subheadline)
               .padding(12)
               .background(Color(.systemGray6))

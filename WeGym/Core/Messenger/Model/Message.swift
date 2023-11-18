@@ -51,12 +51,26 @@ struct Message: Identifiable, Codable, Hashable {
       return .image(imageUrl)
     }
 
-    if text.hasPrefix("http") {
+    if text.hasPrefix("http") || Self.hasLinkSuffix(text) {
       return .link(text)
     }
 
     return .text(text)
   }
+
+  static private func hasLinkSuffix(_ str: String) -> Bool {
+    guard !str.isContainSpaceAndNewlines() else { return false }
+    return linkSuffixes.contains(where: { str.hasSuffix($0) })
+  }
+
+  static private let linkSuffixes = [
+    ".com",
+    ".org",
+    ".co",
+    ".us",
+    ".gov",
+    ".edu",
+  ]
 }
 
 struct Conversation: Identifiable, Hashable, Codable {
