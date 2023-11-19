@@ -17,10 +17,10 @@ struct LinkPreview: View {
   var body: some View {
     if let metadata = viewModel.metadata {
       LPLinkViewRepresented(metadata: metadata)
-        .frame(width: UIScreen.main.bounds.width - 100, height: 250)
+        .frame(width: UIScreen.main.bounds.width * 0.66, height: UIScreen.main.bounds.height * 0.24)
     } else {
       ProgressView()
-        .frame(width: UIScreen.main.bounds.width - 100, height: 250)
+        .frame(width: UIScreen.main.bounds.width * 0.66, height: UIScreen.main.bounds.height * 0.24)
     }
   }
 }
