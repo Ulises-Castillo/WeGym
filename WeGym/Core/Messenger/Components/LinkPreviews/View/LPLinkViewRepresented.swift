@@ -9,7 +9,7 @@ import LinkPresentation
 import SwiftUI
 
 class CustomLinkView: LPLinkView {
-  override var intrinsicContentSize: CGSize { CGSize(width: 0, height: super.intrinsicContentSize.height) }
+  override var intrinsicContentSize: CGSize { CGSize(width: 0, height: UIScreen.main.bounds.height * 0.24) }
 }
 
 struct LPLinkViewRepresented: UIViewRepresentable {

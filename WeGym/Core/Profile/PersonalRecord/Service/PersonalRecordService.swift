@@ -16,7 +16,7 @@ struct PersonalRecordService {
 
     // get user following + add current user
     guard let currentUser = UserService.shared.currentUser else { return }
-    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: consider efficiency of double fetch (same call to observe training sessions)
+    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id, fromServer: false)
     userFollowing.append(currentUser)
 
     let userFollowingIds: [String] = userFollowing.map({ $0.id })

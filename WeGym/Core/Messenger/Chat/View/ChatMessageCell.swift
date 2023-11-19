@@ -70,7 +70,8 @@ struct ChatMessageCell: View {
           }
         }
         .padding(.horizontal)
-        
+        .textSelection(.enabled)
+
         Spacer()
       }
     }

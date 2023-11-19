@@ -19,6 +19,7 @@ struct CommentCell: View {
   var body: some View {
     HStack {
       CircularProfileImageView(user: user, size: .xSmall)
+        .disabled(true)
 
       VStack(alignment: .leading, spacing: 4) {
         HStack(spacing: 2) {
@@ -31,6 +32,7 @@ struct CommentCell: View {
         }
         Text(attributedString(from: comment.commentText))
           .foregroundColor(.primary)
+          .textSelection(.enabled)
       }
       .font(.caption)
       Spacer()
