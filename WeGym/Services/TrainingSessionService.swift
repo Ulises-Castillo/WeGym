@@ -37,11 +37,16 @@ struct TrainingSessionService {
     fetchedDates.removeAll()
   }
 
+  static var isLoadingDate: Date?
+
   static private var firestoreListener: ListenerRegistration?
 
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
     // also need to observe current user for date (consider local updates etc) can use [user+date] as ID to update actual ID when create call returns
 
+    guard date.startOfDay != isLoadingDate else { return } // prevent unnecessary repeat calls
+    isLoadingDate = date.startOfDay
+    
     // get user following + add current user
     guard let currentUser = UserService.shared.currentUser else { return }
     var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: cache users
@@ -82,6 +87,7 @@ struct TrainingSessionService {
       }
 
       completion(trainingSessions, removedTrainingSessions)
+      isLoadingDate = nil
     }
   }
 
