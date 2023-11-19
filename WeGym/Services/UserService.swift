@@ -158,7 +158,7 @@ extension UserService {
 // MARK: Fetch User Following
 extension UserService {
 
-  static func fetchUserFollowing(uid: String) async throws -> [User] { //TODO: highest priority to update user cache
+  static func fetchUserFollowing(uid: String, fromServer: Bool = false) async throws -> [User] { //TODO: highest priority to update user cache
     async let snapshot = try await FirestoreConstants
       .FollowingCollection
       .document(uid)
@@ -173,9 +173,16 @@ extension UserService {
 
     var following = [User]()
     for uid in uids {
-      async let followee = try await UserService.fetchUser(withUid: uid, fromCache: false)
-      try await following.append(followee)
-
+      do {
+        async let followee = try await UserService.fetchUser(withUid: uid, fromCache: !fromServer)
+        try await following.append(followee)
+      } catch {
+        print("DEGUG: Error: \(error)")
+        if !fromServer {  // go to server if cache empty fro a particular user
+          async let followee = try await UserService.fetchUser(withUid: uid, fromCache: false)
+          try await following.append(followee)
+        }
+      }
     }
     return following
   }

@@ -41,6 +41,8 @@ struct TrainingSessionService {
 
   static private var firestoreListener: ListenerRegistration?
 
+  static private var lastServerCall = Date.distantPast
+
   static func observeUserFollowingTrainingSessionsForDate(date: Date, completion: @escaping([TrainingSession], [TrainingSession]) -> Void) async throws {
     // also need to observe current user for date (consider local updates etc) can use [user+date] as ID to update actual ID when create call returns
 
@@ -49,7 +51,13 @@ struct TrainingSessionService {
     
     // get user following + add current user
     guard let currentUser = UserService.shared.currentUser else { return }
-    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id) //TODO: cache users
+
+    // fetch from Server max once every hour
+    let fromServer = Date.now.timeIntervalSince(lastServerCall) > 30*60 // fetch from server max once every 30 mins
+    if fromServer {
+      lastServerCall = Date.now
+    }
+    var userFollowing = try await UserService.fetchUserFollowing(uid: currentUser.id, fromServer: fromServer)
     userFollowing.append(currentUser)
 
     let userFollowingIds: [String] = userFollowing.map({ $0.id })
