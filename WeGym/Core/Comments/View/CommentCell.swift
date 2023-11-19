@@ -31,6 +31,7 @@ struct CommentCell: View {
         }
         Text(attributedString(from: comment.commentText))
           .foregroundColor(.primary)
+          .textSelection(.enabled)
       }
       .font(.caption)
       Spacer()
