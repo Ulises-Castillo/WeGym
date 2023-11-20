@@ -53,6 +53,9 @@ struct NotificationsView: View {
           Task { try await viewModel.updateNotifications() }
         }
       }
+      .refreshable {
+        Task { try await viewModel.updateNotifications(force: true) }
+      }
       .onAppear {
         Task { try await viewModel.updateNotifications() }
         shouldShowNotificationBadge = false

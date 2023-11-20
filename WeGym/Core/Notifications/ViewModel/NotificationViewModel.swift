@@ -14,12 +14,16 @@ class NotificationsViewModel: ObservableObject {
   @Published var notifications = [Notification2]()
   @Published var isLoading = false
   @Published var isNewNotification = false
+  private var lastUpdate = Date.distantPast
 
   init() {
     Task { try await updateNotifications() }
   }
 
-  func updateNotifications() async throws {
+  func updateNotifications(force: Bool = false) async throws {
+    guard Date.now.timeIntervalSince(lastUpdate) > 60 || force else { return }
+    lastUpdate = Date.now
+
     isLoading = true
     notifications = await NotificationService.fetchNotifications()
     isLoading = false
