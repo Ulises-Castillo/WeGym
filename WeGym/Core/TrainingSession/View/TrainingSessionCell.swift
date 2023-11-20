@@ -68,7 +68,7 @@ struct TrainingSessionCell: View {
   @State var commentsViewMode = false
   @State var notificationCellMode = false
   @State var selectedPR: PersonalRecord?
-  @State var image = Image(systemName: "person.circle.fill")
+  @State var image = Image(systemName: "photo")
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -77,7 +77,7 @@ struct TrainingSessionCell: View {
         if let imageURL = imageUrl  {
           KFImage(URL(string: imageURL))
             .placeholder {
-              Image(systemName: "person.circle.fill")
+              Image(systemName: "photo")
                 .resizable()
                 .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
               //                .clipShape(Circle())
@@ -216,7 +216,7 @@ struct TrainingSessionCell: View {
         if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
           KFImage(URL(string: imageURL))
             .placeholder {
-              Image(systemName: "person.circle.fill")
+              Image(systemName: "photo")
                 .resizable()
                 .frame(width: 45, height: 45)
                 .clipped()

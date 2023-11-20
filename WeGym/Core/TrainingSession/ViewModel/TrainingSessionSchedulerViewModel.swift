@@ -31,7 +31,7 @@ class TrainingSessionSchedulerViewModel: ObservableObject {
   private var uiImage: UIImage?
 
   @Published var updatedImageURL: String?
-  @Published var profileImage: Image?
+  @Published var image: Image?
   @Published var selectedImage: PhotosPickerItem? {
     didSet { Task { await loadImage(fromItem: selectedImage) } }
   }
@@ -43,7 +43,7 @@ class TrainingSessionSchedulerViewModel: ObservableObject {
     guard let uiImage = UIImage(data: data) else { return }
 //    UserService.shared.profileImage = uiImage //TODO: add `image` to UserService singleton (perhaps make it a map: to keep multiple images per date)
     self.uiImage = uiImage
-    profileImage = Image(uiImage: uiImage)
+    image = Image(uiImage: uiImage)
   }
 
   func updateImage(id: String) async throws {

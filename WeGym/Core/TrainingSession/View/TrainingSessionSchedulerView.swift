@@ -63,7 +63,7 @@ struct TrainingSessionSchedulerView: View {
 
           HStack {
             PhotosPicker(selection: $schedulerViewModel.selectedImage) {
-              if let image = schedulerViewModel.profileImage {
+              if let image = schedulerViewModel.image {
                 image
                   .resizable()
                   .scaledToFill()
@@ -199,11 +199,12 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: prevSession.likes,
                                                  shouldShowTime: prevSession.shouldShowTime,
-                                                 personalRecordIds: prevSession.personalRecordIds)
+                                                 personalRecordIds: prevSession.personalRecordIds,
+                                                 imageUrl: prevSession.imageUrl)
 
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
                 try await viewModel.updateTrainingSession(session: newSession)
-
+                try await schedulerViewModel.updateImage(id: newSession.id)
               } else {
                 let newSession = TrainingSession(id: "",
                                                  ownerUid: user.id,
@@ -219,7 +220,9 @@ struct TrainingSessionSchedulerView: View {
 
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
                 try await viewModel.addTrainingSession(session: newSession)
+                try await schedulerViewModel.updateImage(id: newSession.id)
               }
+
             }
             dismiss()
           } label: {
