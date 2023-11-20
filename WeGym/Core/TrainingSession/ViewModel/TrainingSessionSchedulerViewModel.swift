@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 import Firebase
 
+@MainActor
 class TrainingSessionSchedulerViewModel: ObservableObject {
   
   //TODO: should be ordered by most recently accessed (Corey should see "PWR" already selected)
