@@ -125,7 +125,19 @@ extension UserService {
   static func checkIfUserIsFollowed(uid: String) async -> Bool {
     guard let currentUid = Auth.auth().currentUser?.uid else { return false }
     let collection = FirestoreConstants.FollowingCollection.document(currentUid).collection("user-following")
-    guard let snapshot = try? await collection.document(uid).getDocument() else { return false }
+
+    let snapshot: DocumentSnapshot
+
+    do {
+      snapshot = try await collection.document(uid).getDocument(source: .cache)
+    } catch {
+      do {
+        snapshot = try await collection.document(uid).getDocument(source: .server)
+      } catch {
+        return false
+      }
+    }
+
     return snapshot.exists
   }
 }
