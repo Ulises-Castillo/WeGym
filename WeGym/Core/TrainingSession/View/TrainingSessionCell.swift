@@ -42,8 +42,8 @@ struct TrainingSessionCell: View {
 
   private var imageUrl: String? {
     guard !viewModel.isImagesCollapsed else { return nil }
-//    return trainingSession.imageURL //TODO: uncomment
-    return UserService.shared.currentUser?.profileImageUrl
+    return trainingSession.imageUrl
+    //    return UserService.shared.currentUser?.profileImageUrl // TEST
   }
 
   private var focusColor: Color {
@@ -74,7 +74,6 @@ struct TrainingSessionCell: View {
     VStack(alignment: .leading, spacing: 9) {
 
       ZStack {
-        //        if let imageURL = trainingSession.imageURL  {
         if let imageURL = imageUrl  {
           KFImage(URL(string: imageURL))
             .placeholder {
@@ -122,9 +121,7 @@ struct TrainingSessionCell: View {
           .multilineTextAlignment(.leading)
           .lineLimit(2)
           .background(.black.opacity(0.3))
-//          .padding(.top, imageUrl == nil ? 0 : 6)
 
-          //          if trainingSession.imageURL != nil {
           if imageUrl != nil {
             Spacer()
           }
@@ -156,97 +153,92 @@ struct TrainingSessionCell: View {
 
       }
 
-//      VStack(alignment: .leading, spacing: 9) {
-        HStack {
-          VStack(alignment: .leading, spacing: 9) {
-            HStack {
-              if trainingSession.shouldShowTime {
-                // TrainingSession time
-                let date = trainingSession.date.dateValue()
-                Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
-                  .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
-              }
-              // TrainingSession location / gym
-              if let location = trainingSession.location {
-                Text(location)
-                  .foregroundColor(.secondary)
-                  .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
-              }
+      HStack {
+        VStack(alignment: .leading, spacing: 9) {
+          HStack {
+            if trainingSession.shouldShowTime {
+              // TrainingSession time
+              let date = trainingSession.date.dateValue()
+              Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
+                .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
+            }
+            // TrainingSession location / gym
+            if let location = trainingSession.location {
+              Text(location)
+                .foregroundColor(.secondary)
+                .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
+            }
+          }
+
+          // action buttons
+          HStack(spacing: 16) {
+            Button {
+              handleLikeTapped()
+            } label: {
+              Image(systemName: didLike ? "heart.fill" : "heart")
+                .imageScale(.medium)
+                .foregroundColor(didLike ? .red : .blue)
             }
 
-            // action buttons
-            HStack(spacing: 16) {
-              Button {
-                handleLikeTapped()
-              } label: {
-                Image(systemName: didLike ? "heart.fill" : "heart")
+            Button {
+              showComments.toggle()
+            } label: {
+              Image(systemName: "bubble.right")
+                .imageScale(.medium)
+            }
+
+            if let user = trainingSession.user, !user.isCurrentUser {
+              NavigationLink(value: WGNavigation.chat(user)) { //TODO: set user on notification cell model
+                Image(systemName: "envelope")
                   .imageScale(.medium)
-                  .foregroundColor(didLike ? .red : .blue)
-              }
+              }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
+              Spacer()
+            }
 
+            if let user = trainingSession.user, user.isCurrentUser {
               Button {
-                showComments.toggle()
-              } label: {
-                Image(systemName: "bubble.right")
+                showEditPrSheet.toggle()
+              } label: {                //TODO: move to computed property "isFutureTrainingSession"
+                //            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
+                Image(systemName: "trophy")
                   .imageScale(.medium)
-              }
-
-              if let user = trainingSession.user, !user.isCurrentUser {
-                NavigationLink(value: WGNavigation.chat(user)) { //TODO: set user on notification cell model
-                  Image(systemName: "envelope")
-                    .imageScale(.medium)
-                }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
-                Spacer()
-              }
-
-              if let user = trainingSession.user, user.isCurrentUser {
-                Button {
-                  showEditPrSheet.toggle()
-                } label: {                //TODO: move to computed property "isFutureTrainingSession"
-                  //            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
-                  Image(systemName: "trophy")
-                    .imageScale(.medium)
-                }
               }
             }
-            .padding(.leading, 8)
-            .padding(.top, 4)
-            .foregroundColor(.blue)
-
-
           }
-          Spacer()
+          .padding(.leading, 8)
+          .padding(.top, 4)
+          .foregroundColor(.blue)
 
-//          if let imageURL = trainingSession.imageURL, viewModel.isImagesCollapsed { //TODO: uncomment
-          if let imageURL = UserService.shared.currentUser?.profileImageUrl, viewModel.isImagesCollapsed {
-            KFImage(URL(string: imageURL))
-              .placeholder {
-                Image(systemName: "person.circle.fill")
-                  .resizable()
-                  .frame(width: 45, height: 45)
-                //                .clipShape(Circle())
-                  .clipped()
-                  .foregroundColor(Color(.systemGray4))
-                  .opacity(0.3)
-              }
-              .onSuccess { result in
-                image = Image(uiImage: result.image)
-              }
-              .resizable()
-              .scaledToFill()
-              .frame(width: 45, height: 45)
-            //            .clipShape(Square())
-              .clipped()
-              .cornerRadius(6)
-              .padding(.trailing, 33)
-              .padding(.top, 9)
-              .onTapGesture {
-                AppNavigation.shared.image = image
-                AppNavigation.shared.showImageViewer.toggle()
-              }
-          }
+
         }
-//      }
+        Spacer()
+
+        if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
+          KFImage(URL(string: imageURL))
+            .placeholder {
+              Image(systemName: "person.circle.fill")
+                .resizable()
+                .frame(width: 45, height: 45)
+                .clipped()
+                .foregroundColor(Color(.systemGray4))
+                .opacity(0.3)
+            }
+            .onSuccess { result in
+              image = Image(uiImage: result.image)
+            }
+            .resizable()
+            .scaledToFill()
+            .frame(width: 45, height: 45)
+            .clipped()
+            .cornerRadius(6)
+            .padding(.trailing, 33)
+            .padding(.top, 9)
+            .onTapGesture {
+              AppNavigation.shared.image = image
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        }
+      }
 
       // likes label
       if likesCount > 0 { //TODO: show list of ppl who liked
