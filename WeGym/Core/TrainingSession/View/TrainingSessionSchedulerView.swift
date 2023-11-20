@@ -91,7 +91,7 @@ struct TrainingSessionSchedulerView: View {
                   .padding(.trailing, 33)
                   .padding(.top, 9)
               } else {
-                Image(systemName: "photo.badge.plus")
+                Image(systemName: "photo")
                   .resizable()
                   .frame(width: 39, height: 29)
                   .scaledToFill()
