@@ -46,7 +46,8 @@ class TrainingSessionSchedulerViewModel: ObservableObject {
     image = Image(uiImage: uiImage)
   }
 
-  func updateImage(id: String) async throws {
+  func updateImage(id: String?) async throws {
+    guard let id = id, !id.isEmpty else { return }
     var data = [String: Any]()
     
     if let uiImage = uiImage {

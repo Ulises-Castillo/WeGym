@@ -219,8 +219,8 @@ struct TrainingSessionSchedulerView: View {
                                                  personalRecordIds: [])
 
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
-                try await viewModel.addTrainingSession(session: newSession)
-                try await schedulerViewModel.updateImage(id: newSession.id)
+                let newId = try await viewModel.addTrainingSession(session: newSession)
+                try await schedulerViewModel.updateImage(id: newId)
               }
 
             }
