@@ -164,6 +164,7 @@ struct TrainingSessionSchedulerView: View {
               //TODO: delete training session from local cache immediately
               Task {
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = nil
+                UserService.shared.dateImageMap[viewModel.day.startOfDay] = nil
                 try await viewModel.deleteTrainingSession(session: session)
               }
               dismiss()
@@ -241,6 +242,8 @@ struct TrainingSessionSchedulerView: View {
         }
       }
     }.onAppear {
+      schedulerViewModel.date = viewModel.day
+
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""

@@ -14,6 +14,7 @@ class UserService: ObservableObject {
   static let shared = UserService()
   @Published var currentUser: User?
   @Published var profileImage: UIImage?
+  @Published var dateImageMap = [Date: UIImage]()
 
   private func mapUsers(fromSnapshot snapshot: QuerySnapshot) -> [User] {
     return snapshot.documents

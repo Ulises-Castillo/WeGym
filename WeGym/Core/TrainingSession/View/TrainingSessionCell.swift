@@ -46,6 +46,16 @@ struct TrainingSessionCell: View {
     //    return UserService.shared.currentUser?.profileImageUrl // TEST
   }
 
+  private var localImage: UIImage? {
+    guard !viewModel.isImagesCollapsed else { return nil }
+    guard trainingSession.user?.isCurrentUser ?? false else { return nil }
+    return UserService.shared.dateImageMap[trainingSession.date.dateValue().startOfDay]
+  }
+
+  private var isShowingLargeImage: Bool {
+    return localImage != nil || imageUrl != nil
+  }
+
   private var focusColor: Color {
     let now = Date.now
     let numDays = Calendar.current.numberOfDaysBetween(now, and: viewModel.day)
@@ -74,13 +84,23 @@ struct TrainingSessionCell: View {
     VStack(alignment: .leading, spacing: 9) {
 
       ZStack {
-        if let imageURL = imageUrl  {
+        if let localImage = localImage {
+          Image(uiImage: localImage)
+            .resizable()
+            .scaledToFill()
+            .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+            .clipped()
+            .onTapGesture {
+              AppNavigation.shared.image = Image(uiImage: localImage)
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        }
+        else if let imageURL = imageUrl  {
           KFImage(URL(string: imageURL))
             .placeholder {
               Image(systemName: "photo")
                 .resizable()
                 .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
-              //                .clipShape(Circle())
                 .clipped()
                 .foregroundColor(Color(.systemGray4))
                 .opacity(0.3)
@@ -91,7 +111,6 @@ struct TrainingSessionCell: View {
             .resizable()
             .scaledToFill()
             .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
-          //            .clipShape(Square())
             .clipped()
             .onTapGesture {
               AppNavigation.shared.image = image
@@ -104,7 +123,7 @@ struct TrainingSessionCell: View {
             if let user = trainingSession.user?.isCurrentUser ?? false ? userService.currentUser : trainingSession.user {
               // user profile image
               CircularProfileImageView(user: user, size: .xSmall)
-                .padding(.leading, imageUrl == nil ? 0 : 6)
+                .padding(.leading, !isShowingLargeImage ? 0 : 6)
               // username
               Text(user.fullName ?? user.username)
                 .fontWeight(.bold)
@@ -122,7 +141,7 @@ struct TrainingSessionCell: View {
           .lineLimit(2)
           .background(.black.opacity(0.3))
 
-          if imageUrl != nil {
+          if isShowingLargeImage {
             Spacer()
           }
 
@@ -148,7 +167,7 @@ struct TrainingSessionCell: View {
               }.disabled(trainingSession.user?.isCurrentUser == false)
             }
           }
-          .padding(imageUrl == nil ? 0 : 6)
+          .padding(!isShowingLargeImage ? 0 : 6)
         }
 
       }
@@ -213,7 +232,21 @@ struct TrainingSessionCell: View {
         }
         Spacer()
 
-        if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
+        if let localImage = UserService.shared.dateImageMap[trainingSession.date.dateValue().startOfDay],
+           trainingSession.user?.isCurrentUser ?? false, viewModel.isImagesCollapsed {
+          Image(uiImage: localImage)
+            .resizable()
+            .scaledToFill()
+            .frame(width: 45, height: 45)
+            .clipped()
+            .cornerRadius(6)
+            .padding(.trailing, 33)
+            .padding(.top, 9)
+            .onTapGesture {
+              AppNavigation.shared.image = Image(uiImage: localImage)
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        } else if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
           KFImage(URL(string: imageURL))
             .placeholder {
               Image(systemName: "photo")
