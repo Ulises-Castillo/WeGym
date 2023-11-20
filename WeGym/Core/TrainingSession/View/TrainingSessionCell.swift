@@ -79,6 +79,9 @@ struct TrainingSessionCell: View {
   @State var notificationCellMode = false
   @State var selectedPR: PersonalRecord?
   @State var image = Image(systemName: "photo")
+  @State private var currentAmount = 0.0
+  @State private var finalAmount = 1.0
+  @State private var magnificationTimer: Timer?
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
@@ -90,9 +93,39 @@ struct TrainingSessionCell: View {
             .scaledToFill()
             .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
             .clipped()
+            .scaleEffect(finalAmount + currentAmount)
+            .gesture(
+              MagnificationGesture()
+                .onChanged { amount in
+                  currentAmount = amount - 1
+
+                  magnificationTimer?.invalidate()
+                  magnificationTimer = Timer.scheduledTimer(withTimeInterval: 0.27, repeats: false) { timer in
+                    if amount < 1 {
+                      viewModel.isImagesCollapsed = true
+                    } else if amount > 1 {
+                      AppNavigation.shared.image = image
+                      AppNavigation.shared.showImageViewer.toggle()
+                    }
+                    currentAmount = 0
+                    finalAmount = 1 // reset //TODO: seperate, longer timer for reset
+                  }
+                }
+                .onEnded { amount in
+                  magnificationTimer?.invalidate()
+                  finalAmount += currentAmount
+                  if finalAmount < 1 {
+                    viewModel.isImagesCollapsed = true
+                  } else if finalAmount > 1 {
+                    AppNavigation.shared.image = image
+                    AppNavigation.shared.showImageViewer.toggle()
+                  }
+                  currentAmount = 0
+                  finalAmount = 1 // reset
+                }
+            )
             .onTapGesture {
-              AppNavigation.shared.image = Image(uiImage: localImage)
-              AppNavigation.shared.showImageViewer.toggle()
+              viewModel.isImagesCollapsed = true
             }
         }
         else if let imageURL = imageUrl  {
@@ -112,9 +145,39 @@ struct TrainingSessionCell: View {
             .scaledToFill()
             .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
             .clipped()
+            .scaleEffect(finalAmount + currentAmount)
+            .gesture(
+              MagnificationGesture()
+                .onChanged { amount in
+                  currentAmount = amount - 1
+
+                  magnificationTimer?.invalidate()
+                  magnificationTimer = Timer.scheduledTimer(withTimeInterval: 0.27, repeats: false) { timer in
+                    if amount < 1 {
+                      viewModel.isImagesCollapsed = true
+                    } else if amount > 1 {
+                      AppNavigation.shared.image = image
+                      AppNavigation.shared.showImageViewer.toggle()
+                    }
+                    currentAmount = 0
+                    finalAmount = 1 // reset //TODO: seperate, longer timer for reset
+                  }
+                }
+                .onEnded { amount in
+                  magnificationTimer?.invalidate()
+                  finalAmount += currentAmount
+                  if finalAmount < 1 {
+                    viewModel.isImagesCollapsed = true
+                  } else if finalAmount > 1 {
+                    AppNavigation.shared.image = image
+                    AppNavigation.shared.showImageViewer.toggle()
+                  }
+                  currentAmount = 0
+                  finalAmount = 1 // reset
+                }
+            )
             .onTapGesture {
-              AppNavigation.shared.image = image
-              AppNavigation.shared.showImageViewer.toggle()
+              viewModel.isImagesCollapsed = true
             }
         }
 
@@ -243,8 +306,7 @@ struct TrainingSessionCell: View {
             .padding(.trailing, 33)
             .padding(.top, 9)
             .onTapGesture {
-              AppNavigation.shared.image = Image(uiImage: localImage)
-              AppNavigation.shared.showImageViewer.toggle()
+              viewModel.isImagesCollapsed = false
             }
         } else if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
           KFImage(URL(string: imageURL))
@@ -267,8 +329,7 @@ struct TrainingSessionCell: View {
             .padding(.trailing, 33)
             .padding(.top, 9)
             .onTapGesture {
-              AppNavigation.shared.image = image
-              AppNavigation.shared.showImageViewer.toggle()
+              viewModel.isImagesCollapsed = false
             }
         }
       }
