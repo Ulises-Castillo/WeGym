@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct TrainingSessionCell: View {
 
@@ -39,6 +40,22 @@ struct TrainingSessionCell: View {
     return viewModel.commentsCountCache[trainingSession.id, default: 0]
   }
 
+  private var imageUrl: String? {
+    guard !viewModel.isImagesCollapsed else { return nil }
+    return trainingSession.imageUrl
+    //    return UserService.shared.currentUser?.profileImageUrl // TEST
+  }
+
+  private var localImage: UIImage? {
+    guard !viewModel.isImagesCollapsed else { return nil }
+    guard trainingSession.user?.isCurrentUser ?? false else { return nil }
+    return UserService.shared.dateImageMap[trainingSession.date.dateValue().startOfDay]
+  }
+
+  private var isShowingLargeImage: Bool {
+    return localImage != nil || imageUrl != nil
+  }
+
   private var focusColor: Color {
     let now = Date.now
     let numDays = Calendar.current.numberOfDaysBetween(now, and: viewModel.day)
@@ -61,105 +78,200 @@ struct TrainingSessionCell: View {
   @State var commentsViewMode = false
   @State var notificationCellMode = false
   @State var selectedPR: PersonalRecord?
+  @State var image = Image(systemName: "photo")
 
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
 
-      HStack {
-        if let user = trainingSession.user?.isCurrentUser ?? false ? userService.currentUser : trainingSession.user {
-          // user profile image
-          CircularProfileImageView(user: user, size: .xSmall)
-          // username
-          Text(user.fullName ?? user.username)
-            .fontWeight(.bold)
-            .font(.system(size: 14, weight: Font.Weight.bold, design: Font.Design.rounded))
+      ZStack {
+        if let localImage = localImage {
+          Image(uiImage: localImage)
+            .resizable()
+            .scaledToFill()
+            .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+            .clipped()
+            .onTapGesture {
+              AppNavigation.shared.image = Image(uiImage: localImage)
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        }
+        else if let imageURL = imageUrl  {
+          KFImage(URL(string: imageURL))
+            .placeholder {
+              Image(systemName: "photo")
+                .resizable()
+                .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+                .clipped()
+                .foregroundColor(Color(.systemGray4))
+                .opacity(0.3)
+            }
+            .onSuccess { result in
+              image = Image(uiImage: result.image)
+            }
+            .resizable()
+            .scaledToFill()
+            .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+            .clipped()
+            .onTapGesture {
+              AppNavigation.shared.image = image
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        }
 
-          + Text(" ") + Text(trainingSession.caption ?? "")
-            .fontWeight(.regular)
-            .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
+        VStack(alignment: .leading, spacing: 9) {
+          HStack {
+            if let user = trainingSession.user?.isCurrentUser ?? false ? userService.currentUser : trainingSession.user {
+              // user profile image
+              CircularProfileImageView(user: user, size: .xSmall)
+                .padding(.leading, !isShowingLargeImage ? 0 : 6)
+              // username
+              Text(user.fullName ?? user.username)
+                .fontWeight(.bold)
+                .font(.system(size: 14, weight: Font.Weight.bold, design: Font.Design.rounded))
+
+              + Text(" ") + Text(trainingSession.caption ?? "")
+                .fontWeight(.regular)
+                .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
+            }
+            Spacer()
+          }
+          .frame(maxWidth: .infinity, alignment: .leading) // may not need this
+          .frame(height: 48) //TODO: make dynamic based on image or not if necessary
+          .multilineTextAlignment(.leading)
+          .lineLimit(2)
+          .background(.black.opacity(0.3))
+
+          if isShowingLargeImage {
+            Spacer()
+          }
+
+          VStack(alignment: .leading, spacing: 9) {
+            HStack {
+              // body parts / workout type        //TODO: consider horizontal scrollview beyond 3 focuses
+              ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
+                Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
+                  .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 32)
+                  .background(focusColor)
+                  .cornerRadius(6)
+              }
+            }
+            .foregroundColor(.white)
+            .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
+
+            ForEach(trainingSession.personalRecords ?? [], id: \.self) { pr in
+              Button {
+                selectedPR = pr
+                showEditPrSheet.toggle()
+              } label: {
+                PersonalRecordFlex(personalRecord: pr)
+              }.disabled(trainingSession.user?.isCurrentUser == false)
+            }
+          }
+          .padding(!isShowingLargeImage ? 0 : 6)
+        }
+
+      }
+
+      HStack {
+        VStack(alignment: .leading, spacing: 9) {
+          HStack {
+            if trainingSession.shouldShowTime {
+              // TrainingSession time
+              let date = trainingSession.date.dateValue()
+              Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
+                .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
+            }
+            // TrainingSession location / gym
+            if let location = trainingSession.location {
+              Text(location)
+                .foregroundColor(.secondary)
+                .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
+            }
+          }
+
+          // action buttons
+          HStack(spacing: 16) {
+            Button {
+              handleLikeTapped()
+            } label: {
+              Image(systemName: didLike ? "heart.fill" : "heart")
+                .imageScale(.medium)
+                .foregroundColor(didLike ? .red : .blue)
+            }
+
+            Button {
+              showComments.toggle()
+            } label: {
+              Image(systemName: "bubble.right")
+                .imageScale(.medium)
+            }
+
+            if let user = trainingSession.user, !user.isCurrentUser {
+              NavigationLink(value: WGNavigation.chat(user)) { //TODO: set user on notification cell model
+                Image(systemName: "envelope")
+                  .imageScale(.medium)
+              }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
+              Spacer()
+            }
+
+            if let user = trainingSession.user, user.isCurrentUser {
+              Button {
+                showEditPrSheet.toggle()
+              } label: {                //TODO: move to computed property "isFutureTrainingSession"
+                //            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
+                Image(systemName: "trophy")
+                  .imageScale(.medium)
+              }
+            }
+          }
+          .padding(.leading, 8)
+          .padding(.top, 4)
+          .foregroundColor(.blue)
+
+
         }
         Spacer()
-      }
-      .frame(maxWidth: .infinity, alignment: .leading) // may not need this
-      .multilineTextAlignment(.leading)
-      .lineLimit(2)
 
-
-
-      HStack {
-        // body parts / workout type        //TODO: consider horizontal scrollview beyond 3 focuses
-        ForEach(beautifyWorkoutFocuses(focuses: Array(trainingSession.focus.prefix(3))), id: \.self) { focus in
-          Text(" \((notificationCellMode ? " " : "") + focus)   ") //TODO: investigate actual root cause of issue
-            .frame(width: (UIScreen.main.bounds.width/3) - 21, height: 32)
-            .background(focusColor)
+        if let localImage = UserService.shared.dateImageMap[trainingSession.date.dateValue().startOfDay],
+           trainingSession.user?.isCurrentUser ?? false, viewModel.isImagesCollapsed {
+          Image(uiImage: localImage)
+            .resizable()
+            .scaledToFill()
+            .frame(width: 45, height: 45)
+            .clipped()
             .cornerRadius(6)
+            .padding(.trailing, 33)
+            .padding(.top, 9)
+            .onTapGesture {
+              AppNavigation.shared.image = Image(uiImage: localImage)
+              AppNavigation.shared.showImageViewer.toggle()
+            }
+        } else if let imageURL = trainingSession.imageUrl, viewModel.isImagesCollapsed { //TODO: uncomment
+          KFImage(URL(string: imageURL))
+            .placeholder {
+              Image(systemName: "photo")
+                .resizable()
+                .frame(width: 45, height: 45)
+                .clipped()
+                .foregroundColor(Color(.systemGray4))
+                .opacity(0.3)
+            }
+            .onSuccess { result in
+              image = Image(uiImage: result.image)
+            }
+            .resizable()
+            .scaledToFill()
+            .frame(width: 45, height: 45)
+            .clipped()
+            .cornerRadius(6)
+            .padding(.trailing, 33)
+            .padding(.top, 9)
+            .onTapGesture {
+              AppNavigation.shared.image = image
+              AppNavigation.shared.showImageViewer.toggle()
+            }
         }
       }
-      .foregroundColor(.white)
-      .font(.system(size: 15, weight: .semibold, design: Font.Design.rounded))
-
-      ForEach(trainingSession.personalRecords ?? [], id: \.self) { pr in
-        Button {
-          selectedPR = pr
-          showEditPrSheet.toggle()
-        } label: {
-          PersonalRecordFlex(personalRecord: pr)
-        }.disabled(trainingSession.user?.isCurrentUser == false)
-      }
-
-      HStack {
-        if trainingSession.shouldShowTime {
-          // TrainingSession time
-          let date = trainingSession.date.dateValue()
-          Text(date, format: Calendar.current.component(.minute, from: date) == 0 ? .dateTime.hour() : .dateTime.hour().minute())
-            .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
-        }
-        // TrainingSession location / gym
-        if let location = trainingSession.location {
-          Text(location)
-            .foregroundColor(.secondary)
-            .font(.system(size: 14, weight: Font.Weight.regular, design: Font.Design.rounded))
-        }
-      }
-
-      // action buttons
-      HStack(spacing: 16) {
-        Button {
-          handleLikeTapped()
-        } label: {
-          Image(systemName: didLike ? "heart.fill" : "heart")
-            .imageScale(.medium)
-            .foregroundColor(didLike ? .red : .blue)
-        }
-
-        Button {
-          showComments.toggle()
-        } label: {
-          Image(systemName: "bubble.right")
-            .imageScale(.medium)
-        }
-
-        if let user = trainingSession.user, !user.isCurrentUser {
-          NavigationLink(value: WGNavigation.chat(user)) { //TODO: set user on notification cell model
-            Image(systemName: "envelope")
-              .imageScale(.medium)
-          }.disabled(trainingSession.user == nil || trainingSession.user!.isCurrentUser)
-          Spacer()
-        }
-
-        if let user = trainingSession.user, user.isCurrentUser {
-          Button {
-            showEditPrSheet.toggle()
-          } label: {                //TODO: move to computed property "isFutureTrainingSession"
-//            let imageName = trainingSession.date.dateValue().timeIntervalSince1970 > Date.now.timeIntervalSince1970 ? "scope" : "trophy" // future feature: set goals for future sessions
-            Image(systemName: "trophy")
-              .imageScale(.medium)
-          }
-        }
-      }
-      .padding(.leading, 8)
-      .padding(.top, 4)
-      .foregroundColor(.blue)
 
       // likes label
       if likesCount > 0 { //TODO: show list of ppl who liked
@@ -170,6 +282,7 @@ struct TrainingSessionCell: View {
             .font(.system(size: 14, weight: Font.Weight.semibold, design: Font.Design.rounded))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 10)
+            .padding(.top, -1)
         }
       }
       // comments label

@@ -14,12 +14,16 @@ class NotificationsViewModel: ObservableObject {
   @Published var notifications = [Notification2]()
   @Published var isLoading = false
   @Published var isNewNotification = false
+  private var lastUpdate = Date.distantPast
 
   init() {
     Task { try await updateNotifications() }
   }
 
-  func updateNotifications() async throws {
+  func updateNotifications(force: Bool = false) async throws {
+    guard Date.now.timeIntervalSince(lastUpdate) > 60 || force else { return }
+    lastUpdate = Date.now
+
     isLoading = true
     notifications = await NotificationService.fetchNotifications()
     isLoading = false
@@ -43,8 +47,13 @@ class NotificationsViewModel: ObservableObject {
     }
 
     if let trainingSessionId = notification.trainingSessionId {
-      async let trainingSessionSnapshot = await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument(source: .cache) //TODO: test .cache
-      self.notifications[indexOfNotification].trainingSession = try? await trainingSessionSnapshot.data(as: TrainingSession.self)
+      let trainingSessionSnapshot: DocumentSnapshot
+      do {
+        trainingSessionSnapshot = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument(source: .cache)
+      } catch {
+        trainingSessionSnapshot = try await FirestoreConstants.TrainingSessionsCollection.document(trainingSessionId).getDocument(source: .server)
+      }
+      self.notifications[indexOfNotification].trainingSession = try? trainingSessionSnapshot.data(as: TrainingSession.self)
       guard let ownerUid = self.notifications[indexOfNotification].trainingSession?.ownerUid else { return }
       let trainingSessionUser = try? await UserService.fetchUser(withUid: ownerUid)
       self.notifications[indexOfNotification].trainingSession?.user = trainingSessionUser

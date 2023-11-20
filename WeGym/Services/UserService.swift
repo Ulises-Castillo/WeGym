@@ -14,6 +14,7 @@ class UserService: ObservableObject {
   static let shared = UserService()
   @Published var currentUser: User?
   @Published var profileImage: UIImage?
+  @Published var dateImageMap = [Date: UIImage]()
 
   private func mapUsers(fromSnapshot snapshot: QuerySnapshot) -> [User] {
     return snapshot.documents
@@ -31,8 +32,19 @@ class UserService: ObservableObject {
 
   //TODO: if .cache fails, try .server
   static func fetchUser(withUid uid: String, fromCache: Bool = true) async throws -> User {
-    let snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: fromCache ? .cache : .default) //TODO: snapshot listener to ensure data is being updated from server (quite sure this will only get the data from the server the first time)
+    
+    let snapshot: DocumentSnapshot
+
+    do {
+      snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: fromCache ? .cache : .default) //TODO: snapshot listener to ensure data is being updated from server (quite sure this will only get the data from the server the first time)
+    } catch {
+      print("DEBUG: error fetching user: \(error)")
+      print("DEBUG: retrying fetch from server")
+      snapshot = try await FirestoreConstants.UserCollection.document(uid).getDocument(source: .server)
+    }
+
     let user = try snapshot.data(as: User.self)                                                          // gets updated on app re-launch, unsure if/when it would get updated otherwise
+
     return user
   }
 
@@ -114,7 +126,19 @@ extension UserService {
   static func checkIfUserIsFollowed(uid: String) async -> Bool {
     guard let currentUid = Auth.auth().currentUser?.uid else { return false }
     let collection = FirestoreConstants.FollowingCollection.document(currentUid).collection("user-following")
-    guard let snapshot = try? await collection.document(uid).getDocument() else { return false }
+
+    let snapshot: DocumentSnapshot
+
+    do {
+      snapshot = try await collection.document(uid).getDocument(source: .cache)
+    } catch {
+      do {
+        snapshot = try await collection.document(uid).getDocument(source: .server)
+      } catch {
+        return false
+      }
+    }
+
     return snapshot.exists
   }
 }

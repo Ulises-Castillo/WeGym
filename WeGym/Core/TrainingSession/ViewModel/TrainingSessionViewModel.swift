@@ -11,7 +11,7 @@ import Firebase
 class TrainingSessionViewModel: ObservableObject {
 
   var personalRecordsViewModel: PersonalRecordsViewModel?
-
+  
   var day = Date.now {
     didSet {
       reloadTrainingSessions()
@@ -30,6 +30,7 @@ class TrainingSessionViewModel: ObservableObject {
     return trainingSessionsCache[key(currentUserId, day)]
   }
 
+  @Published var isImagesCollapsed = false
   @Published var trainingSessions = [TrainingSession]()
 
   var userfollowingOrderLocal: [String]?
@@ -120,8 +121,8 @@ class TrainingSessionViewModel: ObservableObject {
   }
 
   @MainActor
-  func addTrainingSession(session: TrainingSession) async throws { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
-    try await TrainingSessionService.uploadTrainingSession(date: session.date,
+  func addTrainingSession(session: TrainingSession) async throws -> String? { //TODO: works well, however consider adding session locally immediate (offline mode will require this certainly)
+    return try await TrainingSessionService.uploadTrainingSession(date: session.date,
                                                            focus: session.focus,
                                                            category: session.category,
                                                            location: session.location,

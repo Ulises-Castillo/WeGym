@@ -131,9 +131,9 @@ struct TrainingSessionService {
     return trainingSessions
   }
 
-  static func uploadTrainingSession(date: Timestamp, focus: [String], category: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool, personalRecordIds: [String]) async throws {
+  static func uploadTrainingSession(date: Timestamp, focus: [String], category: [String], location: String?, caption: String?, likes: Int, shouldShowTime: Bool, personalRecordIds: [String]) async throws -> String? {
 
-    guard let uid = Auth.auth().currentUser?.uid else { return }
+    guard let uid = Auth.auth().currentUser?.uid else { return nil }
     let postRef = FirestoreConstants.TrainingSessionsCollection.document()
 
     let trainingSession = TrainingSession(id: postRef.documentID,
@@ -147,8 +147,9 @@ struct TrainingSessionService {
                                           shouldShowTime: shouldShowTime,
                                           personalRecordIds: personalRecordIds)
 
-    guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return }
+    guard let encodedTrainingSession = try? Firestore.Encoder().encode(trainingSession) else { return nil }
     try await postRef.setData(encodedTrainingSession)
+    return postRef.documentID
   }
 
   static func updateTrainingSession(trainingSession: TrainingSession) async throws {

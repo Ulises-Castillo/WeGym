@@ -5,8 +5,11 @@
 //  Created by Ulises Castillo on 10/19/23.
 //
 
-import Foundation
+import SwiftUI
+import PhotosUI
+import Firebase
 
+@MainActor
 class TrainingSessionSchedulerViewModel: ObservableObject {
   
   //TODO: should be ordered by most recently accessed (Corey should see "PWR" already selected)
@@ -24,4 +27,42 @@ class TrainingSessionSchedulerViewModel: ObservableObject {
     "Vallejo In-Shape"
   ]
   @Published var selectedGym = [String]()
+
+  private var uiImage: UIImage?
+
+  @Published var updatedImageURL: String?
+  @Published var image: Image?
+  @Published var selectedImage: PhotosPickerItem? {
+    didSet { Task { await loadImage(fromItem: selectedImage) } }
+  }
+  
+  var date: Date?
+
+  func loadImage(fromItem item: PhotosPickerItem?) async {
+    guard let item = item else { return }
+    
+    guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+    guard let uiImage = UIImage(data: data) else { return }
+
+    if let date = date {
+      UserService.shared.dateImageMap[date.startOfDay] = uiImage
+    }
+    self.uiImage = uiImage
+    image = Image(uiImage: uiImage)
+  }
+
+  func updateImage(id: String?) async throws {
+    guard let id = id, !id.isEmpty else { return }
+    var data = [String: Any]()
+    
+    if let uiImage = uiImage {
+      let imageUrl = try await ImageUploader.uploadImage(image: uiImage)
+      data["imageUrl"] = imageUrl
+      updatedImageURL = imageUrl
+    }
+    
+    if !data.isEmpty {
+      try await FirestoreConstants.TrainingSessionsCollection.document(id).updateData(data)
+    }
+  }
 }

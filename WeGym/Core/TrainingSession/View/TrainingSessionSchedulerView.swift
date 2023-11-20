@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 import Firebase
+import PhotosUI
+import Kingfisher
 import SlideButton
 
 struct TrainingSessionSchedulerView: View {
@@ -59,17 +61,58 @@ struct TrainingSessionSchedulerView: View {
           .accentColor(Color(.systemBlue))
           .padding()
 
-          DatePicker("",
-                     selection: $workoutTime,
-                     in: viewModel.day.startOfDay...viewModel.day.endOfDay, // only allow date within current day
-                     displayedComponents: .hourAndMinute)
-          .padding()
-          .font(.headline)
-          .fontWeight(.medium)
-          .onTapGesture {
-            timeTapped = true
-            guard let currentUserId = UserService.shared.currentUser?.id else { return }
-            viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
+          HStack {
+            PhotosPicker(selection: $schedulerViewModel.selectedImage) {
+              if let image = schedulerViewModel.image {
+                image
+                  .resizable()
+                  .scaledToFill()
+                  .frame(width: 39, height: 39)
+                  .clipped()
+                  .cornerRadius(3)
+                  .padding(.trailing, 33)
+                  .padding(.top, 9)
+              } else if let imageUrl = viewModel.currentUserTrainingSesssion?.imageUrl {
+//                } else if let imageUrl = UserService.shared.currentUser?.profileImageUrl {
+                KFImage(URL(string: imageUrl))
+                  .placeholder {
+                    Image(systemName: "photo")
+                      .resizable()
+                      .frame(width: 33, height: 33)
+                      .clipped()
+                      .foregroundColor(Color(.systemGray4))
+                      .opacity(0.3)
+                  }
+                  .resizable()
+                  .scaledToFill()
+                  .frame(width: 39, height: 39)
+                  .clipped()
+                  .cornerRadius(3)
+                  .padding(.trailing, 33)
+                  .padding(.top, 9)
+              } else {
+                Image(systemName: "photo")
+                  .resizable()
+                  .frame(width: 39, height: 29)
+                  .scaledToFill()
+              }
+            }
+            .padding(.leading, 21)
+
+            Spacer()
+
+            DatePicker("",
+                       selection: $workoutTime,
+                       in: viewModel.day.startOfDay...viewModel.day.endOfDay, // only allow date within current day
+                       displayedComponents: .hourAndMinute)
+            .padding()
+            .font(.headline)
+            .fontWeight(.medium)
+            .onTapGesture {
+              timeTapped = true
+              guard let currentUserId = UserService.shared.currentUser?.id else { return }
+              viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
+            }
           }
 
           // set gym / workout location
@@ -121,6 +164,7 @@ struct TrainingSessionSchedulerView: View {
               //TODO: delete training session from local cache immediately
               Task {
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = nil
+                UserService.shared.dateImageMap[viewModel.day.startOfDay] = nil
                 try await viewModel.deleteTrainingSession(session: session)
               }
               dismiss()
@@ -156,11 +200,12 @@ struct TrainingSessionSchedulerView: View {
                                                  user: user,
                                                  likes: prevSession.likes,
                                                  shouldShowTime: prevSession.shouldShowTime,
-                                                 personalRecordIds: prevSession.personalRecordIds)
+                                                 personalRecordIds: prevSession.personalRecordIds,
+                                                 imageUrl: prevSession.imageUrl)
 
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
                 try await viewModel.updateTrainingSession(session: newSession)
-
+                try await schedulerViewModel.updateImage(id: newSession.id)
               } else {
                 let newSession = TrainingSession(id: "",
                                                  ownerUid: user.id,
@@ -175,8 +220,10 @@ struct TrainingSessionSchedulerView: View {
                                                  personalRecordIds: [])
 
                 viewModel.trainingSessionsCache[viewModel.key(currUserId, viewModel.day)] = newSession
-                try await viewModel.addTrainingSession(session: newSession)
+                let newId = try await viewModel.addTrainingSession(session: newSession)
+                try await schedulerViewModel.updateImage(id: newId)
               }
+
             }
             dismiss()
           } label: {
@@ -195,6 +242,8 @@ struct TrainingSessionSchedulerView: View {
         }
       }
     }.onAppear {
+      schedulerViewModel.date = viewModel.day
+
       if let session = viewModel.currentUserTrainingSesssion {
         workoutTime = session.date.dateValue()
         workoutCaption = session.caption ?? ""

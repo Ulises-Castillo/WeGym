@@ -22,6 +22,7 @@ struct TrainingSessionsView: View {
   @State private var trainingSession: TrainingSession?
   @State private var defaultDayTimer: Timer?
   @State private var isAnimationForward = true
+//  @State private var isImagesCollapsed = false
 
   @EnvironmentObject var viewModel: TrainingSessionViewModel
 
@@ -114,10 +115,11 @@ struct TrainingSessionsView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-            defaultDayTimer?.invalidate()
-            animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
+//            defaultDayTimer?.invalidate()
+//            animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
+            viewModel.isImagesCollapsed.toggle()
           } label: {
-            Image(systemName: "arrow.forward.square")
+            Image(systemName: viewModel.isImagesCollapsed ? "arrow.up.left.and.arrow.down.right" : "arrow.down.right.and.arrow.up.left")
               .foregroundColor(Color(.systemBlue))
               .padding(.horizontal, 9)
           }
