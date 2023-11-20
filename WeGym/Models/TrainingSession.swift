@@ -24,7 +24,7 @@ struct TrainingSession: Identifiable, Hashable, Codable, Equatable {
   var shouldShowTime: Bool = false
   var personalRecordIds: [String]
   var personalRecords: [PersonalRecord]?
-  var imageURL: String?
+  var imageUrl: String?
 }
 
 /*

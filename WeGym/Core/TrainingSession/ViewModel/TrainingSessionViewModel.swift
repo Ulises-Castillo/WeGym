@@ -11,7 +11,7 @@ import Firebase
 class TrainingSessionViewModel: ObservableObject {
 
   var personalRecordsViewModel: PersonalRecordsViewModel?
-
+  
   var day = Date.now {
     didSet {
       reloadTrainingSessions()

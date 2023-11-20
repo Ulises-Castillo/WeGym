@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 import Firebase
+import PhotosUI
+import Kingfisher
 import SlideButton
 
 struct TrainingSessionSchedulerView: View {
@@ -59,17 +61,58 @@ struct TrainingSessionSchedulerView: View {
           .accentColor(Color(.systemBlue))
           .padding()
 
-          DatePicker("",
-                     selection: $workoutTime,
-                     in: viewModel.day.startOfDay...viewModel.day.endOfDay, // only allow date within current day
-                     displayedComponents: .hourAndMinute)
-          .padding()
-          .font(.headline)
-          .fontWeight(.medium)
-          .onTapGesture {
-            timeTapped = true
-            guard let currentUserId = UserService.shared.currentUser?.id else { return }
-            viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
+          HStack {
+            PhotosPicker(selection: $schedulerViewModel.selectedImage) {
+              if let image = schedulerViewModel.profileImage {
+                image
+                  .resizable()
+                  .scaledToFill()
+                  .frame(width: 39, height: 39)
+                  .clipped()
+                  .cornerRadius(3)
+                  .padding(.trailing, 33)
+                  .padding(.top, 9)
+              } else if let imageUrl = viewModel.currentUserTrainingSesssion?.imageUrl {
+//                } else if let imageUrl = UserService.shared.currentUser?.profileImageUrl {
+                KFImage(URL(string: imageUrl))
+                  .placeholder {
+                    Image(systemName: "photo")
+                      .resizable()
+                      .frame(width: 33, height: 33)
+                      .clipped()
+                      .foregroundColor(Color(.systemGray4))
+                      .opacity(0.3)
+                  }
+                  .resizable()
+                  .scaledToFill()
+                  .frame(width: 39, height: 39)
+                  .clipped()
+                  .cornerRadius(3)
+                  .padding(.trailing, 33)
+                  .padding(.top, 9)
+              } else {
+                Image(systemName: "photo.badge.plus")
+                  .resizable()
+                  .frame(width: 39, height: 29)
+                  .scaledToFill()
+              }
+            }
+            .padding(.leading, 21)
+
+            Spacer()
+
+            DatePicker("",
+                       selection: $workoutTime,
+                       in: viewModel.day.startOfDay...viewModel.day.endOfDay, // only allow date within current day
+                       displayedComponents: .hourAndMinute)
+            .padding()
+            .font(.headline)
+            .fontWeight(.medium)
+            .onTapGesture {
+              timeTapped = true
+              guard let currentUserId = UserService.shared.currentUser?.id else { return }
+              viewModel.trainingSessionsCache[viewModel.key(currentUserId, viewModel.day)]?.shouldShowTime = true //TODO: test after new swipe animation changes
+            }
           }
 
           // set gym / workout location

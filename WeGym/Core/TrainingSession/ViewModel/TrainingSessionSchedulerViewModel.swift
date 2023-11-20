@@ -5,7 +5,9 @@
 //  Created by Ulises Castillo on 10/19/23.
 //
 
-import Foundation
+import SwiftUI
+import PhotosUI
+import Firebase
 
 class TrainingSessionSchedulerViewModel: ObservableObject {
   
@@ -24,4 +26,36 @@ class TrainingSessionSchedulerViewModel: ObservableObject {
     "Vallejo In-Shape"
   ]
   @Published var selectedGym = [String]()
+
+  private var uiImage: UIImage?
+
+  @Published var updatedImageURL: String?
+  @Published var profileImage: Image?
+  @Published var selectedImage: PhotosPickerItem? {
+    didSet { Task { await loadImage(fromItem: selectedImage) } }
+  }
+  
+  func loadImage(fromItem item: PhotosPickerItem?) async {
+    guard let item = item else { return }
+    
+    guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+    guard let uiImage = UIImage(data: data) else { return }
+//    UserService.shared.profileImage = uiImage //TODO: add `image` to UserService singleton (perhaps make it a map: to keep multiple images per date)
+    self.uiImage = uiImage
+    profileImage = Image(uiImage: uiImage)
+  }
+
+  func updateImage(id: String) async throws {
+    var data = [String: Any]()
+    
+    if let uiImage = uiImage {
+      let imageUrl = try await ImageUploader.uploadImage(image: uiImage)
+      data["imageUrl"] = imageUrl
+      updatedImageURL = imageUrl
+    }
+    
+    if !data.isEmpty {
+      try await FirestoreConstants.TrainingSessionsCollection.document(id).updateData(data)
+    }
+  }
 }
