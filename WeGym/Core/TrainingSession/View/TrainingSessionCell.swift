@@ -91,7 +91,7 @@ struct TrainingSessionCell: View {
           Image(uiImage: localImage)
             .resizable()
             .scaledToFill()
-            .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+            .frame(width: UIScreen.main.bounds.width - 42, height: UIScreen.main.bounds.width - 42)
             .clipped()
             .scaleEffect(finalAmount + currentAmount)
             .gesture(
@@ -133,7 +133,7 @@ struct TrainingSessionCell: View {
             .placeholder {
               Image(systemName: "photo")
                 .resizable()
-                .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+                .frame(width: UIScreen.main.bounds.width - 42, height: UIScreen.main.bounds.width - 42)
                 .clipped()
                 .foregroundColor(Color(.systemGray4))
                 .opacity(0.3)
@@ -143,7 +143,7 @@ struct TrainingSessionCell: View {
             }
             .resizable()
             .scaledToFill()
-            .frame(width: UIScreen.main.bounds.width - 16, height: UIScreen.main.bounds.width - 16)
+            .frame(width: UIScreen.main.bounds.width - 42, height: UIScreen.main.bounds.width - 42)
             .clipped()
             .scaleEffect(finalAmount + currentAmount)
             .gesture(
@@ -202,7 +202,8 @@ struct TrainingSessionCell: View {
           .frame(height: 48) //TODO: make dynamic based on image or not if necessary
           .multilineTextAlignment(.leading)
           .lineLimit(2)
-          .background(.black.opacity(0.3))
+          .foregroundColor(isShowingLargeImage ? .white : .primary)
+          .background(!isShowingLargeImage ? .clear : .black.opacity(0.3))
 
           if isShowingLargeImage {
             Spacer()
@@ -362,7 +363,7 @@ struct TrainingSessionCell: View {
       }
     }
     .padding(.leading, 21)
-    .padding(.trailing, 9)
+    .padding(.trailing, isShowingLargeImage ? 21 : 9)
     .foregroundColor(.primary)
     .sheet(isPresented: $showComments) {
       CommentsView(trainingSession: trainingSession, viewMode: commentsViewMode)
