@@ -115,11 +115,10 @@ struct TrainingSessionsView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button {
-//            defaultDayTimer?.invalidate()
-//            animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
-            viewModel.isImagesCollapsed.toggle()
+            defaultDayTimer?.invalidate()
+            animateDayChange(newDate: viewModel.day.addingTimeInterval(86400), duration: 0.39)
           } label: {
-            Image(systemName: viewModel.isImagesCollapsed ? "arrow.up.left.and.arrow.down.right" : "arrow.down.right.and.arrow.up.left")
+            Image(systemName: "arrow.forward.square")
               .foregroundColor(Color(.systemBlue))
               .padding(.horizontal, 9)
           }
