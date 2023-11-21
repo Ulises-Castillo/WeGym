@@ -30,7 +30,7 @@ class TrainingSessionViewModel: ObservableObject {
     return trainingSessionsCache[key(currentUserId, day)]
   }
 
-  @Published var isImagesCollapsed = false
+  @Published var isImagesCollapsed = true
   @Published var trainingSessions = [TrainingSession]()
 
   var userfollowingOrderLocal: [String]?
