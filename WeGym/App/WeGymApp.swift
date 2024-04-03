@@ -145,7 +145,7 @@ struct WeGymApp: App {
     WindowGroup {
       ContentView()
         .onOpenURL { url in
-          print("***: \(url)")
+//          print("***: \(url)")//TODO: add logger
         }
     }
   }
